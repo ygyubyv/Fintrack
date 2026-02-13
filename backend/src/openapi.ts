@@ -1,7 +1,7 @@
 import swaggerJSDoc from "swagger-jsdoc";
-import { openapiDefinition } from "./openapi/index";
+import { openapiDefinitionV1 } from "./openapi/v1/index";
 
-export const openapiSpec = swaggerJSDoc({
-  definition: openapiDefinition,
+export const openapiV1Spec = swaggerJSDoc({
+  definition: openapiDefinitionV1,
   apis: [],
 });
