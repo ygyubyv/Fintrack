@@ -1,8 +1,8 @@
 import type { Request, Response, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { JWT_CONFIG } from "../config";
+import { AUTH_CONFIG } from "../config/auth.config";
 
-const { accessTokenSecret } = JWT_CONFIG;
+const { accessTokenSecret } = AUTH_CONFIG;
 
 export const AuthMiddleware = async (
   request: Request,

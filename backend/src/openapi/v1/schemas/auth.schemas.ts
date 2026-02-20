@@ -42,13 +42,41 @@ export const LoginRequestSchema = {
   },
 };
 
+export const RefreshRequestSchema = {
+  type: "object",
+  required: ["refreshToken"],
+  properties: {
+    refreshToken: {
+      type: "string",
+      description: "Refresh token used to rotate tokens",
+      example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    },
+  },
+};
+
+export const LogoutRequestSchema = {
+  type: "object",
+  required: ["refreshToken"],
+  properties: {
+    refreshToken: {
+      type: "string",
+      description: "Refresh token to revoke",
+      example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    },
+  },
+};
+
 export const AuthResponseSchema = {
   type: "object",
-  required: ["accessToken", "idToken"],
+  required: ["accessToken", "refreshToken", "idToken"],
   properties: {
     accessToken: {
       type: "string",
       description: "JWT access token for API authentication",
+    },
+    refreshToken: {
+      type: "string",
+      description: "JWT refresh token used for token rotation",
     },
     idToken: {
       type: "string",

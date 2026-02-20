@@ -6,7 +6,7 @@ import path from "node:path";
 
 dotenv.config();
 
-import { FRONTEND_URL } from "./config";
+import { FRONTEND_URL } from "./config/app.config";
 
 import { openapiV1Spec } from "./openapi";
 
@@ -19,13 +19,13 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.static(path.join(process.cwd(), "public")));
 
-app.use("/api", apiRoutes);
-
 app.use(
   cors({
     origin: FRONTEND_URL,
   }),
 );
+
+app.use("/api", apiRoutes);
 
 app.get("/openapi/v1.json", (request, response) => {
   response.json(openapiV1Spec);

@@ -5,6 +5,16 @@ import { AppError } from "../errors/AppError";
 import { MapPrismaError } from "../errors/mapper/prisma-error.mapper";
 
 export const UserService = () => {
+  const findById = async (id: number) => {
+    const user = await prisma.user.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    return user;
+  };
+
   const findByEmail = async (email: string) => {
     const user = await prisma.user.findUnique({
       where: {
@@ -82,6 +92,7 @@ export const UserService = () => {
   };
 
   return {
+    findById,
     findByEmail,
     create,
     update,
