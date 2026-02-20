@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import Header from "@/components/header/Header.vue";
 import Footer from "@/components/footer/Footer.vue";
+import { useAuthStore } from "@/stores/auth/auth.store";
+import { storeToRefs } from "pinia";
+import BaseSpinner from "@/components/base/BaseSpinner.vue";
+
+const { isLoading } = storeToRefs(useAuthStore());
 </script>
 
 <template>
@@ -9,9 +14,10 @@ import Footer from "@/components/footer/Footer.vue";
   >
     <Header />
 
-    <main class="flex-1">
-      <div class="mx-auto max-w-7xl px-8 py-6">
-        <RouterView />
+    <main class="flex flex-1 items-center justify-center">
+      <div class="w-full max-w-7xl px-8 py-6">
+        <RouterView v-if="!isLoading" />
+        <BaseSpinner v-else mode="Black-spinner" />
       </div>
     </main>
 

@@ -1,0 +1,176 @@
+import { defineStore } from "pinia";
+import { ref, computed } from "vue";
+import { jwtDecode } from "jwt-decode";
+import { AuthService } from "./services/auth.service";
+import type {
+  AuthState,
+  IAccessTokenClaims,
+  ILoginPayload,
+  ISignupPayload,
+} from "./types";
+
+export const useAuthStore = defineStore("auth", () => {
+  const state = ref<AuthState>("anonymous");
+
+  // Flag to call bootstrap only once
+  const isInitialized = ref(false);
+  const isLoading = ref(false);
+  const tokenIsRefreshing = ref(false);
+
+  const accessToken = ref<string | null>(null);
+  const refreshToken = ref<string | null>(null);
+  const idToken = ref<string | null>(null);
+
+  const isAuthenticated = computed(() => {
+    return state.value === "authenticated";
+  });
+
+  const isExpired = (accessToken: string) => {
+    const decodedAccessToken = jwtDecode<IAccessTokenClaims>(accessToken);
+    return decodedAccessToken.exp * 1000 < Date.now();
+  };
+
+  const setSession = (accessTk: string, refreshTk: string, idTk: string) => {
+    accessToken.value = accessTk;
+    refreshToken.value = refreshTk;
+    idToken.value = idTk;
+
+    localStorage.setItem("accessToken", accessTk);
+    localStorage.setItem("refreshToken", refreshTk);
+    localStorage.setItem("idToken", idTk);
+
+    state.value = "authenticated";
+  };
+
+  const clearSession = () => {
+    accessToken.value = null;
+    refreshToken.value = null;
+    idToken.value = null;
+
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("idToken");
+
+    state.value = "anonymous";
+  };
+
+  const login = async (payload: ILoginPayload) => {
+    isLoading.value = true;
+
+    try {
+      const { data } = await AuthService().login(payload);
+
+      if (!data) {
+        return;
+      }
+
+      setSession(data.accessToken, data.refreshToken, data.idToken);
+    } finally {
+      isLoading.value = false;
+    }
+  };
+
+  const signup = async (payload: ISignupPayload) => {
+    isLoading.value = true;
+
+    try {
+      const { data } = await AuthService().signup(payload);
+
+      if (!data) {
+        return;
+      }
+
+      setSession(data.accessToken, data.refreshToken, data.idToken);
+    } finally {
+      isLoading.value = false;
+    }
+  };
+
+  const logout = async () => {
+    isLoading.value = true;
+    try {
+      if (refreshToken.value) {
+        await AuthService().logout({
+          refreshToken: refreshToken.value,
+        });
+      }
+
+      clearSession();
+    } finally {
+      isLoading.value = false;
+    }
+  };
+
+  const refresh = async () => {
+    if (!refreshToken.value) {
+      return clearSession();
+    }
+
+    try {
+      isLoading.value = true;
+      tokenIsRefreshing.value = true;
+
+      const tokens = await AuthService().refresh({
+        refreshToken: refreshToken.value,
+      });
+
+      setSession(
+        tokens.data.accessToken,
+        tokens.data.refreshToken,
+        tokens.data.idToken,
+      );
+    } catch (error) {
+      clearSession();
+      console.error(error);
+    } finally {
+      isLoading.value = false;
+      tokenIsRefreshing.value = false;
+    }
+  };
+
+  const bootstrap = async () => {
+    if (isInitialized.value) {
+      return;
+    }
+
+    const accessTk = localStorage.getItem("accessToken");
+    const refreshTk = localStorage.getItem("refreshToken");
+    const idTk = localStorage.getItem("idToken");
+
+    if (!accessTk || !refreshTk || !idTk) {
+      state.value = "anonymous";
+      return;
+    }
+
+    accessToken.value = accessTk;
+    refreshToken.value = refreshTk;
+    idToken.value = idTk;
+
+    if (isExpired(accessTk)) {
+      try {
+        await refresh();
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      state.value = "authenticated";
+    }
+
+    isInitialized.value = true;
+  };
+
+  return {
+    state,
+    accessToken,
+    isAuthenticated,
+    tokenIsRefreshing,
+    isLoading,
+
+    login,
+    signup,
+    logout,
+    refresh,
+    bootstrap,
+    isExpired,
+  };
+});

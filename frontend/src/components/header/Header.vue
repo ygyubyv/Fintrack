@@ -2,17 +2,31 @@
 import { RouterLink, useRoute } from "vue-router";
 import BaseButton from "../base/BaseButton.vue";
 import Burger from "./Burger.vue";
+import { useAuthStore } from "@/stores/auth/auth.store";
+import { storeToRefs } from "pinia";
+import { computed } from "vue";
 
 const route = useRoute();
 
+const authStore = useAuthStore();
+const { logout } = authStore;
+const { isAuthenticated, isLoading } = storeToRefs(authStore);
+
 const links = [
-  { label: "Dashboard", to: "/dashboard" },
-  { label: "Transactions", to: "/transactions" },
-  { label: "Analytics", to: "/analytics" },
-  { label: "Budgets", to: "/budgets" },
+  { label: "Dashboard", to: "/dashboard", requiresAuth: true },
+  { label: "Transactions", to: "/transactions", requiresAuth: true },
+  { label: "Analytics", to: "/analytics", requiresAuth: true },
+  { label: "Budgets", to: "/budgets", requiresAuth: true },
 ];
 
-const isAuthenticated = false;
+const visibleLinks = computed(() => {
+  return links.filter((link) => {
+    if (link.requiresAuth && !isAuthenticated.value) {
+      return false;
+    }
+    return true;
+  });
+});
 </script>
 
 <template>
@@ -28,7 +42,7 @@ const isAuthenticated = false;
       <!-- Desktop navigation -->
       <nav class="hidden sm:flex items-center gap-4">
         <RouterLink
-          v-for="link in links"
+          v-for="link in visibleLinks"
           :key="link.to"
           :to="link.to"
           class="relative px-3 py-2 text-sm font-medium text-neutral-600 transition-colors hover:text-neutral-900 group"
@@ -39,10 +53,10 @@ const isAuthenticated = false;
             :class="
               route.path === link.to ? 'scale-x-100' : 'group-hover:scale-x-100'
             "
-          ></span>
+          />
         </RouterLink>
 
-        <div class="ml-2">
+        <div class="ml-2" v-if="!isLoading">
           <!-- Login -->
           <template v-if="!isAuthenticated">
             <RouterLink to="/auth">
@@ -62,13 +76,14 @@ const isAuthenticated = false;
               icon="right-from-bracket"
               mode="Secondary"
               size="Small"
+              :onClick="logout"
             />
           </template>
         </div>
       </nav>
 
       <!-- Mobile -->
-      <div class="sm:hidden">
+      <div class="sm:hidden" v-if="!isLoading">
         <template v-if="!isAuthenticated">
           <!-- Login -->
           <RouterLink to="/auth">
@@ -82,7 +97,11 @@ const isAuthenticated = false;
         </template>
         <template v-else>
           <!-- Burger -->
-          <Burger :links="links" />
+          <Burger
+            :links="visibleLinks"
+            :is-authenticated="isAuthenticated"
+            @logout="logout"
+          />
         </template>
       </div>
     </div>

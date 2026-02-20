@@ -43,6 +43,7 @@
 
         <div class="border-t border-gray-200">
           <button
+            v-if="isAuthenticated"
             @click="emit('logout')"
             class="w-full text-left px-4 py-3 text-black hover:bg-gray-100 transition font-medium"
           >
@@ -65,7 +66,10 @@ interface Link {
   to: string;
 }
 
-defineProps<{ links: Link[] }>();
+defineProps<{
+  links: Link[];
+  isAuthenticated: boolean;
+}>();
 const emit = defineEmits<{
   (e: "logout"): void;
 }>();
