@@ -19,6 +19,7 @@
     "@vee-validate/rules": "^4.15.1",
     "@vee-validate/yup": "^4.15.1",
     "@vueuse/core": "^14.2.1",
+    "@vueuse/router": "^14.2.1",
     "axios": "^1.13.5",
     "camelcase-keys": "^10.0.2",
     "jwt-decode": "^4.0.0",

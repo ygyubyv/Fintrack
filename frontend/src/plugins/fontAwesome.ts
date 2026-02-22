@@ -9,6 +9,8 @@ import {
   faRightToBracket,
   faRightFromBracket,
   faUserPlus,
+  faPaperPlane,
+  faKey,
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(
@@ -19,6 +21,8 @@ library.add(
   faRightToBracket,
   faRightFromBracket,
   faUserPlus,
+  faPaperPlane,
+  faKey,
 );
 
 export { FontAwesomeIcon };

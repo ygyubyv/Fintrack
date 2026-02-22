@@ -1,6 +1,6 @@
 import { useForm, useFormErrors } from "vee-validate";
 import { loginSchema } from "./schemas/login.schema";
-import type { ISignupSchema } from "../../types";
+import type { ISignupPayload } from "../../types";
 import { useAuthStore } from "@/stores/auth/auth.store";
 import { useRouter } from "vue-router";
 
@@ -16,7 +16,7 @@ export const useSignupForm = () => {
       lastName: "",
       email: "",
       password: "",
-    } as ISignupSchema,
+    } as ISignupPayload,
   });
 
   const errors = useFormErrors();

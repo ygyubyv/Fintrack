@@ -5,7 +5,9 @@ import { AuthService } from "./services/auth.service";
 import type {
   AuthState,
   IAccessTokenClaims,
+  IForgotPasswordPayload,
   ILoginPayload,
+  IResetPasswordPayload,
   ISignupPayload,
 } from "./types";
 
@@ -128,6 +130,28 @@ export const useAuthStore = defineStore("auth", () => {
     }
   };
 
+  const forgotPassword = async (payload: IForgotPasswordPayload) => {
+    try {
+      isLoading.value = true;
+      await AuthService().forgotPassword(payload);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      isLoading.value = false;
+    }
+  };
+
+  const resetPassword = async (payload: IResetPasswordPayload) => {
+    try {
+      isLoading.value = true;
+      await AuthService().resetPassword(payload);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      isLoading.value = false;
+    }
+  };
+
   const bootstrap = async () => {
     if (isInitialized.value) {
       return;
@@ -170,6 +194,8 @@ export const useAuthStore = defineStore("auth", () => {
     signup,
     logout,
     refresh,
+    forgotPassword,
+    resetPassword,
     bootstrap,
     isExpired,
   };

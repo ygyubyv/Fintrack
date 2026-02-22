@@ -29,19 +29,30 @@ const {
     />
 
     <!-- Password -->
-    <BaseInput
-      v-model="password"
-      v-bind="passwordAttrs"
-      :error="errors.password"
-      id="password"
-      type="password"
-      label="Password"
-      placeholder="Enter your password"
-    />
+    <div class="space-y-1">
+      <BaseInput
+        v-model="password"
+        v-bind="passwordAttrs"
+        :error="errors.password"
+        id="password"
+        type="password"
+        label="Password"
+        placeholder="Enter your password"
+      />
+
+      <!-- Forgot password link -->
+      <div class="flex justify-end">
+        <RouterLink
+          :to="{ name: 'auth', query: { mode: 'forgot' } }"
+          class="text-sm font-medium text-primary-600 hover:text-primary-700 hover:underline transition"
+        >
+          Forgot password?
+        </RouterLink>
+      </div>
+    </div>
 
     <!-- Actions -->
     <div class="flex justify-end gap-3 mt-6">
-      <!-- Reset Form -->
       <BaseButton
         v-if="meta.dirty"
         text="Reset"
@@ -50,7 +61,6 @@ const {
         @click="resetForm"
       />
 
-      <!-- Submit -->
       <BaseButton
         text="Login"
         icon="right-to-bracket"
@@ -58,7 +68,6 @@ const {
         mode="Primary"
         type="submit"
         :disabled="!meta.valid || !meta.dirty"
-        @click="onSubmit"
       />
     </div>
   </form>

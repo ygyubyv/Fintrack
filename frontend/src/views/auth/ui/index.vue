@@ -1,15 +1,31 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { computed } from "vue";
 import type { AuthMode } from "../types";
 
 import LoginForm from "./components/LoginForm.vue";
 import RegisterForm from "./components/RegisterForm.vue";
 import AuthSwitcher from "./components/AuthSwitcher.vue";
+import ForgotPasswordForm from "./components/ForgotPasswordForm.vue";
+import ResetPasswordForm from "./components/ResetPasswordForm.vue";
 
-const mode = ref<AuthMode>("login");
+import { useRouteQuery } from "@vueuse/router";
+
+const mode = useRouteQuery<AuthMode>("mode", "login");
 
 const currentComponent = computed(() => {
-  return mode.value === "login" ? LoginForm : RegisterForm;
+  switch (mode.value) {
+    case "login":
+      return LoginForm;
+
+    case "register":
+      return RegisterForm;
+
+    case "forgot":
+      return ForgotPasswordForm;
+
+    case "reset":
+      return ResetPasswordForm;
+  }
 });
 
 const switchMode = (value: AuthMode) => {
