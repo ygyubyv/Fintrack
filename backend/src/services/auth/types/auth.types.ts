@@ -27,6 +27,10 @@ export interface IResetPasswordPayload {
   password: string;
 }
 
+export interface IVerifyEmailPayload {
+  code: number;
+}
+
 export interface IAuthContext {
   ipAddress?: string;
   userAgent?: string;

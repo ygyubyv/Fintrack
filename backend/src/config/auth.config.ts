@@ -11,6 +11,9 @@ export const AUTH_CONFIG = {
   resetPasswordSecret: process.env.RESET_PASSWORD_SECRET,
   resetPasswordTokenExpiresIn: 10 * 60 * 1000,
 
+  verifyEmailSecret: process.env.VERIFY_EMAIL_SECRET,
+  verifyEmailTokenExpiresIn: 10 * 60 * 1000,
+
   jwtIssuer: process.env.JWT_ISSUER,
   jwtAudienceApi: process.env.JWT_AUDIENCE_API,
   jwtAudienceClient: process.env.JWT_AUDIENCE_CLIENT,

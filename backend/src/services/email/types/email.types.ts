@@ -1,9 +1,14 @@
-export type TEmailTemplate = "ResetPassword";
+export type TEmailTemplate = "ResetPassword" | "VerifyEmail";
 
 type TEmailTemplateVariablesMap = {
   ResetPassword: {
     firstName: string;
     resetLink: string;
+  };
+
+  VerifyEmail: {
+    firstName: string;
+    verificationCode: number;
   };
 };
 

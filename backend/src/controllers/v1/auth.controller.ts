@@ -36,23 +36,15 @@ export const AuthController = () => {
   ) => {
     try {
       const { firstName, lastName, password, email } = request.body;
-      const userAgent = request.get("user-agent");
-      const ipAddress = request.ip;
 
-      const tokens = await AuthService().signup(
-        {
-          firstName,
-          lastName,
-          email,
-          password,
-        },
-        {
-          ipAddress,
-          userAgent,
-        },
-      );
+      await AuthService().signup({
+        firstName,
+        lastName,
+        email,
+        password,
+      });
 
-      return response.status(200).json(tokens);
+      return response.sendStatus(201);
     } catch (error) {
       next(error);
     }
@@ -65,18 +57,10 @@ export const AuthController = () => {
   ) => {
     try {
       const { refreshToken } = request.body;
-      const userAgent = request.get("user-agent");
-      const ipAddress = request.ip;
 
-      const tokens = await AuthService().refreshTokens(
-        {
-          refreshToken,
-        },
-        {
-          ipAddress,
-          userAgent,
-        },
-      );
+      const tokens = await AuthService().refreshTokens({
+        refreshToken,
+      });
 
       return response.status(200).json(tokens);
     } catch (error) {
@@ -139,6 +123,24 @@ export const AuthController = () => {
     }
   };
 
+  const verifyEmail = async (
+    request: Request,
+    response: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const { code } = request.body;
+
+      const tokens = await AuthService().verifyEmail({
+        code,
+      });
+
+      return response.status(200).json(tokens);
+    } catch (error) {
+      next(error);
+    }
+  };
+
   return {
     login,
     signup,
@@ -146,5 +148,6 @@ export const AuthController = () => {
     refresh,
     forgotPassword,
     resetPassword,
+    verifyEmail,
   };
 };

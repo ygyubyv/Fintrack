@@ -15,16 +15,6 @@ export const UserService = () => {
     return user;
   };
 
-  const findByResetToken = async (resetPasswordTokenHash: string) => {
-    const user = await prisma.user.findUnique({
-      where: {
-        resetPasswordTokenHash,
-      },
-    });
-
-    return user;
-  };
-
   const findByEmail = async (email: string) => {
     const user = await prisma.user.findUnique({
       where: {
@@ -104,7 +94,6 @@ export const UserService = () => {
   return {
     findById,
     findByEmail,
-    findByResetToken,
     create,
     update,
     remove,

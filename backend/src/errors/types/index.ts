@@ -6,6 +6,8 @@ export const ERROR_CODES = {
   AUTH_TOKEN_INVALID: "AUTH_TOKEN_INVALID",
   AUTH_TOKEN_EXPIRED: "AUTH_TOKEN_EXPIRED",
   AUTH_RESET_TOKEN_INVALID: "AUTH_RESET_TOKEN_INVALID",
+  AUTH_EMAIL_VERIFICATION_TOKEN_INVALID:
+    "AUTH_EMAIL_VERIFICATION_TOKEN_INVALID",
 
   // User
   USER_NOT_FOUND: "USER_NOT_FOUND",
@@ -43,6 +45,11 @@ export const ERROR_MAP: Record<ErrorCode, { status: number; message: string }> =
     AUTH_RESET_TOKEN_INVALID: {
       status: 400,
       message: "Reset token is invalid",
+    },
+
+    AUTH_EMAIL_VERIFICATION_TOKEN_INVALID: {
+      status: 400,
+      message: "Email verification token is invalid",
     },
 
     // User

@@ -5,6 +5,7 @@ import { RefreshTokenService } from "../refresh-token/refresh-token.service";
 import type { SignOptions } from "jsonwebtoken";
 import {
   IAuthContext,
+  IVerifyEmailPayload,
   IForgotPasswordPayload,
   ILoginPayload,
   ILogoutPayload,
@@ -18,6 +19,9 @@ import { AppError } from "../../errors/AppError";
 import crypto from "crypto";
 import { EmailService } from "../email/email.service";
 import { FRONTEND_URL } from "../../config/app.config";
+import { PasswordResetTokenService } from "../password-reset-token/password-reset-token.service";
+import { EmailVerificationTokenService } from "../email-verification-token/email-verification-token.service";
+import { LastLoginService } from "../last-login/last-login.service";
 
 const generateHashToken = (length = 32) => {
   return crypto.randomBytes(length).toString("hex");
@@ -25,6 +29,10 @@ const generateHashToken = (length = 32) => {
 
 const hashToken = (token: string, key: string) => {
   return crypto.createHmac("sha256", key).update(token).digest("hex");
+};
+
+const generateVerificationCode = () => {
+  return crypto.randomInt(100000, 1000000);
 };
 
 const generateToken = (
@@ -82,6 +90,9 @@ export const AuthService = () => {
   const userService = UserService();
   const refreshTokenService = RefreshTokenService();
   const emailService = EmailService();
+  const emailVerificationTokenService = EmailVerificationTokenService();
+  const passwordVerificationTokenService = PasswordResetTokenService();
+  const lastLoginService = LastLoginService();
 
   const login = async (payload: ILoginPayload, context: IAuthContext) => {
     const user = await userService.findByEmail(payload.email);
@@ -113,16 +124,16 @@ export const AuthService = () => {
     const expiresAt = new Date(decodedRefreshToken.exp * 1000);
     const tokenHash = hashToken(refreshToken, AUTH_CONFIG.refreshTokenSecret!);
 
-    await refreshTokenService.create({
+    refreshTokenService.create({
       tokenHash,
       userId: user.id,
       expiresAt,
-      ipAddress: context.ipAddress,
-      userAgent: context.userAgent,
     });
 
-    await userService.update(user.id, {
-      lastLogin: new Date(),
+    lastLoginService.upsert({
+      userId: user.id,
+      ipAddress: context.ipAddress,
+      userAgent: context.userAgent,
     });
 
     return {
@@ -132,49 +143,42 @@ export const AuthService = () => {
     };
   };
 
-  const signup = async (payload: ISignupPayload, context: IAuthContext) => {
-    const user = await userService.create(payload);
+  const signup = async (payload: ISignupPayload) => {
+    const user =
+      (await userService.findByEmail(payload.email)) ||
+      (await userService.create(payload));
 
-    const accessToken = generateToken("access", {
-      sub: String(user.id),
-    });
+    if (user.emailVerified) {
+      throw new AppError("USER_EMAIL_EXISTS");
+    }
 
-    const idToken = generateToken("id", {
-      sub: String(user.id),
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-    });
+    const verificationCode = generateVerificationCode();
 
-    const refreshToken = generateToken("refresh", {
-      sub: String(user.id),
-    });
+    emailService.sendTemplateEmail(
+      user.email,
+      "Verify your Fintrack account",
+      "VerifyEmail",
+      {
+        firstName: user.firstName,
+        verificationCode,
+      },
+    );
 
-    const decodedRefreshToken = jwt.decode(refreshToken) as IRefreshTokenClaims;
-
-    const expiresAt = new Date(decodedRefreshToken.exp * 1000);
-    const tokenHash = hashToken(refreshToken, AUTH_CONFIG.refreshTokenSecret!);
-
-    await refreshTokenService.create({
-      tokenHash,
+    emailVerificationTokenService.create({
+      tokenHash: hashToken(
+        String(verificationCode),
+        AUTH_CONFIG.verifyEmailSecret!,
+      ),
+      expiresAt: new Date(Date.now() + AUTH_CONFIG.verifyEmailTokenExpiresIn),
       userId: user.id,
-      expiresAt,
-      ipAddress: context.ipAddress,
-      userAgent: context.userAgent,
     });
-
-    return {
-      accessToken,
-      refreshToken,
-      idToken,
-    };
   };
 
   const logout = async (payload: ILogoutPayload) => {
     try {
       jwt.verify(payload.refreshToken, AUTH_CONFIG.refreshTokenSecret!);
 
-      await refreshTokenService.revoke(
+      refreshTokenService.revoke(
         hashToken(payload.refreshToken, AUTH_CONFIG.refreshTokenSecret!),
       );
     } catch (err) {
@@ -182,10 +186,7 @@ export const AuthService = () => {
     }
   };
 
-  const refreshTokens = async (
-    payload: IRefreshTokensPayload,
-    context: IAuthContext,
-  ) => {
+  const refreshTokens = async (payload: IRefreshTokensPayload) => {
     try {
       const decoded = jwt.verify(
         payload.refreshToken,
@@ -228,12 +229,10 @@ export const AuthService = () => {
         AUTH_CONFIG.refreshTokenSecret!,
       );
 
-      await refreshTokenService.create({
+      refreshTokenService.create({
         tokenHash,
         userId: user.id,
         expiresAt,
-        ipAddress: context.ipAddress,
-        userAgent: context.userAgent,
       });
 
       return {
@@ -254,19 +253,15 @@ export const AuthService = () => {
     }
 
     const token = generateHashToken();
-    const resetPasswordTokenHash = hashToken(
-      token,
-      AUTH_CONFIG.resetPasswordSecret!,
-    );
+    const tokenHash = hashToken(token, AUTH_CONFIG.resetPasswordSecret!);
 
-    await userService.update(user.id, {
-      resetPasswordTokenHash,
-      resetPasswordExpiresAt: new Date(
-        Date.now() + AUTH_CONFIG.resetPasswordTokenExpiresIn,
-      ),
+    passwordVerificationTokenService.create({
+      userId: user.id,
+      tokenHash,
+      expiresAt: new Date(Date.now() + AUTH_CONFIG.resetPasswordTokenExpiresIn),
     });
 
-    await emailService.sendTemplateEmail(
+    emailService.sendTemplateEmail(
       user.email,
       "Reset Password",
       "ResetPassword",
@@ -278,26 +273,73 @@ export const AuthService = () => {
   };
 
   const resetPassword = async (payload: IResetPasswordPayload) => {
-    const user = await userService.findByResetToken(
+    const token = await passwordVerificationTokenService.findByResetToken(
       hashToken(payload.token, AUTH_CONFIG.resetPasswordSecret!),
     );
 
-    if (!user) {
+    if (!token) {
       return;
     }
 
-    if (
-      user.resetPasswordExpiresAt &&
-      new Date(user.resetPasswordExpiresAt).getTime() < Date.now()
-    ) {
+    if (new Date(token.expiresAt).getTime() < Date.now() || token.usedAt) {
       throw new AppError("AUTH_RESET_TOKEN_INVALID");
     }
 
-    await userService.update(user.id, {
+    userService.update(token.user.id, {
       password: payload.password,
-      resetPasswordTokenHash: null,
-      resetPasswordExpiresAt: null,
     });
+  };
+
+  const verifyEmail = async (payload: IVerifyEmailPayload) => {
+    const token = await emailVerificationTokenService.findByVerificationToken(
+      hashToken(String(payload.code), AUTH_CONFIG.verifyEmailSecret!),
+    );
+
+    if (!token) {
+      return;
+    }
+
+    if (new Date(token.expiresAt).getTime() < Date.now() || token.usedAt) {
+      throw new AppError("AUTH_EMAIL_VERIFICATION_TOKEN_INVALID");
+    }
+
+    const user = await userService.update(token.userId, {
+      emailVerified: true,
+    });
+
+    emailVerificationTokenService.consume(token.tokenHash);
+
+    const accessToken = generateToken("access", {
+      sub: String(user.id),
+    });
+
+    const idToken = generateToken("id", {
+      sub: String(user.id),
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+    });
+
+    const refreshToken = generateToken("refresh", {
+      sub: String(user.id),
+    });
+
+    const decodedRefreshToken = jwt.decode(refreshToken) as IRefreshTokenClaims;
+
+    const expiresAt = new Date(decodedRefreshToken.exp * 1000);
+    const tokenHash = hashToken(refreshToken, AUTH_CONFIG.refreshTokenSecret!);
+
+    refreshTokenService.create({
+      tokenHash,
+      userId: user.id,
+      expiresAt,
+    });
+
+    return {
+      accessToken,
+      refreshToken,
+      idToken,
+    };
   };
 
   return {
@@ -307,5 +349,6 @@ export const AuthService = () => {
     refreshTokens,
     forgotPassword,
     resetPassword,
+    verifyEmail,
   };
 };

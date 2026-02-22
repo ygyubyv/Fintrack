@@ -6,6 +6,7 @@ import type {
   ILogoutPayload,
   IResetPasswordPayload,
   IForgotPasswordPayload,
+  IVerifyEmailPayload,
 } from "../../../services/auth/types/auth.types";
 
 export const SignupSchema: z.ZodType<ISignupPayload> = z.object({
@@ -37,4 +38,11 @@ export const ForgotPasswordSchema: z.ZodType<IForgotPasswordPayload> = z.object(
 export const ResetPasswordSchema: z.ZodType<IResetPasswordPayload> = z.object({
   token: z.string(),
   password: z.string().min(6),
+});
+
+export const VerifyEmailSchema: z.ZodType<IVerifyEmailPayload> = z.object({
+  code: z
+    .number()
+    .min(100000)
+    .max(1000000 - 1),
 });

@@ -10,7 +10,5 @@ export interface IUpdateUser {
   lastName?: string;
   password?: string;
   email?: string;
-  resetPasswordTokenHash?: string | null;
-  resetPasswordExpiresAt?: Date | null;
-  lastLogin?: Date;
+  emailVerified?: boolean;
 }

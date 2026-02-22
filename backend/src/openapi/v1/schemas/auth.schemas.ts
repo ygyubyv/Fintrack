@@ -113,3 +113,17 @@ export const ResetPasswordRequestSchema = {
     },
   },
 };
+
+export const VerifyEmailRequestSchema = {
+  type: "object",
+  required: ["code"],
+  properties: {
+    code: {
+      type: "integer",
+      minimum: 100000,
+      maximum: 999999,
+      description: "6-digit verification code received via email",
+      example: 123456,
+    },
+  },
+};

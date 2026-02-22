@@ -6,12 +6,14 @@ import {
   SignupRequestSchema,
   ForgotPasswordRequestSchema,
   ResetPasswordRequestSchema,
+  VerifyEmailRequestSchema,
 } from "../schemas/auth.schemas";
 import { ErrorResponseSchema } from "../schemas/error-response.schema";
+
 export const authPaths = {
   "/api/v1/auth/signup": {
     post: {
-      summary: "User registration",
+      summary: "Sign up",
       tags: ["Authentication"],
 
       requestBody: {
@@ -24,8 +26,58 @@ export const authPaths = {
       },
 
       responses: {
+        201: {
+          description:
+            "User registration accepted. Verification code has been sent to email.",
+        },
+
+        409: {
+          description: "Email already exists (and already verified)",
+          content: {
+            "application/json": {
+              schema: ErrorResponseSchema,
+            },
+          },
+        },
+
+        422: {
+          description: "Validation error",
+          content: {
+            "application/json": {
+              schema: ErrorResponseSchema,
+            },
+          },
+        },
+
+        500: {
+          description: "Internal server error",
+          content: {
+            "application/json": {
+              schema: ErrorResponseSchema,
+            },
+          },
+        },
+      },
+    },
+  },
+
+  "/api/v1/auth/verify-email": {
+    post: {
+      summary: "Verify email ",
+      tags: ["Authentication"],
+
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: VerifyEmailRequestSchema,
+          },
+        },
+      },
+
+      responses: {
         200: {
-          description: "User successfully registered",
+          description: "Email verified successfully. Tokens issued.",
           content: {
             "application/json": {
               schema: AuthResponseSchema,
@@ -33,8 +85,8 @@ export const authPaths = {
           },
         },
 
-        409: {
-          description: "Email already exists",
+        400: {
+          description: "Email verification token is invalid (expired/used)",
           content: {
             "application/json": {
               schema: ErrorResponseSchema,
