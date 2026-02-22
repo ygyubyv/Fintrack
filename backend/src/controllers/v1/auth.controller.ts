@@ -1,4 +1,4 @@
-import { AuthService } from "../../services/auth.service";
+import { AuthService } from "../../services/auth/auth.service";
 import type { Request, Response, NextFunction } from "express";
 
 export const AuthController = () => {
@@ -102,10 +102,49 @@ export const AuthController = () => {
     }
   };
 
+  const forgotPassword = async (
+    request: Request,
+    response: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const { email } = request.body;
+
+      await AuthService().forgotPassword({
+        email,
+      });
+
+      return response.sendStatus(200);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  const resetPassword = async (
+    request: Request,
+    response: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const { token, password } = request.body;
+
+      await AuthService().resetPassword({
+        token,
+        password,
+      });
+
+      return response.sendStatus(204);
+    } catch (error) {
+      next(error);
+    }
+  };
+
   return {
     login,
     signup,
     logout,
     refresh,
+    forgotPassword,
+    resetPassword,
   };
 };

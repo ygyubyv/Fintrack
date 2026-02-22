@@ -4,7 +4,9 @@ import type {
   ILoginPayload,
   IRefreshTokensPayload,
   ILogoutPayload,
-} from "../../../types/v1/auth";
+  IResetPasswordPayload,
+  IForgotPasswordPayload,
+} from "../../../services/auth/types/auth.types";
 
 export const SignupSchema: z.ZodType<ISignupPayload> = z.object({
   firstName: z.string().min(1),
@@ -24,4 +26,15 @@ export const LogoutSchema: z.ZodType<ILogoutPayload> = z.object({
 
 export const RefreshSchema: z.ZodType<IRefreshTokensPayload> = z.object({
   refreshToken: z.string(),
+});
+
+export const ForgotPasswordSchema: z.ZodType<IForgotPasswordPayload> = z.object(
+  {
+    email: z.string().email(),
+  },
+);
+
+export const ResetPasswordSchema: z.ZodType<IResetPasswordPayload> = z.object({
+  token: z.string(),
+  password: z.string().min(6),
 });

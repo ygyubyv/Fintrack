@@ -18,6 +18,15 @@ export interface IRefreshTokensPayload {
   refreshToken: string;
 }
 
+export interface IForgotPasswordPayload {
+  email: string;
+}
+
+export interface IResetPasswordPayload {
+  token: string;
+  password: string;
+}
+
 export interface IAuthContext {
   ipAddress?: string;
   userAgent?: string;

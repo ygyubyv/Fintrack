@@ -1,14 +1,24 @@
 import bcrypt from "bcryptjs";
-import { prisma } from "../lib/prisma";
-import { ICreateUser, IUpdateUser } from "../types/v1";
-import { AppError } from "../errors/AppError";
-import { MapPrismaError } from "../errors/mapper/prisma-error.mapper";
+import { prisma } from "../../lib/prisma";
+import { ICreateUser, IUpdateUser } from "./types/user.types";
+import { AppError } from "../../errors/AppError";
+import { MapPrismaError } from "../../errors/mapper/prisma-error.mapper";
 
 export const UserService = () => {
   const findById = async (id: number) => {
     const user = await prisma.user.findUnique({
       where: {
         id,
+      },
+    });
+
+    return user;
+  };
+
+  const findByResetToken = async (resetPasswordTokenHash: string) => {
+    const user = await prisma.user.findUnique({
+      where: {
+        resetPasswordTokenHash,
       },
     });
 
@@ -94,6 +104,7 @@ export const UserService = () => {
   return {
     findById,
     findByEmail,
+    findByResetToken,
     create,
     update,
     remove,

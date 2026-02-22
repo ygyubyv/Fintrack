@@ -5,10 +5,14 @@ export const ERROR_CODES = {
   AUTH_INVALID_CREDENTIALS: "AUTH_INVALID_CREDENTIALS",
   AUTH_TOKEN_INVALID: "AUTH_TOKEN_INVALID",
   AUTH_TOKEN_EXPIRED: "AUTH_TOKEN_EXPIRED",
+  AUTH_RESET_TOKEN_INVALID: "AUTH_RESET_TOKEN_INVALID",
 
   // User
   USER_NOT_FOUND: "USER_NOT_FOUND",
   USER_EMAIL_EXISTS: "USER_EMAIL_EXISTS",
+
+  // Email
+  EMAIL_SEND_FAILED: "EMAIL_SEND_FAILED",
 
   // Shared
   VALIDATION_ERROR: "VALIDATION_ERROR",
@@ -36,6 +40,11 @@ export const ERROR_MAP: Record<ErrorCode, { status: number; message: string }> =
       message: "Token expired",
     },
 
+    AUTH_RESET_TOKEN_INVALID: {
+      status: 400,
+      message: "Reset token is invalid",
+    },
+
     // User
     USER_NOT_FOUND: {
       status: 404,
@@ -45,6 +54,12 @@ export const ERROR_MAP: Record<ErrorCode, { status: number; message: string }> =
     USER_EMAIL_EXISTS: {
       status: 409,
       message: "Email already exists",
+    },
+
+    // Email
+    EMAIL_SEND_FAILED: {
+      status: 500,
+      message: "Failed to send email",
     },
 
     // Shared

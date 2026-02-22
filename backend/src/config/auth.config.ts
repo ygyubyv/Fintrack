@@ -8,6 +8,9 @@ export const AUTH_CONFIG = {
   refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET,
   refreshTokenExpiresIn: "1w",
 
+  resetPasswordSecret: process.env.RESET_PASSWORD_SECRET,
+  resetPasswordTokenExpiresIn: 10 * 60 * 1000,
+
   jwtIssuer: process.env.JWT_ISSUER,
   jwtAudienceApi: process.env.JWT_AUDIENCE_API,
   jwtAudienceClient: process.env.JWT_AUDIENCE_CLIENT,

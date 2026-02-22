@@ -84,3 +84,32 @@ export const AuthResponseSchema = {
     },
   },
 };
+
+export const ForgotPasswordRequestSchema = {
+  type: "object",
+  required: ["email"],
+  properties: {
+    email: {
+      type: "string",
+      format: "email",
+      example: "john.doe@example.com",
+    },
+  },
+};
+
+export const ResetPasswordRequestSchema = {
+  type: "object",
+  required: ["token", "password"],
+  properties: {
+    token: {
+      type: "string",
+      description: "Reset password token received via email",
+      example: "a3f8c9e2b7d4...",
+    },
+    password: {
+      type: "string",
+      minLength: 6,
+      example: "NewSecurePassword123!",
+    },
+  },
+};

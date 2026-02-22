@@ -4,6 +4,8 @@ import {
   LogoutRequestSchema,
   RefreshRequestSchema,
   SignupRequestSchema,
+  ForgotPasswordRequestSchema,
+  ResetPasswordRequestSchema,
 } from "../schemas/auth.schemas";
 import { ErrorResponseSchema } from "../schemas/error-response.schema";
 export const authPaths = {
@@ -166,6 +168,95 @@ export const authPaths = {
         },
         401: {
           description: "Invalid refresh token",
+          content: {
+            "application/json": {
+              schema: ErrorResponseSchema,
+            },
+          },
+        },
+      },
+    },
+  },
+
+  "/api/v1/auth/forgot-password": {
+    post: {
+      summary: "Forgot password",
+      tags: ["Authentication"],
+
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: ForgotPasswordRequestSchema,
+          },
+        },
+      },
+
+      responses: {
+        200: {
+          description: "If the email exists, a reset link has been sent",
+        },
+
+        422: {
+          description: "Validation error",
+          content: {
+            "application/json": {
+              schema: ErrorResponseSchema,
+            },
+          },
+        },
+
+        500: {
+          description: "Internal server error",
+          content: {
+            "application/json": {
+              schema: ErrorResponseSchema,
+            },
+          },
+        },
+      },
+    },
+  },
+
+  "/api/v1/auth/reset-password": {
+    post: {
+      summary: "Reset password",
+      tags: ["Authentication"],
+
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: ResetPasswordRequestSchema,
+          },
+        },
+      },
+
+      responses: {
+        204: {
+          description: "Password successfully reset",
+        },
+
+        400: {
+          description: "Invalid reset token",
+          content: {
+            "application/json": {
+              schema: ErrorResponseSchema,
+            },
+          },
+        },
+
+        422: {
+          description: "Validation error",
+          content: {
+            "application/json": {
+              schema: ErrorResponseSchema,
+            },
+          },
+        },
+
+        500: {
+          description: "Internal server error",
           content: {
             "application/json": {
               schema: ErrorResponseSchema,

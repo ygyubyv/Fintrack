@@ -1,19 +1,27 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { UserService } from "./user.service";
-import { RefreshTokenService } from "./refresh-token.service";
+import { UserService } from "../user/user.service";
+import { RefreshTokenService } from "../refresh-token/refresh-token.service";
 import type { SignOptions } from "jsonwebtoken";
 import {
   IAuthContext,
+  IForgotPasswordPayload,
   ILoginPayload,
   ILogoutPayload,
   IRefreshTokenClaims,
   IRefreshTokensPayload,
+  IResetPasswordPayload,
   ISignupPayload,
-} from "../types/v1";
-import { AUTH_CONFIG } from "../config/auth.config";
-import { AppError } from "../errors/AppError";
+} from "./types/auth.types";
+import { AUTH_CONFIG } from "../../config/auth.config";
+import { AppError } from "../../errors/AppError";
 import crypto from "crypto";
+import { EmailService } from "../email/email.service";
+import { FRONTEND_URL } from "../../config/app.config";
+
+const generateHashToken = (length = 32) => {
+  return crypto.randomBytes(length).toString("hex");
+};
 
 const hashToken = (token: string, key: string) => {
   return crypto.createHmac("sha256", key).update(token).digest("hex");
@@ -73,6 +81,7 @@ const generateToken = (
 export const AuthService = () => {
   const userService = UserService();
   const refreshTokenService = RefreshTokenService();
+  const emailService = EmailService();
 
   const login = async (payload: ILoginPayload, context: IAuthContext) => {
     const user = await userService.findByEmail(payload.email);
@@ -237,10 +246,66 @@ export const AuthService = () => {
     }
   };
 
+  const forgotPassword = async (payload: IForgotPasswordPayload) => {
+    const user = await userService.findByEmail(payload.email);
+
+    if (!user) {
+      return;
+    }
+
+    const token = generateHashToken();
+    const resetPasswordTokenHash = hashToken(
+      token,
+      AUTH_CONFIG.resetPasswordSecret!,
+    );
+
+    await userService.update(user.id, {
+      resetPasswordTokenHash,
+      resetPasswordExpiresAt: new Date(
+        Date.now() + AUTH_CONFIG.resetPasswordTokenExpiresIn,
+      ),
+    });
+
+    await emailService.sendTemplateEmail(
+      user.email,
+      "Reset Password",
+      "ResetPassword",
+      {
+        firstName: user.firstName,
+        resetLink: `${FRONTEND_URL}/auth?mode=reset&token=${token}`,
+      },
+    );
+  };
+
+  const resetPassword = async (payload: IResetPasswordPayload) => {
+    const user = await userService.findByResetToken(
+      hashToken(payload.token, AUTH_CONFIG.resetPasswordSecret!),
+    );
+
+    if (!user) {
+      return;
+    }
+
+    if (
+      user.resetPasswordExpiresAt &&
+      new Date(user.resetPasswordExpiresAt).getTime() < Date.now()
+    ) {
+      throw new AppError("AUTH_RESET_TOKEN_INVALID");
+    }
+
+    await userService.update(user.id, {
+      password: payload.password,
+      resetPasswordTokenHash: null,
+      resetPasswordExpiresAt: null,
+    });
+  };
+
   return {
     login,
     signup,
     logout,
     refreshTokens,
+    forgotPassword,
+    resetPassword,
   };
 };
