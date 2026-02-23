@@ -1,4 +1,9 @@
-export type AuthMode = "login" | "register" | "reset" | "forgot";
+export type AuthMode =
+  | "login"
+  | "register"
+  | "reset"
+  | "forgot"
+  | "verify-email";
 
 export interface ILoginPayload {
   email: string;
@@ -19,4 +24,8 @@ export interface IForgotPasswordPayload {
 export interface IResetPasswordPayload {
   token: string;
   password: string;
+}
+
+export interface IVerifyEmailPayload {
+  code: number;
 }

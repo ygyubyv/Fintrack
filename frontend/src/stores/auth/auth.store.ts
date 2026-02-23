@@ -9,6 +9,7 @@ import type {
   ILoginPayload,
   IResetPasswordPayload,
   ISignupPayload,
+  IVerifyEmailPayload,
 } from "./types";
 
 export const useAuthStore = defineStore("auth", () => {
@@ -76,13 +77,7 @@ export const useAuthStore = defineStore("auth", () => {
     isLoading.value = true;
 
     try {
-      const { data } = await AuthService().signup(payload);
-
-      if (!data) {
-        return;
-      }
-
-      setSession(data.accessToken, data.refreshToken, data.idToken);
+      await AuthService().signup(payload);
     } finally {
       isLoading.value = false;
     }
@@ -152,6 +147,22 @@ export const useAuthStore = defineStore("auth", () => {
     }
   };
 
+  const verifyEmail = async (payload: IVerifyEmailPayload) => {
+    isLoading.value = true;
+
+    try {
+      const { data } = await AuthService().verifyEmail(payload);
+
+      if (!data) {
+        return;
+      }
+
+      setSession(data.accessToken, data.refreshToken, data.idToken);
+    } finally {
+      isLoading.value = false;
+    }
+  };
+
   const bootstrap = async () => {
     if (isInitialized.value) {
       return;
@@ -196,6 +207,7 @@ export const useAuthStore = defineStore("auth", () => {
     refresh,
     forgotPassword,
     resetPassword,
+    verifyEmail,
     bootstrap,
     isExpired,
   };

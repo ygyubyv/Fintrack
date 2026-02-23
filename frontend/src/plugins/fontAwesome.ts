@@ -11,6 +11,7 @@ import {
   faUserPlus,
   faPaperPlane,
   faKey,
+  faLock,
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(
@@ -23,6 +24,7 @@ library.add(
   faUserPlus,
   faPaperPlane,
   faKey,
+  faLock,
 );
 
 export { FontAwesomeIcon };

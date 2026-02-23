@@ -7,6 +7,7 @@ import type {
   IRefreshTokensPayload,
   IResetPasswordPayload,
   ISignupPayload,
+  IVerifyEmailPayload,
 } from "../types";
 
 export const AuthService = () => {
@@ -19,7 +20,7 @@ export const AuthService = () => {
   };
 
   const signup = async (payload: ISignupPayload) => {
-    return await axiosInstance.post<IAuthResponse>("/auth/signup", payload, {
+    await axiosInstance.post("/auth/signup", payload, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -58,6 +59,18 @@ export const AuthService = () => {
     });
   };
 
+  const verifyEmail = async (payload: IVerifyEmailPayload) => {
+    return await axiosInstance.post<IAuthResponse>(
+      "/auth/verify-email",
+      payload,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+  };
+
   return {
     login,
     signup,
@@ -65,5 +78,6 @@ export const AuthService = () => {
     refresh,
     forgotPassword,
     resetPassword,
+    verifyEmail,
   };
 };

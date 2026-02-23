@@ -29,6 +29,10 @@ export interface IResetPasswordPayload {
   password: string;
 }
 
+export interface IVerifyEmailPayload {
+  code: number;
+}
+
 export interface IAuthResponse {
   accessToken: string;
   idToken: string;

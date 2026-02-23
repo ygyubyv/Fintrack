@@ -67,10 +67,6 @@ router.beforeEach(async (to) => {
   const { bootstrap } = authStore;
   const { isAuthenticated } = storeToRefs(authStore);
 
-  if (to.meta.requiresUnauth && isAuthenticated.value) {
-    return { name: "main" };
-  }
-
   // Await auth if page requires authenticated
   if (to.meta.requiresAuth && !isAuthenticated.value) {
     await bootstrap();
@@ -83,6 +79,10 @@ router.beforeEach(async (to) => {
   // Async auth if page is public
   if (!to.meta.requiresAuth && !to.meta.requiresunauth) {
     bootstrap();
+  }
+
+  if (to.meta.requiresUnauth && isAuthenticated.value) {
+    return { name: "main" };
   }
 });
 

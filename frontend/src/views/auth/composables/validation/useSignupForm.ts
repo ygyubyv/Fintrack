@@ -36,7 +36,10 @@ export const useSignupForm = () => {
       });
 
       router.replace({
-        name: "main",
+        name: "auth",
+        query: {
+          mode: "verify-email",
+        },
       });
     } catch (error) {
       console.error(error);

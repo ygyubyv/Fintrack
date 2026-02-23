@@ -7,6 +7,7 @@ import RegisterForm from "./components/RegisterForm.vue";
 import AuthSwitcher from "./components/AuthSwitcher.vue";
 import ForgotPasswordForm from "./components/ForgotPasswordForm.vue";
 import ResetPasswordForm from "./components/ResetPasswordForm.vue";
+import VerifyEmailForm from "./components/VerifyEmailForm.vue";
 
 import { useRouteQuery } from "@vueuse/router";
 
@@ -25,6 +26,9 @@ const currentComponent = computed(() => {
 
     case "reset":
       return ResetPasswordForm;
+
+    case "verify-email":
+      return VerifyEmailForm;
   }
 });
 
