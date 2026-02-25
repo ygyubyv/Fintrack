@@ -13,7 +13,7 @@ model User {
   lastName   String
   email      String   @unique
   emailVerified Boolean @default(false)
-  password   String
+  password   String?
 
   lastLogin  LastLogin?
 
@@ -33,7 +33,8 @@ model LastLogin {
 
   userAgent String?
   ipAddress String?
-  createdAt DateTime @default(now())
+  
+  lastLoginAt DateTime @updatedAt
 }
 
 model PasswordResetToken {

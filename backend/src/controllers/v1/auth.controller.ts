@@ -141,6 +141,32 @@ export const AuthController = () => {
     }
   };
 
+  const google = async (
+    request: Request,
+    response: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const { idToken } = request.body;
+      const userAgent = request.get("user-agent");
+      const ipAddress = request.ip;
+
+      const tokens = await AuthService().google(
+        {
+          idToken,
+        },
+        {
+          ipAddress,
+          userAgent,
+        },
+      );
+
+      return response.status(200).json(tokens);
+    } catch (error) {
+      next(error);
+    }
+  };
+
   return {
     login,
     signup,
@@ -149,5 +175,6 @@ export const AuthController = () => {
     forgotPassword,
     resetPassword,
     verifyEmail,
+    google,
   };
 };

@@ -7,6 +7,7 @@ import type {
   IResetPasswordPayload,
   IForgotPasswordPayload,
   IVerifyEmailPayload,
+  IGooglePayload,
 } from "../../../services/auth/types/auth.types";
 
 export const SignupSchema: z.ZodType<ISignupPayload> = z.object({
@@ -45,4 +46,8 @@ export const VerifyEmailSchema: z.ZodType<IVerifyEmailPayload> = z.object({
     .number()
     .min(100000)
     .max(1000000 - 1),
+});
+
+export const GoogleSchema: z.ZodType<IGooglePayload> = z.object({
+  idToken: z.string(),
 });

@@ -127,3 +127,15 @@ export const VerifyEmailRequestSchema = {
     },
   },
 };
+
+export const GoogleRequestSchema = {
+  type: "object",
+  required: ["idToken"],
+  properties: {
+    idToken: {
+      type: "string",
+      description: "Google ID token received from Google Sign-In / OAuth (JWT)",
+      example: "eyJhbGciOiJSUzI1NiIsImtpZCI6Ij...google-id-token...",
+    },
+  },
+};

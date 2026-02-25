@@ -11,6 +11,7 @@ import type {
   ISignupPayload,
   IVerifyEmailPayload,
 } from "./types";
+import type { CredentialResponse } from "vue3-google-signin";
 
 export const useAuthStore = defineStore("auth", () => {
   const state = ref<AuthState>("anonymous");
@@ -163,6 +164,28 @@ export const useAuthStore = defineStore("auth", () => {
     }
   };
 
+  const googleAuth = async (payload: CredentialResponse) => {
+    isLoading.value = true;
+
+    try {
+      if (!payload.credential) {
+        return;
+      }
+
+      const { data } = await AuthService().googleAuth({
+        idToken: payload.credential,
+      });
+
+      if (!data) {
+        return;
+      }
+
+      setSession(data.accessToken, data.refreshToken, data.idToken);
+    } finally {
+      isLoading.value = false;
+    }
+  };
+
   const bootstrap = async () => {
     if (isInitialized.value) {
       return;
@@ -208,6 +231,7 @@ export const useAuthStore = defineStore("auth", () => {
     forgotPassword,
     resetPassword,
     verifyEmail,
+    googleAuth,
     bootstrap,
     isExpired,
   };

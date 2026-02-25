@@ -3,9 +3,10 @@ import { loginSchema } from "./schemas/login.schema";
 import type { ISignupPayload } from "../../types";
 import { useAuthStore } from "@/stores/auth/auth.store";
 import { useRouter } from "vue-router";
+import type { CredentialResponse } from "vue3-google-signin";
 
 export const useSignupForm = () => {
-  const { signup } = useAuthStore();
+  const { signup, googleAuth } = useAuthStore();
 
   const router = useRouter();
 
@@ -46,6 +47,18 @@ export const useSignupForm = () => {
     }
   });
 
+  const handleGoogleAuth = async (payload: CredentialResponse) => {
+    try {
+      await googleAuth(payload);
+
+      router.replace({
+        name: "main",
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return {
     meta,
     firstName,
@@ -59,5 +72,6 @@ export const useSignupForm = () => {
     errors,
     resetForm,
     onSubmit,
+    handleGoogleAuth,
   };
 };

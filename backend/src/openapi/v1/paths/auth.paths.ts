@@ -7,6 +7,7 @@ import {
   ForgotPasswordRequestSchema,
   ResetPasswordRequestSchema,
   VerifyEmailRequestSchema,
+  GoogleRequestSchema,
 } from "../schemas/auth.schemas";
 import { ErrorResponseSchema } from "../schemas/error-response.schema";
 
@@ -63,7 +64,7 @@ export const authPaths = {
 
   "/api/v1/auth/verify-email": {
     post: {
-      summary: "Verify email ",
+      summary: "Verify email",
       tags: ["Authentication"],
 
       requestBody: {
@@ -87,6 +88,60 @@ export const authPaths = {
 
         400: {
           description: "Email verification token is invalid (expired/used)",
+          content: {
+            "application/json": {
+              schema: ErrorResponseSchema,
+            },
+          },
+        },
+
+        422: {
+          description: "Validation error",
+          content: {
+            "application/json": {
+              schema: ErrorResponseSchema,
+            },
+          },
+        },
+
+        500: {
+          description: "Internal server error",
+          content: {
+            "application/json": {
+              schema: ErrorResponseSchema,
+            },
+          },
+        },
+      },
+    },
+  },
+
+  "/api/v1/auth/google": {
+    post: {
+      summary: "Sign in with Google",
+      tags: ["Authentication"],
+
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: GoogleRequestSchema,
+          },
+        },
+      },
+
+      responses: {
+        200: {
+          description: "User successfully authenticated with Google",
+          content: {
+            "application/json": {
+              schema: AuthResponseSchema,
+            },
+          },
+        },
+
+        400: {
+          description: "Google ID token is invalid",
           content: {
             "application/json": {
               schema: ErrorResponseSchema,

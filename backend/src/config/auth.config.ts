@@ -14,6 +14,9 @@ export const AUTH_CONFIG = {
   verifyEmailSecret: process.env.VERIFY_EMAIL_SECRET,
   verifyEmailTokenExpiresIn: 10 * 60 * 1000,
 
+  googleClientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  googleClientId: process.env.GOOGLE_CLIENT_ID,
+
   jwtIssuer: process.env.JWT_ISSUER,
   jwtAudienceApi: process.env.JWT_AUDIENCE_API,
   jwtAudienceClient: process.env.JWT_AUDIENCE_CLIENT,

@@ -27,7 +27,8 @@ export const UserService = () => {
 
   const create = async (payload: ICreateUser) => {
     try {
-      const hashedPassword = await bcrypt.hash(payload.password, 8);
+      const hashedPassword =
+        payload.password && (await bcrypt.hash(payload.password, 8));
 
       return await prisma.user.create({
         data: {

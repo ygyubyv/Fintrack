@@ -13,6 +13,7 @@ import {
   IRefreshTokensPayload,
   IResetPasswordPayload,
   ISignupPayload,
+  IGooglePayload,
 } from "./types/auth.types";
 import { AUTH_CONFIG } from "../../config/auth.config";
 import { AppError } from "../../errors/AppError";
@@ -22,6 +23,7 @@ import { FRONTEND_URL } from "../../config/app.config";
 import { PasswordResetTokenService } from "../password-reset-token/password-reset-token.service";
 import { EmailVerificationTokenService } from "../email-verification-token/email-verification-token.service";
 import { LastLoginService } from "../last-login/last-login.service";
+import { OAuth2Client } from "google-auth-library";
 
 const generateHashToken = (length = 32) => {
   return crypto.randomBytes(length).toString("hex");
@@ -98,7 +100,7 @@ export const AuthService = () => {
     const user = await userService.findByEmail(payload.email);
 
     const passwordMatched =
-      user && (await bcrypt.compare(payload.password, user.password));
+      user && (await bcrypt.compare(payload.password, user.password!));
 
     if (!passwordMatched) {
       throw new AppError("AUTH_INVALID_CREDENTIALS");
@@ -342,6 +344,69 @@ export const AuthService = () => {
     };
   };
 
+  const google = async (payload: IGooglePayload, context: IAuthContext) => {
+    const client = new OAuth2Client();
+
+    const ticket = await client.verifyIdToken({
+      idToken: payload.idToken,
+      audience: AUTH_CONFIG.googleClientId,
+    });
+
+    const data = ticket.getPayload();
+
+    if (!data) {
+      throw new AppError("AUTH_GOOGLE_ID_TOKEN_INVALID");
+    }
+
+    const user =
+      (await userService.findByEmail(data.email!)) ||
+      (await userService.create({
+        email: data.email!,
+        firstName: data.given_name || data.name?.split(" ")[0] || "",
+        lastName:
+          data.family_name || data.name?.split(" ").slice(1).join(" ") || "",
+        emailVerified: data.email_verified || false,
+      }));
+
+    const accessToken = generateToken("access", {
+      sub: String(user.id),
+    });
+
+    const idToken = generateToken("id", {
+      sub: String(user.id),
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+    });
+
+    const refreshToken = generateToken("refresh", {
+      sub: String(user.id),
+    });
+
+    const decodedRefreshToken = jwt.decode(refreshToken) as IRefreshTokenClaims;
+
+    const expiresAt = new Date(decodedRefreshToken.exp * 1000);
+    const tokenHash = hashToken(refreshToken, AUTH_CONFIG.refreshTokenSecret!);
+
+    refreshTokenService.create({
+      tokenHash,
+      userId: user.id,
+      expiresAt,
+    });
+
+    lastLoginService.upsert({
+      userId: user.id,
+      ipAddress: context.ipAddress,
+      userAgent: context.userAgent,
+    });
+
+    return {
+      accessToken,
+      refreshToken,
+      idToken,
+    };
+  };
+
   return {
     login,
     signup,
@@ -350,5 +415,6 @@ export const AuthService = () => {
     forgotPassword,
     resetPassword,
     verifyEmail,
+    google,
   };
 };

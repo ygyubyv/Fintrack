@@ -8,6 +8,7 @@ export const ERROR_CODES = {
   AUTH_RESET_TOKEN_INVALID: "AUTH_RESET_TOKEN_INVALID",
   AUTH_EMAIL_VERIFICATION_TOKEN_INVALID:
     "AUTH_EMAIL_VERIFICATION_TOKEN_INVALID",
+  AUTH_GOOGLE_ID_TOKEN_INVALID: "AUTH_GOOGLE_ID_TOKEN_INVALID",
 
   // User
   USER_NOT_FOUND: "USER_NOT_FOUND",
@@ -50,6 +51,11 @@ export const ERROR_MAP: Record<ErrorCode, { status: number; message: string }> =
     AUTH_EMAIL_VERIFICATION_TOKEN_INVALID: {
       status: 400,
       message: "Email verification token is invalid",
+    },
+
+    AUTH_GOOGLE_ID_TOKEN_INVALID: {
+      status: 400,
+      message: "Google ID token is invalid",
     },
 
     // User

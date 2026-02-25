@@ -33,6 +33,10 @@ export interface IVerifyEmailPayload {
   code: number;
 }
 
+export interface IGoogleAuthPayload {
+  idToken: string;
+}
+
 export interface IAuthResponse {
   accessToken: string;
   idToken: string;

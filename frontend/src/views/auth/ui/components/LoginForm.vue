@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import BaseButton from "@/components/base/BaseButton.vue";
 import BaseInput from "@/components/base/BaseInput.vue";
+import { GoogleSignInButton } from "vue3-google-signin";
+
 import { useLoginForm } from "../../composables/validation/useLoginForm";
 
 const {
@@ -12,6 +14,7 @@ const {
   meta,
   onSubmit,
   resetForm,
+  handleGoogleAuth,
 } = useLoginForm();
 </script>
 
@@ -69,6 +72,18 @@ const {
         type="submit"
         :disabled="!meta.valid || !meta.dirty"
       />
+    </div>
+
+    <!-- Divider -->
+    <div class="flex items-center gap-4 my-6">
+      <div class="flex-1 h-px bg-gray-200" />
+      <span class="text-sm text-gray-400">OR</span>
+      <div class="flex-1 h-px bg-gray-200" />
+    </div>
+
+    <!-- Google Button -->
+    <div class="flex justify-center">
+      <GoogleSignInButton @success="handleGoogleAuth"></GoogleSignInButton>
     </div>
   </form>
 </template>

@@ -2,6 +2,7 @@ import axiosInstance from "@/plugins/axios.plugin";
 import type {
   IAuthResponse,
   IForgotPasswordPayload,
+  IGoogleAuthPayload,
   ILoginPayload,
   ILogoutPayload,
   IRefreshTokensPayload,
@@ -71,6 +72,14 @@ export const AuthService = () => {
     );
   };
 
+  const googleAuth = async (payload: IGoogleAuthPayload) => {
+    return await axiosInstance.post<IAuthResponse>("/auth/google", payload, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  };
+
   return {
     login,
     signup,
@@ -79,5 +88,6 @@ export const AuthService = () => {
     forgotPassword,
     resetPassword,
     verifyEmail,
+    googleAuth,
   };
 };

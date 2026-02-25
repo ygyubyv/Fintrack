@@ -9,6 +9,7 @@ import {
   ForgotPasswordSchema,
   ResetPasswordSchema,
   VerifyEmailSchema,
+  GoogleSchema,
 } from "../../validation/schemas/v1/auth.schema";
 
 const router = express.Router();
@@ -20,6 +21,7 @@ const {
   forgotPassword,
   resetPassword,
   verifyEmail,
+  google,
 } = AuthController();
 
 router.post("/login", ValidateMiddleware(LoginSchema), login);
@@ -41,5 +43,6 @@ router.post(
   ValidateMiddleware(VerifyEmailSchema),
   verifyEmail,
 );
+router.post("/google", ValidateMiddleware(GoogleSchema), google);
 
 export default router;

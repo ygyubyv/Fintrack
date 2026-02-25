@@ -31,6 +31,10 @@ export interface IVerifyEmailPayload {
   code: number;
 }
 
+export interface IGooglePayload {
+  idToken: string;
+}
+
 export interface IAuthContext {
   ipAddress?: string;
   userAgent?: string;
