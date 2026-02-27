@@ -1,0 +1,31 @@
+model Expense {
+  id        Int     @id @default(autoincrement())
+  value     Decimal @db.Decimal(12, 2)
+  description String?
+
+  expenseType      ExpenseType
+  paymentType      PaymentType
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  categoryId Int?
+  category   Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  
+  tags Tag[]
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([userId])
+}
+
+enum ExpenseType {
+  INCOME
+  EXPENSE
+}
+
+enum PaymentType {
+  CARD
+  CASH
+}

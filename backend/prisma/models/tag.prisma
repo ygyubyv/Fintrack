@@ -1,0 +1,16 @@
+model Tag {
+  id        Int     @id @default(autoincrement())
+
+  title String
+  color String
+
+  userId   Int
+  user     User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  expenses Expense[]
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([title, userId])
+}

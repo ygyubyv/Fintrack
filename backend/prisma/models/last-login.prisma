@@ -1,0 +1,11 @@
+model LastLogin {
+  id        Int      @id @default(autoincrement())
+
+  userId    Int      @unique 
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  userAgent String?
+  ipAddress String?
+  
+  lastLoginAt DateTime @updatedAt
+}

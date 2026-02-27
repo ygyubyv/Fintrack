@@ -24,25 +24,25 @@ const {
   google,
 } = AuthController();
 
-router.post("/login", ValidateMiddleware(LoginSchema), login);
-router.post("/signup", ValidateMiddleware(SignupSchema), signup);
-router.post("/logout", ValidateMiddleware(LogoutSchema), logout);
-router.post("/refresh", ValidateMiddleware(RefreshSchema), refresh);
+router.post("/login", ValidateMiddleware({ body: LoginSchema }), login);
+router.post("/signup", ValidateMiddleware({ body: SignupSchema }), signup);
+router.post("/logout", ValidateMiddleware({ body: LogoutSchema }), logout);
+router.post("/refresh", ValidateMiddleware({ body: RefreshSchema }), refresh);
 router.post(
   "/forgot-password",
-  ValidateMiddleware(ForgotPasswordSchema),
+  ValidateMiddleware({ body: ForgotPasswordSchema }),
   forgotPassword,
 );
 router.post(
   "/reset-password",
-  ValidateMiddleware(ResetPasswordSchema),
+  ValidateMiddleware({ body: ResetPasswordSchema }),
   resetPassword,
 );
 router.post(
   "/verify-email",
-  ValidateMiddleware(VerifyEmailSchema),
+  ValidateMiddleware({ body: VerifyEmailSchema }),
   verifyEmail,
 );
-router.post("/google", ValidateMiddleware(GoogleSchema), google);
+router.post("/google", ValidateMiddleware({ body: GoogleSchema }), google);
 
 export default router;

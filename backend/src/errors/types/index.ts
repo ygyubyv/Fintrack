@@ -14,6 +14,17 @@ export const ERROR_CODES = {
   USER_NOT_FOUND: "USER_NOT_FOUND",
   USER_EMAIL_EXISTS: "USER_EMAIL_EXISTS",
 
+  // Tag
+  TAG_NOT_FOUND: "TAG_NOT_FOUND",
+  TAG_EXISTS: "TAG_EXISTS",
+
+  // Category
+  CATEGORY_NOT_FOUND: "CATEGORY_NOT_FOUND",
+  CATEGORY_EXISTS: "CATEGORY_EXISTS",
+
+  // Expense
+  EXPENSE_NOT_FOUND: "EXPENSE_NOT_FOUND",
+
   // Email
   EMAIL_SEND_FAILED: "EMAIL_SEND_FAILED",
 
@@ -67,6 +78,34 @@ export const ERROR_MAP: Record<ErrorCode, { status: number; message: string }> =
     USER_EMAIL_EXISTS: {
       status: 409,
       message: "Email already exists",
+    },
+
+    // Tag
+    TAG_NOT_FOUND: {
+      status: 404,
+      message: "Tag not found",
+    },
+
+    TAG_EXISTS: {
+      status: 409,
+      message: "Tag already exists",
+    },
+
+    // Category
+    CATEGORY_NOT_FOUND: {
+      status: 404,
+      message: "Category not found",
+    },
+
+    CATEGORY_EXISTS: {
+      status: 409,
+      message: "Category already exists",
+    },
+
+    // Expense
+    EXPENSE_NOT_FOUND: {
+      status: 404,
+      message: "Expense not found",
     },
 
     // Email

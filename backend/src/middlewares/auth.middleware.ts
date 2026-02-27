@@ -23,7 +23,7 @@ export const AuthMiddleware = async (
     const decoded = jwt.verify(token, accessTokenSecret!) as JwtPayload;
 
     request.user = {
-      id: decoded.sub!,
+      id: Number(decoded.sub!),
     };
 
     next();
