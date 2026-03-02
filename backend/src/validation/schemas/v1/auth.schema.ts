@@ -11,15 +11,15 @@ import type {
 } from "../../../services/auth/types/auth.types";
 
 export const SignupSchema: z.ZodType<ISignupPayload> = z.object({
-  firstName: z.string().min(1),
-  lastName: z.string().min(1),
-  email: z.string().email(),
-  password: z.string().min(6),
+  firstName: z.string().min(1).max(100),
+  lastName: z.string().min(1).max(100),
+  email: z.string().email().max(254),
+  password: z.string().min(6).max(128),
 });
 
 export const LoginSchema: z.ZodType<ILoginPayload> = z.object({
-  email: z.string().email(),
-  password: z.string().min(6),
+  email: z.string().email().max(254),
+  password: z.string().min(6).max(128),
 });
 
 export const LogoutSchema: z.ZodType<ILogoutPayload> = z.object({
@@ -32,13 +32,13 @@ export const RefreshSchema: z.ZodType<IRefreshTokensPayload> = z.object({
 
 export const ForgotPasswordSchema: z.ZodType<IForgotPasswordPayload> = z.object(
   {
-    email: z.string().email(),
+    email: z.string().email().max(254),
   },
 );
 
 export const ResetPasswordSchema: z.ZodType<IResetPasswordPayload> = z.object({
   token: z.string(),
-  password: z.string().min(6),
+  password: z.string().min(6).max(128),
 });
 
 export const VerifyEmailSchema: z.ZodType<IVerifyEmailPayload> = z.object({

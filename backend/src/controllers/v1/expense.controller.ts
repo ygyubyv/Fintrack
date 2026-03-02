@@ -5,6 +5,8 @@ import {
   TPaymentType,
 } from "../../services/expense/types/expense.types";
 import { TSortDirection } from "../../types/v1";
+import { AppError } from "../../errors/AppError";
+import { toExpenseResponse } from "../../dto/expense/expense.response.dto";
 
 export const ExpenseController = () => {
   const getById = async (
@@ -20,7 +22,13 @@ export const ExpenseController = () => {
         id: Number(id),
       });
 
-      return response.status(200).json(expense);
+      if (!expense) {
+        throw new AppError("EXPENSE_NOT_FOUND");
+      }
+
+      const formattedExpense = toExpenseResponse(expense);
+
+      return response.status(200).json(formattedExpense);
     } catch (error) {
       next(error);
     }
@@ -64,9 +72,9 @@ export const ExpenseController = () => {
         expenseType: expenseType as TExpenseType,
         paymentType: paymentType as TPaymentType,
         categoryId: Number(categoryId),
-        tagIds: Array.isArray(tagIds) ? tagIds.map(Number) : [Number(tagIds)],
-        createdFromDate: new Date(createdFromDate as string),
-        createdToDate: new Date(createdToDate as string),
+        tagIds: Array.isArray(tagIds) ? tagIds.map(Number) : undefined,
+        createdFromDate: createdFromDate as unknown as Date,
+        createdToDate: createdToDate as unknown as Date,
         orderByCreatedAt: !!orderByCreatedAt,
         orderByCreatedAtDirection: orderByCreatedAtDirection as TSortDirection,
         orderByValue: !!orderByValue,
@@ -79,7 +87,14 @@ export const ExpenseController = () => {
           orderByPaymentTypeDirection as TSortDirection,
       });
 
-      return response.status(200).json(expenses);
+      const formattedExpenses = {
+        data: expenses.data.map((expense) => {
+          return toExpenseResponse(expense);
+        }),
+        meta: expenses.meta,
+      };
+
+      return response.status(200).json(formattedExpenses);
     } catch (error) {
       next(error);
     }
@@ -110,7 +125,9 @@ export const ExpenseController = () => {
         tagIds,
       });
 
-      return response.status(201).json(expense);
+      const formattedExpense = toExpenseResponse(expense);
+
+      return response.status(201).json(formattedExpense);
     } catch (error) {
       next(error);
     }
@@ -142,7 +159,9 @@ export const ExpenseController = () => {
         tagIds,
       });
 
-      return response.status(200).json(expense);
+      const formattedExpense = toExpenseResponse(expense);
+
+      return response.status(200).json(formattedExpense);
     } catch (error) {
       next(error);
     }

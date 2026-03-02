@@ -2,11 +2,15 @@ import { PaginationMetaSchema } from "./pagination.schemas";
 
 export const CategorySchema = {
   type: "object",
-  required: ["id", "title", "userId", "createdAt", "updatedAt"],
+  required: ["id", "title", "createdAt", "updatedAt"],
   properties: {
     id: { type: "integer", minimum: 1, example: 1 },
-    title: { type: "string", example: "Groceries" },
-    userId: { type: "integer", minimum: 1, example: 10 },
+    title: {
+      type: "string",
+      minLength: 1,
+      maxLength: 50,
+      example: "Groceries",
+    },
     createdAt: {
       type: "string",
       format: "date-time",
@@ -33,7 +37,12 @@ export const CreateCategoryRequestSchema = {
   type: "object",
   required: ["title"],
   properties: {
-    title: { type: "string", example: "Groceries" },
+    title: {
+      type: "string",
+      minLength: 1,
+      maxLength: 50,
+      example: "Groceries",
+    },
   },
 };
 
@@ -41,6 +50,11 @@ export const UpdateCategoryRequestSchema = {
   type: "object",
   additionalProperties: false,
   properties: {
-    title: { type: "string", example: "Groceries & Household" },
+    title: {
+      type: "string",
+      minLength: 1,
+      maxLength: 50,
+      example: "Groceries & Household",
+    },
   },
 };

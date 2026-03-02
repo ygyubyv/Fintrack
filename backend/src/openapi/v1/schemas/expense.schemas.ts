@@ -27,20 +27,27 @@ export const ExpenseSchema = {
     "value",
     "expenseType",
     "paymentType",
-    "userId",
+    "tags",
     "createdAt",
     "updatedAt",
   ],
   properties: {
     id: { type: "integer", minimum: 1, example: 1 },
     value: ExpenseValueSchema,
-    description: { type: "string", nullable: true, example: "Coffee" },
+
+    description: {
+      type: "string",
+      minLength: 1,
+      maxLength: 255,
+      example: "Coffee",
+    },
 
     expenseType: ExpenseTypeSchema,
     paymentType: PaymentTypeSchema,
 
-    userId: { type: "integer", minimum: 1, example: 10 },
-    categoryId: { type: "integer", minimum: 1, nullable: true, example: 3 },
+    category: { ...CategorySchema, nullable: true },
+
+    tags: { type: "array", items: TagSchema, example: [] },
 
     createdAt: {
       type: "string",
@@ -55,15 +62,7 @@ export const ExpenseSchema = {
   },
 };
 
-export const ExpenseDetailsSchema = {
-  ...ExpenseSchema,
-  required: [...ExpenseSchema.required, "tags", "category"],
-  properties: {
-    ...ExpenseSchema.properties,
-    tags: { type: "array", items: TagSchema },
-    category: { ...CategorySchema, nullable: true },
-  },
-};
+export const ExpenseDetailsSchema = ExpenseSchema;
 
 export const ExpenseListResponseSchema = {
   type: "object",
@@ -79,7 +78,12 @@ export const CreateExpenseRequestSchema = {
   required: ["value", "expenseType", "paymentType"],
   properties: {
     value: { type: "number", minimum: 1, example: 1250 },
-    description: { type: "string", example: "Coffee" },
+    description: {
+      type: "string",
+      minLength: 1,
+      maxLength: 255,
+      example: "Coffee",
+    },
     expenseType: ExpenseTypeSchema,
     paymentType: PaymentTypeSchema,
     categoryId: { type: "integer", minimum: 1, example: 3 },
@@ -96,10 +100,15 @@ export const UpdateExpenseRequestSchema = {
   additionalProperties: false,
   properties: {
     value: { type: "number", minimum: 1, example: 990 },
-    description: { type: "string", example: "Lunch" },
+    description: {
+      type: "string",
+      minLength: 1,
+      maxLength: 255,
+      example: "Lunch",
+    },
     expenseType: ExpenseTypeSchema,
     paymentType: PaymentTypeSchema,
-    categoryId: { type: "integer", minimum: 1, nullable: true, example: 2 },
+    categoryId: { type: "integer", minimum: 1, example: 2 },
     tagIds: {
       type: "array",
       items: { type: "integer", minimum: 1 },

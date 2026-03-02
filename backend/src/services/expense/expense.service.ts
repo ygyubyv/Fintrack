@@ -90,6 +90,10 @@ export const ExpenseService = () => {
             }
           : {}),
       },
+      include: {
+        tags: true,
+        category: true,
+      },
       skip,
       take,
       orderBy: {
@@ -143,6 +147,10 @@ export const ExpenseService = () => {
           ? { connect: payload.tagIds.map((id) => ({ id })) }
           : undefined,
       },
+      include: {
+        tags: true,
+        category: true,
+      },
     });
   };
 
@@ -171,6 +179,10 @@ export const ExpenseService = () => {
                 set: payload.tagIds.map((id) => ({ id })),
               }
             : undefined,
+        },
+        include: {
+          tags: true,
+          category: true,
         },
       });
     } catch (error) {

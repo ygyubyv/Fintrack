@@ -29,15 +29,13 @@ export const expensePaths = {
           schema: { type: "integer", minimum: 1, maximum: 100 },
           example: 10,
         },
-
         {
           name: "description",
           in: "query",
           required: false,
-          schema: { type: "string" },
+          schema: { type: "string", minLength: 1, maxLength: 255 },
           example: "coffee",
         },
-
         {
           name: "valueFrom",
           in: "query",
@@ -76,7 +74,6 @@ export const expensePaths = {
           example: 3,
         },
 
-        // tagIds як масив: ?tagIds=1&tagIds=2
         {
           name: "tagIds",
           in: "query",
@@ -102,7 +99,6 @@ export const expensePaths = {
           example: "2026-02-27T23:59:59.999Z",
         },
 
-        // Sorting flags + directions
         {
           name: "orderByCreatedAt",
           in: "query",
@@ -241,16 +237,21 @@ export const expensePaths = {
 
       responses: {
         200: {
-          description: "Expense details (can be null if not found)",
+          description: "Expense details",
           content: {
             "application/json": {
-              schema: { ...ExpenseDetailsSchema, nullable: true },
+              schema: ExpenseDetailsSchema,
             },
           },
         },
 
         401: {
           description: "Unauthorized",
+          content: { "application/json": { schema: ErrorResponseSchema } },
+        },
+
+        404: {
+          description: "Expense not found",
           content: { "application/json": { schema: ErrorResponseSchema } },
         },
 

@@ -1,6 +1,8 @@
 import { CategoryService } from "../../services/category/category.service";
 import type { Request, Response, NextFunction } from "express";
 import { TSortDirection } from "../../types/v1";
+import { AppError } from "../../errors/AppError";
+import { toCategoryResponse } from "../../dto/category/category.response.dto";
 
 export const CategoryController = () => {
   const getById = async (
@@ -16,7 +18,13 @@ export const CategoryController = () => {
         id: Number(id),
       });
 
-      return response.status(200).json(category);
+      if (!category) {
+        throw new AppError("CATEGORY_NOT_FOUND");
+      }
+
+      const formattedCategory = toCategoryResponse(category);
+
+      return response.status(200).json(formattedCategory);
     } catch (error) {
       next(error);
     }
@@ -45,7 +53,14 @@ export const CategoryController = () => {
         orderByCreatedAtDirection: orderByCreatedAtDirection as TSortDirection,
       });
 
-      return response.status(200).json(categories);
+      const formattedCategories = {
+        data: categories.data.map((category) => {
+          return toCategoryResponse(category);
+        }),
+        meta: categories.meta,
+      };
+
+      return response.status(200).json(formattedCategories);
     } catch (error) {
       next(error);
     }
@@ -64,7 +79,9 @@ export const CategoryController = () => {
         title,
       });
 
-      return response.status(201).json(category);
+      const formattedCategory = toCategoryResponse(category);
+
+      return response.status(201).json(formattedCategory);
     } catch (error) {
       next(error);
     }
@@ -84,7 +101,9 @@ export const CategoryController = () => {
         title,
       });
 
-      return response.status(200).json(category);
+      const formattedCategory = toCategoryResponse(category);
+
+      return response.status(200).json(formattedCategory);
     } catch (error) {
       next(error);
     }

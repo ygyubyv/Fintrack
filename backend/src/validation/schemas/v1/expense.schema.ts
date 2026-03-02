@@ -24,7 +24,7 @@ const PaymentTypeSchema = z.custom<TPaymentType>(
 export const GetAllSchema: z.ZodType<TGetAllExpensesFilters> = z.object({
   page: z.coerce.number().int().min(1),
   perPage: z.coerce.number().int().min(1).max(100),
-  description: z.coerce.string().optional(),
+  description: z.string().min(1).max(255).optional(),
   valueFrom: z.coerce.number().optional(),
   valueTo: z.coerce.number().optional(),
   expenseType: ExpenseTypeSchema.optional(),
@@ -53,7 +53,7 @@ export const GetByIdSchema: z.ZodType<IGetExpenseByIdFilters> = z.object({
 
 export const CreateSchema: z.ZodType<ICreateExpensePayload> = z.object({
   value: z.number().min(1),
-  description: z.string().optional(),
+  description: z.string().min(1).max(255).optional(),
   expenseType: ExpenseTypeSchema,
   paymentType: PaymentTypeSchema,
   categoryId: z.number().int().min(1).optional(),
@@ -62,7 +62,7 @@ export const CreateSchema: z.ZodType<ICreateExpensePayload> = z.object({
 
 export const UpdateSchema: z.ZodType<IUpdateExpensePayload> = z.object({
   value: z.number().min(1).optional(),
-  description: z.string().optional(),
+  description: z.string().min(1).max(255).optional(),
   expenseType: ExpenseTypeSchema.optional(),
   paymentType: PaymentTypeSchema.optional(),
   categoryId: z.number().int().min(1).optional(),

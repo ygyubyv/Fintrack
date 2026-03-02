@@ -5,21 +5,25 @@ export const SignupRequestSchema = {
     firstName: {
       type: "string",
       minLength: 1,
+      maxLength: 100,
       example: "John",
     },
     lastName: {
       type: "string",
       minLength: 1,
+      maxLength: 100,
       example: "Doe",
     },
     email: {
       type: "string",
       format: "email",
+      maxLength: 254,
       example: "john.doe@example.com",
     },
     password: {
       type: "string",
       minLength: 6,
+      maxLength: 128,
       example: "SecurePassword123!",
     },
   },
@@ -32,11 +36,13 @@ export const LoginRequestSchema = {
     email: {
       type: "string",
       format: "email",
+      maxLength: 254,
       example: "john.doe@example.com",
     },
     password: {
       type: "string",
       minLength: 6,
+      maxLength: 128,
       example: "SecurePassword123!",
     },
   },
@@ -92,6 +98,7 @@ export const ForgotPasswordRequestSchema = {
     email: {
       type: "string",
       format: "email",
+      maxLength: 254,
       example: "john.doe@example.com",
     },
   },
@@ -109,6 +116,7 @@ export const ResetPasswordRequestSchema = {
     password: {
       type: "string",
       minLength: 6,
+      maxLength: 128,
       example: "NewSecurePassword123!",
     },
   },

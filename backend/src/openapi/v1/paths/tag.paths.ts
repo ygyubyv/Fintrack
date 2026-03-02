@@ -32,10 +32,9 @@ export const tagPaths = {
           name: "title",
           in: "query",
           required: false,
-          schema: { type: "string" },
+          schema: { type: "string", minLength: 1, maxLength: 50 },
           example: "foo",
         },
-
         {
           name: "orderByCreatedAt",
           in: "query",
@@ -140,16 +139,19 @@ export const tagPaths = {
 
       responses: {
         200: {
-          description: "Tag (can be null if not found)",
+          description: "Tag",
           content: {
-            "application/json": {
-              schema: { ...TagSchema, nullable: true },
-            },
+            "application/json": { schema: TagSchema },
           },
         },
 
         401: {
           description: "Unauthorized",
+          content: { "application/json": { schema: ErrorResponseSchema } },
+        },
+
+        404: {
+          description: "Tag not found",
           content: { "application/json": { schema: ErrorResponseSchema } },
         },
 

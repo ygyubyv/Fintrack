@@ -10,6 +10,9 @@ export const UserService = () => {
       where: {
         id,
       },
+      include: {
+        lastLogin: true,
+      },
     });
 
     return user;
@@ -57,6 +60,9 @@ export const UserService = () => {
         data: payload,
         where: {
           id,
+        },
+        include: {
+          lastLogin: true,
         },
       });
 

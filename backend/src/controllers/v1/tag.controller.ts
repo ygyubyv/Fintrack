@@ -1,6 +1,8 @@
 import { TagService } from "../../services/tag/tag.service";
 import type { Request, Response, NextFunction } from "express";
 import { TSortDirection } from "../../types/v1";
+import { toTagResponse } from "../../dto/tag/tag.response.dto";
+import { AppError } from "../../errors/AppError";
 
 export const TagController = () => {
   const getById = async (
@@ -16,7 +18,13 @@ export const TagController = () => {
         id: Number(id),
       });
 
-      return response.status(200).json(tag);
+      if (!tag) {
+        throw new AppError("TAG_NOT_FOUND");
+      }
+
+      const formattedTag = toTagResponse(tag);
+
+      return response.status(200).json(formattedTag);
     } catch (error) {
       next(error);
     }
@@ -45,7 +53,14 @@ export const TagController = () => {
         orderByCreatedAtDirection: orderByCreatedAtDirection as TSortDirection,
       });
 
-      return response.status(200).json(tags);
+      const formattedTags = {
+        data: tags.data.map((tag) => {
+          return toTagResponse(tag);
+        }),
+        meta: tags.meta,
+      };
+
+      return response.status(200).json(formattedTags);
     } catch (error) {
       next(error);
     }
@@ -65,7 +80,9 @@ export const TagController = () => {
         color,
       });
 
-      return response.status(201).json(tag);
+      const formattedTag = toTagResponse(tag);
+
+      return response.status(201).json(formattedTag);
     } catch (error) {
       next(error);
     }
@@ -86,7 +103,9 @@ export const TagController = () => {
         color,
       });
 
-      return response.status(200).json(tag);
+      const formattedTag = toTagResponse(tag);
+
+      return response.status(200).json(formattedTag);
     } catch (error) {
       next(error);
     }

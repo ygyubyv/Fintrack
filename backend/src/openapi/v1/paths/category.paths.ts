@@ -32,10 +32,9 @@ export const categoryPaths = {
           name: "title",
           in: "query",
           required: false,
-          schema: { type: "string" },
+          schema: { type: "string", minLength: 1, maxLength: 50 },
           example: "gro",
         },
-
         {
           name: "orderByCreatedAt",
           in: "query",
@@ -136,16 +135,19 @@ export const categoryPaths = {
 
       responses: {
         200: {
-          description: "Category (can be null if not found)",
+          description: "Category",
           content: {
-            "application/json": {
-              schema: { ...CategorySchema, nullable: true },
-            },
+            "application/json": { schema: CategorySchema },
           },
         },
 
         401: {
           description: "Unauthorized",
+          content: { "application/json": { schema: ErrorResponseSchema } },
+        },
+
+        404: {
+          description: "Category not found",
           content: { "application/json": { schema: ErrorResponseSchema } },
         },
 
