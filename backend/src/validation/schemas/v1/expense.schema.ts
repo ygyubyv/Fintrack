@@ -31,8 +31,8 @@ export const GetAllSchema: z.ZodType<TGetAllExpensesFilters> = z.object({
   paymentType: PaymentTypeSchema.optional(),
   categoryId: z.coerce.number().optional(),
   tagIds: z.array(z.coerce.number()).optional(),
-  createdFromDate: z.coerce.date().optional(),
-  createdToDate: z.coerce.date().optional(),
+  createdFromDate: z.iso.datetime().optional(),
+  createdToDate: z.iso.datetime().optional(),
 
   orderByCreatedAt: z.coerce.boolean().optional(),
   orderByCreatedAtDirection: SortDirectionSchema.optional(),

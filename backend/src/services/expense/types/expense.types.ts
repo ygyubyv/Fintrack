@@ -33,8 +33,8 @@ export type TGetAllExpensesFilters = IPaginationPayload &
     paymentType?: TPaymentType;
     categoryId?: number;
     tagIds?: number[];
-    createdFromDate?: Date;
-    createdToDate?: Date;
+    createdFromDate?: string;
+    createdToDate?: string;
   };
 
 export interface IGetExpenseByIdFilters {

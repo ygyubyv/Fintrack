@@ -73,8 +73,8 @@ export const ExpenseController = () => {
         paymentType: paymentType as TPaymentType,
         categoryId: Number(categoryId),
         tagIds: Array.isArray(tagIds) ? tagIds.map(Number) : undefined,
-        createdFromDate: createdFromDate as unknown as Date,
-        createdToDate: createdToDate as unknown as Date,
+        createdFromDate: createdFromDate as string,
+        createdToDate: createdToDate as string,
         orderByCreatedAt: !!orderByCreatedAt,
         orderByCreatedAtDirection: orderByCreatedAtDirection as TSortDirection,
         orderByValue: !!orderByValue,
@@ -151,7 +151,7 @@ export const ExpenseController = () => {
       } = request.body;
 
       const expense = await ExpenseService().update(user!.id, Number(id), {
-        value: Number(value),
+        value: value ? Number(value) : undefined,
         expenseType,
         paymentType,
         description,
