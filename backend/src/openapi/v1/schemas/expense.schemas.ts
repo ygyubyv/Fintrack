@@ -75,18 +75,31 @@ export const ExpenseListResponseSchema = {
 
 export const CreateExpenseRequestSchema = {
   type: "object",
-  required: ["value", "expenseType", "paymentType"],
+  required: ["value", "expenseType", "paymentType", "categoryId", "tagIds"],
   properties: {
-    value: { type: "number", minimum: 1, example: 1250 },
+    value: {
+      type: "number",
+      minimum: 1,
+      example: 1250,
+    },
+
     description: {
       type: "string",
       minLength: 1,
       maxLength: 255,
       example: "Coffee",
     },
+
     expenseType: ExpenseTypeSchema,
     paymentType: PaymentTypeSchema,
-    categoryId: { type: "integer", minimum: 1, example: 3 },
+
+    categoryId: {
+      type: "integer",
+      minimum: 1,
+      nullable: true,
+      example: 3,
+    },
+
     tagIds: {
       type: "array",
       items: { type: "integer", minimum: 1 },
@@ -100,15 +113,24 @@ export const UpdateExpenseRequestSchema = {
   additionalProperties: false,
   properties: {
     value: { type: "number", minimum: 1, example: 990 },
+
     description: {
       type: "string",
       minLength: 1,
       maxLength: 255,
       example: "Lunch",
     },
+
     expenseType: ExpenseTypeSchema,
     paymentType: PaymentTypeSchema,
-    categoryId: { type: "integer", minimum: 1, example: 2 },
+
+    categoryId: {
+      type: "integer",
+      minimum: 1,
+      nullable: true,
+      example: 2,
+    },
+
     tagIds: {
       type: "array",
       items: { type: "integer", minimum: 1 },

@@ -56,8 +56,8 @@ export const CreateSchema: z.ZodType<ICreateExpensePayload> = z.object({
   description: z.string().min(1).max(255).optional(),
   expenseType: ExpenseTypeSchema,
   paymentType: PaymentTypeSchema,
-  categoryId: z.number().int().min(1).optional(),
-  tagIds: z.array(z.number().int().min(1)).optional(),
+  categoryId: z.number().int().min(1).nullable(),
+  tagIds: z.array(z.number().int().min(1)),
 });
 
 export const UpdateSchema: z.ZodType<IUpdateExpensePayload> = z.object({
@@ -65,6 +65,6 @@ export const UpdateSchema: z.ZodType<IUpdateExpensePayload> = z.object({
   description: z.string().min(1).max(255).optional(),
   expenseType: ExpenseTypeSchema.optional(),
   paymentType: PaymentTypeSchema.optional(),
-  categoryId: z.number().int().min(1).optional(),
+  categoryId: z.number().int().min(1).optional().nullable(),
   tagIds: z.array(z.number().int().min(1)).optional(),
 });

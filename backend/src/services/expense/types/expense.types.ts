@@ -5,7 +5,7 @@ export interface ICreateExpensePayload {
   description?: string;
   expenseType: TExpenseType;
   paymentType: TPaymentType;
-  categoryId?: number;
+  categoryId: number | null;
   tagIds?: number[];
 }
 
@@ -14,7 +14,7 @@ export interface IUpdateExpensePayload {
   description?: string;
   expenseType?: TExpenseType;
   paymentType?: TPaymentType;
-  categoryId?: number;
+  categoryId?: number | null;
   tagIds?: number[];
 }
 

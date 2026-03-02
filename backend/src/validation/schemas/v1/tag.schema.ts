@@ -34,7 +34,7 @@ export const CreateSchema: z.ZodType<ICreateTagPayload> = z.object({
 });
 
 export const UpdateSchema: z.ZodType<IUpdateTagPayload> = z.object({
-  title: z.string().min(1).max(50),
+  title: z.string().min(1).max(50).optional(),
   color: z
     .string()
     .regex(hexColorRegex, "Color must be a valid HEX code, e.g., #FF00FF")

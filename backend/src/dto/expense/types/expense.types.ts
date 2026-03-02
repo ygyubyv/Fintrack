@@ -8,7 +8,7 @@ export type TExpenseResponseDto = {
   description?: string;
   expenseType: ExpenseType;
   paymentType: PaymentType;
-  category?: TCategoryResponseDto;
+  category?: TCategoryResponseDto | null;
   tags?: TTagResponseDto[];
   createdAt: Date;
   updatedAt: Date;

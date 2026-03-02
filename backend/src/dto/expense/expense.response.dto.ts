@@ -13,7 +13,7 @@ export const toExpenseResponse = (expense: Expense): TExpenseResponseDto => ({
   description: expense.description ?? undefined,
   expenseType: expense.expenseType,
   paymentType: expense.paymentType,
-  category: expense.category ? toCategoryResponse(expense.category) : undefined,
+  category: expense.category ? toCategoryResponse(expense.category) : null,
   tags: expense.tags?.map((tag) => toTagResponse(tag)),
   createdAt: expense.createdAt,
   updatedAt: expense.updatedAt,

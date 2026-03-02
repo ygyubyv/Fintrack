@@ -47,7 +47,6 @@ export const CreateTagRequestSchema = {
 
 export const UpdateTagRequestSchema = {
   type: "object",
-  required: ["title"],
   additionalProperties: false,
   properties: {
     title: {
