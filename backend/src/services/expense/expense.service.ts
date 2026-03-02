@@ -132,26 +132,36 @@ export const ExpenseService = () => {
   };
 
   const create = async (userId: number, payload: ICreateExpensePayload) => {
-    const { value, expenseType, paymentType, categoryId, description } =
-      payload;
+    try {
+      const { value, expenseType, paymentType, categoryId, description } =
+        payload;
 
-    return await prisma.expense.create({
-      data: {
-        value,
-        expenseType,
-        description,
-        categoryId,
-        paymentType,
-        userId,
-        tags: payload.tagIds?.length
-          ? { connect: payload.tagIds.map((id) => ({ id })) }
-          : undefined,
-      },
-      include: {
-        tags: true,
-        category: true,
-      },
-    });
+      return await prisma.expense.create({
+        data: {
+          value,
+          expenseType,
+          description,
+          categoryId,
+          paymentType,
+          userId,
+          tags: payload.tagIds?.length
+            ? { connect: payload.tagIds.map((id) => ({ id })) }
+            : undefined,
+        },
+        include: {
+          tags: true,
+          category: true,
+        },
+      });
+    } catch (error) {
+      const dbError = MapPrismaError(error);
+
+      if (dbError === "DB_FOREIGN_KEY") {
+        throw new AppError("INVALID_CATEGORY_OR_TAG");
+      }
+
+      throw error;
+    }
   };
 
   const update = async (
@@ -174,11 +184,12 @@ export const ExpenseService = () => {
           description,
           categoryId,
           paymentType,
-          tags: payload.tagIds?.length
-            ? {
-                set: payload.tagIds.map((id) => ({ id })),
-              }
-            : undefined,
+          tags:
+            payload.tagIds !== undefined
+              ? {
+                  set: payload.tagIds.map((id) => ({ id })),
+                }
+              : undefined,
         },
         include: {
           tags: true,
@@ -190,6 +201,10 @@ export const ExpenseService = () => {
 
       if (dbError === "DB_RECORD_NOT_FOUND") {
         throw new AppError("EXPENSE_NOT_FOUND");
+      }
+
+      if (dbError === "DB_FOREIGN_KEY") {
+        throw new AppError("INVALID_CATEGORY_OR_TAG");
       }
 
       throw error;

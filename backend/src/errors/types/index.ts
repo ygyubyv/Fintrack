@@ -24,6 +24,7 @@ export const ERROR_CODES = {
 
   // Expense
   EXPENSE_NOT_FOUND: "EXPENSE_NOT_FOUND",
+  INVALID_CATEGORY_OR_TAG: "INVALID_CATEGORY_OR_TAG",
 
   // Email
   EMAIL_SEND_FAILED: "EMAIL_SEND_FAILED",
@@ -106,6 +107,11 @@ export const ERROR_MAP: Record<ErrorCode, { status: number; message: string }> =
     EXPENSE_NOT_FOUND: {
       status: 404,
       message: "Expense not found",
+    },
+
+    INVALID_CATEGORY_OR_TAG: {
+      status: 404,
+      message: "Category or tag not found",
     },
 
     // Email
