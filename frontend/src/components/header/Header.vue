@@ -17,6 +17,7 @@ const links = [
   { label: "Transactions", to: "/transactions", requiresAuth: true },
   { label: "Analytics", to: "/analytics", requiresAuth: true },
   { label: "Tags", to: "/tags", requiresAuth: true },
+  { label: "Categories", to: "/categories", requiresAuth: true },
 ];
 
 const visibleLinks = computed(() => {

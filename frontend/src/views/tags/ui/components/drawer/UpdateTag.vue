@@ -82,7 +82,7 @@ import BaseButton from "@/components/base/BaseButton.vue";
 import BaseDrawer from "@/components/base/BaseDrawer.vue";
 import BaseInput from "@/components/base/BaseInput.vue";
 import { useUpdateTagForm } from "../../../composables/validation/useUpdateTagForm";
-import type { ICreateTag, ITag } from "../../../types";
+import type { ITag, IUpdateTag } from "../../../types";
 import { Vue3ColorPicker } from "@cyhnkckali/vue3-color-picker";
 import { ref, useTemplateRef } from "vue";
 import { onClickOutside } from "@vueuse/core";
@@ -95,7 +95,7 @@ interface Props {
 
 interface Emits {
   (e: "update:drawerIsVisible", value: boolean): void;
-  (e: "submit", tag: ICreateTag): void;
+  (e: "submit", payload: IUpdateTag): void;
 }
 
 const props = defineProps<Props>();
@@ -124,6 +124,9 @@ watch(
     if (newValue) {
       setForm(props.initialValues);
     }
+  },
+  {
+    immediate: true,
   },
 );
 </script>

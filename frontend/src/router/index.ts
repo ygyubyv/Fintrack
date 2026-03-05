@@ -7,6 +7,7 @@ import Dashboard from "@/pages/dashboard.vue";
 import Transactions from "@/pages/transactions.vue";
 import { useAuthStore } from "@/stores/auth/auth.store";
 import { storeToRefs } from "pinia";
+import Categories from "@/pages/categories.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -39,6 +40,14 @@ const router = createRouter({
       path: "/tags",
       name: "tags",
       component: Tags,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/categories",
+      name: "categories",
+      component: Categories,
       meta: {
         requiresAuth: true,
       },

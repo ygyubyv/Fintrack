@@ -74,7 +74,7 @@ export const CategoryService = () => {
     } catch (error) {
       const dbError = MapPrismaError(error);
 
-      if (dbError === "DB_RECORD_NOT_FOUND") {
+      if (dbError === "DB_UNIQUE_CONSTRAINT") {
         throw new AppError("CATEGORY_EXISTS");
       }
 

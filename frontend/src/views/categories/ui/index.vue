@@ -3,65 +3,68 @@ import BasePagination from "@/components/base/BasePagination.vue";
 import BaseInput from "@/components/base/BaseInput.vue";
 import BaseButton from "@/components/base/BaseButton.vue";
 import { usePaginatedList } from "@/composables/usePaginatedList";
-import CreateTag from "./components/drawer/CreateTag.vue";
-import type { ITag, IUpdateTag } from "../types";
-import { TagsApi } from "../services/api/tags.api";
-import { TagsService } from "../services/tags.service";
+import type { ICategory, ICreateCategory, IUpdateCategory } from "../types";
+import { CategoriesApi } from "../services/api/categories.api";
+import { CategoriesService } from "../services/categories.service";
 import { computed, ref } from "vue";
 import BaseOverlay from "@/components/base/BaseOverlay.vue";
-import TagsTable from "./components/TagsTable.vue";
-import UpdateTag from "./components/drawer/UpdateTag.vue";
+import UpdateCategory from "./components/drawer/UpdateCategory.vue";
 import BaseConfirmDialog from "@/components/base/BaseConfirmDialog.vue";
+import CreateCategory from "./components/drawer/CreateCategory.vue";
+import CategoriesTable from "./components/CategoriesTable.vue";
 
 const {
   page,
   perPage,
   lastPage,
   items,
-  isLoading: tagsIsLoading,
+  isLoading: categoriesIsLoading,
   paginationData,
   searchQueryParams,
   resetFilters,
   refresh,
-} = usePaginatedList<ITag>(TagsApi.getAllTags);
+} = usePaginatedList<ICategory>(CategoriesApi.getAllCategories);
 
-const { createTag, updateTag, deleteTag } = TagsService();
+const { createCategory, updateCategory, deleteCategory } = CategoriesService();
 
-const { isLoading: createTagIsLoading, createTagHandler } = createTag(refresh);
-const { isLoading: updateTagIsLoading, updateTagHandler } = updateTag(refresh);
-const { isLoading: deleteTagIsLoading, deleteTagHandler } = deleteTag(refresh);
+const { isLoading: createCategoryIsLoading, createCategoryHandler } =
+  createCategory(refresh);
+const { isLoading: updateCategoryIsLoading, updateCategoryHandler } =
+  updateCategory(refresh);
+const { isLoading: deleteCategoryIsLoading, deleteCategoryHandler } =
+  deleteCategory(refresh);
 
-const createTagDrawerIsVisible = ref(false);
-const updateTagDrawerIsVisible = ref(false);
-const deleteTagDialogIsVisible = ref(false);
+const createCategoryDrawerIsVisible = ref(false);
+const updateCategoryDrawerIsVisible = ref(false);
+const deleteCategoryDialogIsVisible = ref(false);
 
 const isLoading = computed(() => {
   return (
-    tagsIsLoading.value ||
-    createTagIsLoading.value ||
-    updateTagIsLoading.value ||
-    deleteTagIsLoading.value
+    categoriesIsLoading.value ||
+    createCategoryIsLoading.value ||
+    updateCategoryIsLoading.value ||
+    deleteCategoryIsLoading.value
   );
 });
 
-const selectedTag = ref<ITag | null>(null);
+const selectedCategory = ref<ICategory | null>(null);
 
-const onUpdateTag = (tag: ITag) => {
-  selectedTag.value = tag;
-  updateTagDrawerIsVisible.value = true;
+const onUpdateCategory = (category: ICategory) => {
+  selectedCategory.value = category;
+  updateCategoryDrawerIsVisible.value = true;
 };
 
-const onDeleteTag = (tag: ITag) => {
-  selectedTag.value = tag;
-  deleteTagDialogIsVisible.value = true;
+const onDeleteCategory = (category: ICategory) => {
+  selectedCategory.value = category;
+  deleteCategoryDialogIsVisible.value = true;
 };
 
-const handleUpdateTag = (payload: IUpdateTag) => {
-  updateTagHandler(selectedTag.value!.id, payload);
+const handleUpdateCategory = (payload: IUpdateCategory) => {
+  updateCategoryHandler(selectedCategory.value!.id, payload);
 };
 
-const handleDeleteTag = () => {
-  deleteTagHandler(selectedTag.value!.id);
+const handleDeleteCategory = () => {
+  deleteCategoryHandler(selectedCategory.value!.id);
 };
 </script>
 
@@ -69,35 +72,35 @@ const handleDeleteTag = () => {
   <section class="flex flex-col gap-6 p-6 bg-white rounded-xl shadow-sm">
     <BaseOverlay v-show="isLoading" />
 
-    <!-- Create Tag -->
-    <CreateTag
-      v-model:drawer-is-visible="createTagDrawerIsVisible"
-      @submit="createTagHandler"
+    <!-- Create Category -->
+    <CreateCategory
+      v-model:drawer-is-visible="createCategoryDrawerIsVisible"
+      @submit="createCategoryHandler"
     />
 
-    <!-- Update Tag -->
-    <UpdateTag
-      v-model:drawer-is-visible="updateTagDrawerIsVisible"
-      v-if="selectedTag"
-      :initial-values="selectedTag"
-      @submit="handleUpdateTag"
+    <!-- Update Category -->
+    <UpdateCategory
+      v-model:drawer-is-visible="updateCategoryDrawerIsVisible"
+      v-if="selectedCategory"
+      :initial-values="selectedCategory"
+      @submit="handleUpdateCategory"
     />
 
-    <!-- Delete Tag -->
+    <!-- Delete Category -->
     <BaseConfirmDialog
-      v-model="deleteTagDialogIsVisible"
+      v-model="deleteCategoryDialogIsVisible"
       cancel-text="Cancel"
       confirm-text="Confirm"
-      message="Are you sure you want to delete this tag?"
-      title="Delete Tag"
-      @confirm="handleDeleteTag"
+      message="Are you sure you want to delete this category?"
+      title="Delete Category"
+      @confirm="handleDeleteCategory"
     />
 
     <div
       class="flex flex-col md:flex-row md:justify-between md:items-center gap-4"
     >
       <div>
-        <h2 class="text-2xl font-semibold text-neutral-900">Tags</h2>
+        <h2 class="text-2xl font-semibold text-neutral-900">Categories</h2>
       </div>
 
       <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3">
@@ -118,24 +121,24 @@ const handleDeleteTag = () => {
           @click="resetFilters"
         />
 
-        <!-- Create Tag -->
+        <!-- Create Category -->
         <BaseButton
           text="Create"
           size="Medium"
           mode="Primary"
           icon="plus"
-          @click="createTagDrawerIsVisible = true"
+          @click="createCategoryDrawerIsVisible = true"
         />
       </div>
     </div>
 
     <!-- Table -->
     <div class="overflow-x-auto border border-gray-200 rounded-lg">
-      <TagsTable
+      <CategoriesTable
         :items="items"
         :search-query-params="searchQueryParams"
-        @delete="onDeleteTag"
-        @update="onUpdateTag"
+        @delete="onDeleteCategory"
+        @update="onUpdateCategory"
       />
     </div>
 

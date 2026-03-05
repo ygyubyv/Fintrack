@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import type { ITag } from "../../types";
+import type { ICategory } from "../../types";
 import { formatTimeWithHoursWithoutTimeZone } from "@/utils";
 import BaseOrderBy from "@/components/base/BaseOrderBy.vue";
 import BaseButton from "@/components/base/BaseButton.vue";
 
 interface Props {
-  items: ITag[];
+  items: ICategory[];
   searchQueryParams: Record<string, unknown>;
 }
 
 interface Emits {
-  (e: "update", tag: ITag): void;
-  (e: "delete", tag: ITag): void;
+  (e: "update", category: ICategory): void;
+  (e: "delete", category: ICategory): void;
 }
 
 const props = defineProps<Props>();
@@ -25,11 +25,6 @@ const emit = defineEmits<Emits>();
         <!-- Title -->
         <th class="px-6 py-3 text-left text-sm font-medium text-gray-700">
           Title
-        </th>
-
-        <!-- Color -->
-        <th class="px-6 py-3 text-left text-sm font-medium text-gray-700">
-          Color
         </th>
 
         <!-- Created At -->
@@ -55,32 +50,23 @@ const emit = defineEmits<Emits>();
 
     <tbody class="bg-white divide-y divide-gray-100">
       <tr
-        v-for="tag in items"
-        :key="tag.id"
+        v-for="category in items"
+        :key="category.id"
         class="hover:bg-gray-50 transition"
       >
         <!-- Title -->
         <td class="px-6 py-4 text-gray-800 font-medium">
-          {{ tag.title }}
-        </td>
-
-        <!-- Color -->
-        <td class="px-6 py-4 flex items-center gap-2">
-          <span
-            class="w-4 h-4 rounded border border-gray-300"
-            :style="{ backgroundColor: tag.color }"
-          />
-          <span class="text-gray-700 text-sm">{{ tag.color }}</span>
+          {{ category.title }}
         </td>
 
         <!-- Created At -->
         <td class="px-6 py-4 text-gray-500 text-sm">
-          {{ formatTimeWithHoursWithoutTimeZone(tag.createdAt) }}
+          {{ formatTimeWithHoursWithoutTimeZone(category.createdAt) }}
         </td>
 
         <!-- Updated At -->
         <td class="px-6 py-4 text-gray-500 text-sm">
-          {{ formatTimeWithHoursWithoutTimeZone(tag.updatedAt) }}
+          {{ formatTimeWithHoursWithoutTimeZone(category.updatedAt) }}
         </td>
 
         <!-- Actions -->
@@ -88,7 +74,7 @@ const emit = defineEmits<Emits>();
           <div class="flex items-center justify-end gap-2">
             <!-- Update -->
             <BaseButton
-              @click="emit('update', tag)"
+              @click="emit('update', category)"
               icon="pen"
               size="Small"
               mode="Secondary"
@@ -96,7 +82,7 @@ const emit = defineEmits<Emits>();
 
             <!-- Delete -->
             <BaseButton
-              @click="emit('delete', tag)"
+              @click="emit('delete', category)"
               icon="trash"
               size="Small"
               mode="Danger"
