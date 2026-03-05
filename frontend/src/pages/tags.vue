@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { Budgets } from "@/views/budgets";
+import { Tags } from "@/views/tags";
 </script>
 
 <template>
-  <Budgets />
+  <Tags />
 </template>

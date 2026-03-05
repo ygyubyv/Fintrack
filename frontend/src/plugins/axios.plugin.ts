@@ -4,8 +4,10 @@ import { useAuthStore } from "@/stores/auth/auth.store";
 import camelcaseKeys from "camelcase-keys";
 import { storeToRefs } from "pinia";
 
+export const baseURL = `${API_URL}/${API_PREFIX}`;
+
 const axiosInstance = axios.create({
-  baseURL: `${API_URL}/${API_PREFIX}`,
+  baseURL,
 });
 
 axiosInstance.interceptors.request.use(async (config) => {

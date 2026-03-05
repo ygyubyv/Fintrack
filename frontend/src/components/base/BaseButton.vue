@@ -4,7 +4,7 @@
     :disabled="disabled"
     :type="type"
     :class="[
-      'flex items-center justify-center gap-2 rounded-lg font-medium transition focus:outline-none',
+      'flex items-center justify-center gap-2 rounded-lg font-medium transition focus:outline-none whitespace-nowrap',
       modeClasses,
       sizeClasses,
       disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer',
@@ -22,6 +22,7 @@
 </template>
 
 <script setup lang="ts">
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { computed } from "vue";
 
 type Size = "Small" | "Medium" | "Big";

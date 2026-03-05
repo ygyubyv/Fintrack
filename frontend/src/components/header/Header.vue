@@ -16,7 +16,7 @@ const links = [
   { label: "Dashboard", to: "/dashboard", requiresAuth: true },
   { label: "Transactions", to: "/transactions", requiresAuth: true },
   { label: "Analytics", to: "/analytics", requiresAuth: true },
-  { label: "Budgets", to: "/budgets", requiresAuth: true },
+  { label: "Tags", to: "/tags", requiresAuth: true },
 ];
 
 const visibleLinks = computed(() => {

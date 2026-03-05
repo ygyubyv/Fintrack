@@ -29,8 +29,6 @@ export const TagService = () => {
           title: { contains: filters.title, mode: "insensitive" },
         }),
       },
-      skip,
-      take,
     });
 
     const data = await prisma.tag.findMany({

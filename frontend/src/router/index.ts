@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Main from "@/pages/index.vue";
 import Analytics from "@/pages/analytics.vue";
 import Auth from "@/pages/auth.vue";
-import Budgets from "@/pages/budgets.vue";
+import Tags from "@/pages/tags.vue";
 import Dashboard from "@/pages/dashboard.vue";
 import Transactions from "@/pages/transactions.vue";
 import { useAuthStore } from "@/stores/auth/auth.store";
@@ -36,9 +36,9 @@ const router = createRouter({
       },
     },
     {
-      path: "/budgets",
-      name: "budgets",
-      component: Budgets,
+      path: "/tags",
+      name: "tags",
+      component: Tags,
       meta: {
         requiresAuth: true,
       },

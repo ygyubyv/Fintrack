@@ -29,8 +29,6 @@ export const CategoryService = () => {
           title: { contains: filters.title, mode: "insensitive" },
         }),
       },
-      skip,
-      take,
     });
 
     const data = await prisma.category.findMany({

@@ -1,4 +1,5 @@
 import "./assets/main.css";
+import "@cyhnkckali/vue3-color-picker/dist/style.css";
 
 import { createApp } from "vue";
 import { createPinia } from "pinia";
