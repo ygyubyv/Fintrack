@@ -20,6 +20,8 @@ import {
   faPlus,
   faXmark,
   faCheck,
+  faTimes,
+  faSpinner,
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(
@@ -41,6 +43,8 @@ library.add(
   faPlus,
   faXmark,
   faCheck,
+  faTimes,
+  faSpinner,
 );
 
 export { FontAwesomeIcon };
