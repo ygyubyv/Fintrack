@@ -13,6 +13,7 @@ export type TCategoryOrderByFields = "CreatedAt";
 export type TGetAllCategoriesFilters = IPaginationPayload &
   TOrderBy<TCategoryOrderByFields> & {
     title?: string;
+    categoryIds?: number[];
   };
 
 export interface IGetCategoryByIdFilters {

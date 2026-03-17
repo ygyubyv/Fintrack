@@ -15,6 +15,7 @@ export type TTagOrderByFields = "CreatedAt";
 export type TGetAllTagsFilters = IPaginationPayload &
   TOrderBy<TTagOrderByFields> & {
     title?: string;
+    tagIds?: number[];
   };
 
 export interface IGetTagByIdFilters {

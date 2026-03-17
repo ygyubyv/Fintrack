@@ -2,7 +2,7 @@ import axiosInstance, { baseURL } from "@/plugins/axios.plugin";
 import type { TPaginatedResponse } from "@/types";
 import { watchDebounced } from "@vueuse/core";
 import { useRouteQuery } from "@vueuse/router";
-import { computed, onMounted, reactive, ref, watch } from "vue";
+import { computed, onMounted, reactive, ref, watch, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 
 export const usePaginatedList = <T>(apiUrl: string) => {
@@ -58,7 +58,12 @@ export const usePaginatedList = <T>(apiUrl: string) => {
     params.forEach((value, key) => {
       if (value !== undefined && value !== null && value !== "") {
         if (key === "page" || key === "perPage") return;
-        searchQueryParams[key] = value;
+
+        if (!isNaN(Number(value))) {
+          searchQueryParams[key] = Number(value);
+        } else {
+          searchQueryParams[key] = value;
+        }
       }
     });
   };
@@ -123,18 +128,22 @@ export const usePaginatedList = <T>(apiUrl: string) => {
     },
   );
 
-  watch(filters, fetchItems, {
-    once: true,
-    immediate: true,
-  });
+  watchDebounced(
+    filters,
+    (newValue, oldValue) => {
+      if (JSON.stringify(newValue) !== JSON.stringify(oldValue)) {
+        fetchItems();
+      }
+    },
+    {
+      immediate: true,
+      debounce: DEBOUNCE,
+      deep: true,
+    },
+  );
 
-  watchDebounced(filters, fetchItems, {
-    immediate: false,
-    debounce: DEBOUNCE,
-    deep: true,
-  });
-
-  onMounted(initializeSearchQuery);
+  initializeSearchQuery();
+  fetchItems();
 
   return {
     page,

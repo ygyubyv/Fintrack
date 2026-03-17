@@ -35,6 +35,8 @@ const createTagDrawerIsVisible = ref(false);
 const updateTagDrawerIsVisible = ref(false);
 const deleteTagDialogIsVisible = ref(false);
 
+const selectedTag = ref<ITag | null>(null);
+
 const isLoading = computed(() => {
   return (
     tagsIsLoading.value ||
@@ -43,8 +45,6 @@ const isLoading = computed(() => {
     deleteTagIsLoading.value
   );
 });
-
-const selectedTag = ref<ITag | null>(null);
 
 const onUpdateTag = (tag: ITag) => {
   selectedTag.value = tag;

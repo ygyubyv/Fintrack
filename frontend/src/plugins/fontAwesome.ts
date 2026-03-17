@@ -22,6 +22,14 @@ import {
   faCheck,
   faTimes,
   faSpinner,
+  faFolder,
+  faTag,
+  faCreditCard,
+  faMoneyBill,
+  faSliders,
+  faRotateLeft,
+  faChevronDown,
+  faInbox,
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(
@@ -45,6 +53,15 @@ library.add(
   faCheck,
   faTimes,
   faSpinner,
+  faReceipt,
+  faFolder,
+  faTag,
+  faCreditCard,
+  faMoneyBill,
+  faSliders,
+  faRotateLeft,
+  faChevronDown,
+  faInbox,
 );
 
 export { FontAwesomeIcon };

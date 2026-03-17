@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col w-full">
+  <div class="flex flex-col">
     <label
       v-if="label"
       :for="id"
@@ -15,7 +15,7 @@
       :placeholder="placeholder"
       v-bind="$attrs"
       :class="[
-        'w-full rounded-lg border transition-colors duration-200 focus:outline-none',
+        'rounded-lg border transition-colors duration-200 focus:outline-none',
         sizeClasses,
         error
           ? 'border-red-500 bg-red-50 focus:ring-red-400'

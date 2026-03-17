@@ -3,6 +3,7 @@ import type { Request, Response, NextFunction } from "express";
 import { TSortDirection } from "../../types/v1";
 import { toTagResponse } from "../../dto/tag/tag.response.dto";
 import { AppError } from "../../errors/AppError";
+import { toArray } from "../../utils";
 
 export const TagController = () => {
   const getById = async (
@@ -43,12 +44,18 @@ export const TagController = () => {
         orderByCreatedAt,
         orderByCreatedAtDirection,
       } = request.query;
+
+      const tagIds = toArray(request.query["tagIds[]"])?.map((tagId) =>
+        Number(tagId),
+      );
+
       const { user } = request;
 
       const tags = await TagService().findAll(user!.id, {
         page: Number(page),
         perPage: Number(perPage),
         title: title as string,
+        tagIds,
         orderByCreatedAt: !!orderByCreatedAt,
         orderByCreatedAtDirection: orderByCreatedAtDirection as TSortDirection,
       });

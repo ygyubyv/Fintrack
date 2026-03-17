@@ -7,6 +7,7 @@ import {
 import { TSortDirection } from "../../types/v1";
 import { AppError } from "../../errors/AppError";
 import { toExpenseResponse } from "../../dto/expense/expense.response.dto";
+import { toArray } from "../../utils";
 
 export const ExpenseController = () => {
   const getById = async (
@@ -50,7 +51,6 @@ export const ExpenseController = () => {
         expenseType,
         paymentType,
         categoryId,
-        tagIds,
         createdFromDate,
         createdToDate,
         orderByCreatedAt,
@@ -63,6 +63,10 @@ export const ExpenseController = () => {
         orderByPaymentTypeDirection,
       } = request.query;
 
+      const tagIds = toArray(request.query["tagIds[]"])?.map((tagId) =>
+        Number(tagId),
+      );
+
       const expenses = await ExpenseService().findAll(user!.id, {
         page: Number(page),
         perPage: Number(perPage),
@@ -72,7 +76,7 @@ export const ExpenseController = () => {
         expenseType: expenseType as TExpenseType,
         paymentType: paymentType as TPaymentType,
         categoryId: Number(categoryId),
-        tagIds: Array.isArray(tagIds) ? tagIds.map(Number) : undefined,
+        tagIds,
         createdFromDate: createdFromDate as string,
         createdToDate: createdToDate as string,
         orderByCreatedAt: !!orderByCreatedAt,

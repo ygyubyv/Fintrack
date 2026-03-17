@@ -28,6 +28,9 @@ export const TagService = () => {
         ...(filters?.title && {
           title: { contains: filters.title, mode: "insensitive" },
         }),
+        ...(filters.tagIds?.length && {
+          id: { in: filters.tagIds },
+        }),
       },
     });
 
@@ -36,6 +39,9 @@ export const TagService = () => {
         userId,
         ...(filters?.title && {
           title: { contains: filters.title, mode: "insensitive" },
+        }),
+        ...(filters.tagIds?.length && {
+          id: { in: filters.tagIds },
         }),
       },
       skip,

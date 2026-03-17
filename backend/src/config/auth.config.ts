@@ -1,6 +1,6 @@
 export const AUTH_CONFIG = {
   accessTokenSecret: process.env.ACCESS_TOKEN_SECRET,
-  accessTokenExpiresIn: "15m",
+  accessTokenExpiresIn: "4w",
 
   idTokenSecret: process.env.ID_TOKEN_SECRET,
   idTokenExpiresIn: "1h",

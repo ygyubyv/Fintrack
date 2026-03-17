@@ -28,6 +28,9 @@ export const CategoryService = () => {
         ...(filters?.title && {
           title: { contains: filters.title, mode: "insensitive" },
         }),
+        ...(filters.categoryIds?.length && {
+          id: { in: filters.categoryIds },
+        }),
       },
     });
 
@@ -36,6 +39,9 @@ export const CategoryService = () => {
         userId,
         ...(filters?.title && {
           title: { contains: filters.title, mode: "insensitive" },
+        }),
+        ...(filters.categoryIds?.length && {
+          id: { in: filters.categoryIds },
         }),
       },
       skip,

@@ -3,6 +3,7 @@ import type { Request, Response, NextFunction } from "express";
 import { TSortDirection } from "../../types/v1";
 import { AppError } from "../../errors/AppError";
 import { toCategoryResponse } from "../../dto/category/category.response.dto";
+import { toArray } from "../../utils";
 
 export const CategoryController = () => {
   const getById = async (
@@ -43,12 +44,18 @@ export const CategoryController = () => {
         orderByCreatedAt,
         orderByCreatedAtDirection,
       } = request.query;
+
+      const categoryIds = toArray(request.query["categoryIds[]"])?.map(
+        (categoryId) => Number(categoryId),
+      );
+
       const { user } = request;
 
       const categories = await CategoryService().findAll(user!.id, {
         page: Number(page),
         perPage: Number(perPage),
         title: title as string,
+        categoryIds,
         orderByCreatedAt: !!orderByCreatedAt,
         orderByCreatedAtDirection: orderByCreatedAtDirection as TSortDirection,
       });
