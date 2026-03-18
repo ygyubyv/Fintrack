@@ -7,6 +7,7 @@ export interface ICreateExpensePayload {
   paymentType: TPaymentType;
   categoryId: number | null;
   tagIds?: number[];
+  createdAt?: string;
 }
 
 export interface IUpdateExpensePayload {
@@ -16,6 +17,7 @@ export interface IUpdateExpensePayload {
   paymentType?: TPaymentType;
   categoryId?: number | null;
   tagIds?: number[];
+  createdAt?: string;
 }
 
 export type TExpenseOrderByFields =

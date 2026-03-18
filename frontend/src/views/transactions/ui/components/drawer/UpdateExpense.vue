@@ -74,6 +74,20 @@
           type="text"
           size="Medium"
         />
+
+        <!-- Created At -->
+        <BaseInput
+          id="created-at"
+          type="datetime-local"
+          label="Expense Date"
+          :modelValue="toDatetimeLocal(createdAt as string) ?? null"
+          @update:modelValue="
+            (value) => (createdAt = new Date(value).toISOString())
+          "
+          v-bind="createdAtAttrs"
+          size="Medium"
+          :error="errors.createdAt"
+        />
       </div>
     </template>
 
@@ -116,6 +130,7 @@ import type { ITag } from "@/views/tags/types";
 import CategoryAutocompletePicker from "@/views/categories/ui/components/CategoryAutocompletePicker.vue";
 import type { ICategory } from "@/views/categories/types";
 import { ref, watch } from "vue";
+import { toDatetimeLocal } from "@/utils";
 
 interface Props {
   drawerIsVisible: boolean;
@@ -145,6 +160,8 @@ const {
   description,
   descriptionAttrs,
   errors,
+  createdAt,
+  createdAtAttrs,
   resetForm,
   onSubmit,
   setForm,
@@ -198,6 +215,7 @@ watch(
           return tag.id;
         }),
         description: props.expense.description,
+        createdAt: props.expense.createdAt,
       });
 
       selectedTags.value = props.expense.tags;

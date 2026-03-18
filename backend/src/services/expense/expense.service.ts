@@ -144,6 +144,7 @@ export const ExpenseService = () => {
           categoryId,
           paymentType,
           userId,
+          createdAt: payload.createdAt,
           tags: payload.tagIds?.length
             ? { connect: payload.tagIds.map((id) => ({ id })) }
             : undefined,
@@ -184,6 +185,7 @@ export const ExpenseService = () => {
           description,
           categoryId,
           paymentType,
+          createdAt: payload.createdAt,
           tags:
             payload.tagIds !== undefined
               ? {

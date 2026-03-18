@@ -92,7 +92,7 @@ const formatValue = (expense: IExpense) => {
           <!-- Update -->
           <button
             class="p-1.5 rounded hover:bg-gray-100"
-            @click="emit('update', expense)"
+            @click.stop="emit('update', expense)"
           >
             <font-awesome-icon :icon="['fas', 'pen']" />
           </button>
@@ -100,7 +100,7 @@ const formatValue = (expense: IExpense) => {
           <!-- Delete -->
           <button
             class="p-1.5 rounded hover:bg-gray-100 text-gray-400 hover:text-black"
-            @click="emit('delete', expense)"
+            @click.stop="emit('delete', expense)"
           >
             <font-awesome-icon :icon="['fas', 'trash']" />
           </button>

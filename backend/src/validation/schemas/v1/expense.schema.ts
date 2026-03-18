@@ -21,6 +21,16 @@ const PaymentTypeSchema = z.custom<TPaymentType>(
   (val) => val === "CARD" || val === "CASH",
 );
 
+const dateNotLaterThanNow = z.string().refine(
+  (val) => {
+    const date = new Date(val);
+    return date <= new Date();
+  },
+  {
+    message: "Date can not be grater than now",
+  },
+);
+
 export const GetAllSchema: z.ZodType<TGetAllExpensesFilters> = z.object({
   page: z.coerce.number().int().min(1),
   perPage: z.coerce.number().int().min(1).max(100),
@@ -58,6 +68,7 @@ export const CreateSchema: z.ZodType<ICreateExpensePayload> = z.object({
   paymentType: PaymentTypeSchema,
   categoryId: z.number().int().min(1).nullable(),
   tagIds: z.array(z.number().int().min(1)),
+  createdAt: dateNotLaterThanNow.optional(),
 });
 
 export const UpdateSchema: z.ZodType<IUpdateExpensePayload> = z.object({
@@ -67,4 +78,5 @@ export const UpdateSchema: z.ZodType<IUpdateExpensePayload> = z.object({
   paymentType: PaymentTypeSchema.optional(),
   categoryId: z.number().int().min(1).optional().nullable(),
   tagIds: z.array(z.number().int().min(1)).optional(),
+  createdAt: dateNotLaterThanNow.optional(),
 });

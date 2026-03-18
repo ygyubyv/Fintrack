@@ -20,6 +20,7 @@ export interface ICreateExpense {
   paymentType: TPaymentType;
   categoryId: number | null;
   tagIds: number[];
+  createdAt?: string;
 }
 
 export interface IUpdateExpense {
@@ -29,6 +30,7 @@ export interface IUpdateExpense {
   paymentType: TPaymentType;
   categoryId: number | null;
   tagIds: number[];
+  createdAt?: string;
 }
 
 export type TExpenseType = "INCOME" | "EXPENSE";

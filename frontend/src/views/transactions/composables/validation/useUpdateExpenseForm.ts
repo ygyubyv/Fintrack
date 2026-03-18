@@ -31,6 +31,7 @@ export const useUpdateExpenseForm = ({ emit }: Props) => {
   const [categoryId, categoryIdAttrs] = defineField("categoryId");
   const [tagIds, tagIdsAttrs] = defineField("tagIds");
   const [description, descriptionAttrs] = defineField("description");
+  const [createdAt, createdAtAttrs] = defineField("createdAt");
 
   const onSubmit = handleSubmit((values) => {
     emit("submit", {
@@ -40,6 +41,7 @@ export const useUpdateExpenseForm = ({ emit }: Props) => {
       paymentType: values.paymentType,
       tagIds: values.tagIds,
       description: values.description,
+      createdAt: values.createdAt ?? undefined,
     });
 
     emit("update:drawerIsVisible", false);
@@ -52,6 +54,7 @@ export const useUpdateExpenseForm = ({ emit }: Props) => {
     categoryId.value = initialValues.categoryId;
     tagIds.value = initialValues.tagIds;
     description.value = initialValues.description;
+    createdAt.value = initialValues.createdAt;
   };
 
   return {
@@ -68,6 +71,8 @@ export const useUpdateExpenseForm = ({ emit }: Props) => {
     tagIdsAttrs,
     description,
     descriptionAttrs,
+    createdAt,
+    createdAtAttrs,
     errors,
     resetForm,
     onSubmit,

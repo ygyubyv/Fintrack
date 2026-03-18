@@ -36,4 +36,16 @@ export const updateExpenseSchema = yup.object({
     .array()
     .of(yup.number().typeError("Tag id must be a number"))
     .default([]),
+
+  createdAt: yup
+    .string()
+    .optional()
+    .test("not-later-than-now", "Date cannot be later than now", (value) => {
+      if (!value) {
+        return true;
+      }
+
+      const date = new Date(value);
+      return date <= new Date();
+    }),
 });

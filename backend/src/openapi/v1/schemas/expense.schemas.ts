@@ -105,6 +105,14 @@ export const CreateExpenseRequestSchema = {
       items: { type: "integer", minimum: 1 },
       example: [1, 2],
     },
+
+    createdAt: {
+      type: "string",
+      format: "date-time",
+      description:
+        "The expense creation date. Must not be later than the current time.",
+      example: "2026-03-17T21:00:00.000Z",
+    },
   },
 };
 
@@ -135,6 +143,14 @@ export const UpdateExpenseRequestSchema = {
       type: "array",
       items: { type: "integer", minimum: 1 },
       example: [2, 3],
+    },
+
+    createdAt: {
+      type: "string",
+      format: "date-time",
+      description:
+        "The expense creation date. Must not be later than the current time.",
+      example: "2026-03-17T21:00:00.000Z",
     },
   },
 };

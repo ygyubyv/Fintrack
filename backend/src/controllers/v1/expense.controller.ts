@@ -118,6 +118,7 @@ export const ExpenseController = () => {
         description,
         categoryId,
         tagIds,
+        createdAt,
       } = request.body;
 
       const expense = await ExpenseService().create(user!.id, {
@@ -127,6 +128,7 @@ export const ExpenseController = () => {
         description,
         categoryId,
         tagIds,
+        createdAt,
       });
 
       const formattedExpense = toExpenseResponse(expense);
@@ -152,6 +154,7 @@ export const ExpenseController = () => {
         description,
         categoryId,
         tagIds,
+        createdAt,
       } = request.body;
 
       const expense = await ExpenseService().update(user!.id, Number(id), {
@@ -161,6 +164,7 @@ export const ExpenseController = () => {
         description,
         categoryId,
         tagIds,
+        createdAt,
       });
 
       const formattedExpense = toExpenseResponse(expense);
