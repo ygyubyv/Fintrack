@@ -178,8 +178,6 @@ export const AuthService = () => {
 
   const logout = async (payload: ILogoutPayload) => {
     try {
-      jwt.verify(payload.refreshToken, AUTH_CONFIG.refreshTokenSecret!);
-
       refreshTokenService.revoke(
         hashToken(payload.refreshToken, AUTH_CONFIG.refreshTokenSecret!),
       );

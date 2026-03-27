@@ -1,4 +1,3 @@
-import axiosInstance from "@/plugins/axios.plugin";
 import type {
   IAuthResponse,
   IForgotPasswordPayload,
@@ -10,73 +9,72 @@ import type {
   ISignupPayload,
   IVerifyEmailPayload,
 } from "../types";
+import { useApi } from "@/composables/useApi";
+import { AuthApi } from "./api/auth.api";
 
 export const AuthService = () => {
+  const { $api } = useApi();
   const login = async (payload: ILoginPayload) => {
-    return await axiosInstance.post<IAuthResponse>("/auth/login", payload, {
-      headers: {
-        "Content-Type": "application/json",
-      },
+    return await $api<IAuthResponse>({
+      url: AuthApi.login,
+      method: "POST",
+      payload,
     });
   };
 
   const signup = async (payload: ISignupPayload) => {
-    await axiosInstance.post("/auth/signup", payload, {
-      headers: {
-        "Content-Type": "application/json",
-      },
+    return await $api({
+      url: AuthApi.signup,
+      method: "POST",
+      payload,
     });
   };
 
   const logout = async (payload: ILogoutPayload) => {
-    await axiosInstance.post("/auth/logout", payload, {
-      headers: {
-        "Content-Type": "application/json",
-      },
+    return await $api({
+      url: AuthApi.logout,
+      method: "POST",
+      payload,
     });
   };
 
   const refresh = async (payload: IRefreshTokensPayload) => {
-    return await axiosInstance.post<IAuthResponse>("/auth/refresh", payload, {
-      headers: {
-        "Content-Type": "application/json",
-      },
+    return await $api<IAuthResponse>({
+      url: AuthApi.refresh,
+      method: "POST",
+      payload,
     });
   };
 
   const forgotPassword = async (payload: IForgotPasswordPayload) => {
-    return await axiosInstance.post("/auth/forgot-password", payload, {
-      headers: {
-        "Content-Type": "application/json",
-      },
+    return await $api({
+      url: AuthApi.forgotPassword,
+      method: "POST",
+      payload,
     });
   };
 
   const resetPassword = async (payload: IResetPasswordPayload) => {
-    return await axiosInstance.post("/auth/reset-password", payload, {
-      headers: {
-        "Content-Type": "application/json",
-      },
+    return await $api({
+      url: AuthApi.resetPassword,
+      method: "POST",
+      payload,
     });
   };
 
   const verifyEmail = async (payload: IVerifyEmailPayload) => {
-    return await axiosInstance.post<IAuthResponse>(
-      "/auth/verify-email",
+    return await $api<IAuthResponse>({
+      url: AuthApi.verifyEmail,
+      method: "POST",
       payload,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      },
-    );
+    });
   };
 
   const googleAuth = async (payload: IGoogleAuthPayload) => {
-    return await axiosInstance.post<IAuthResponse>("/auth/google", payload, {
-      headers: {
-        "Content-Type": "application/json",
-      },
+    return await $api<IAuthResponse>({
+      url: AuthApi.google,
+      method: "POST",
+      payload,
     });
   };
 

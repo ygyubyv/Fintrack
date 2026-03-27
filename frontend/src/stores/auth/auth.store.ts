@@ -12,8 +12,11 @@ import type {
   IVerifyEmailPayload,
 } from "./types";
 import type { CredentialResponse } from "vue3-google-signin";
+import { useRouter } from "vue-router";
 
 export const useAuthStore = defineStore("auth", () => {
+  const router = useRouter();
+
   const state = ref<AuthState>("anonymous");
 
   // Flag to call bootstrap only once
@@ -62,7 +65,7 @@ export const useAuthStore = defineStore("auth", () => {
     isLoading.value = true;
 
     try {
-      const { data } = await AuthService().login(payload);
+      const data = await AuthService().login(payload);
 
       if (!data) {
         return;
@@ -94,6 +97,13 @@ export const useAuthStore = defineStore("auth", () => {
       }
 
       clearSession();
+
+      router.replace({
+        name: "auth",
+        query: {
+          mode: "login",
+        },
+      });
     } finally {
       isLoading.value = false;
     }
@@ -112,11 +122,7 @@ export const useAuthStore = defineStore("auth", () => {
         refreshToken: refreshToken.value,
       });
 
-      setSession(
-        tokens.data.accessToken,
-        tokens.data.refreshToken,
-        tokens.data.idToken,
-      );
+      setSession(tokens.accessToken, tokens.refreshToken, tokens.idToken);
     } catch (error) {
       clearSession();
       console.error(error);
@@ -152,7 +158,7 @@ export const useAuthStore = defineStore("auth", () => {
     isLoading.value = true;
 
     try {
-      const { data } = await AuthService().verifyEmail(payload);
+      const data = await AuthService().verifyEmail(payload);
 
       if (!data) {
         return;
@@ -172,7 +178,7 @@ export const useAuthStore = defineStore("auth", () => {
         return;
       }
 
-      const { data } = await AuthService().googleAuth({
+      const data = await AuthService().googleAuth({
         idToken: payload.credential,
       });
 

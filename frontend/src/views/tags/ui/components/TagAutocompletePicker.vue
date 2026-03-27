@@ -127,12 +127,13 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, useTemplateRef } from "@vue/runtime-dom";
 import type { ITag } from "../../types";
-import axiosInstance, { baseURL } from "@/plugins/axios.plugin";
+import { baseURL } from "@/plugins/axios.plugin";
 import { TagsApi } from "../../services/api/tags.api";
 import type { TPaginatedResponse } from "@/types";
 import { onClickOutside, watchDebounced } from "@vueuse/core";
 import { useIntersectionObserver } from "@vueuse/core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { useApi } from "@/composables/useApi";
 
 interface Props {
   id: string;
@@ -237,17 +238,19 @@ const getAllTagsHandler = async () => {
   try {
     isLoading.value = true;
 
-    const response = await axiosInstance.get<TPaginatedResponse<ITag>>(
-      String(getAllTagsApiUrl),
-    );
+    const { $api } = useApi();
+
+    const { data, meta } = await $api<TPaginatedResponse<ITag>>({
+      url: String(getAllTagsApiUrl),
+    });
 
     if (page.value === 1) {
-      items.value = response.data.data;
+      items.value = data;
     } else {
-      items.value = [...items.value, ...response.data.data];
+      items.value = [...items.value, ...data];
     }
 
-    total.value = response.data.meta.total;
+    total.value = meta.total;
   } catch (error) {
     console.error(error);
   } finally {
@@ -266,6 +269,8 @@ const getAllTagsHandler = async () => {
 const initialLoadSelectedItems = async () => {
   try {
     isLoading.value = true;
+
+    const { $api } = useApi();
 
     if (props.multiple && (props.modelValue as ITag[]).length) {
       const getAllTagsApiUrl = new URL(`${baseURL}${TagsApi.getAllTags}`);
@@ -286,23 +291,23 @@ const initialLoadSelectedItems = async () => {
         }
       });
 
-      const items = await axiosInstance.get<TPaginatedResponse<ITag>>(
-        String(getAllTagsApiUrl),
-      );
+      const { data } = await $api<TPaginatedResponse<ITag>>({
+        url: String(getAllTagsApiUrl),
+      });
 
-      selectedItems.value = items.data.data;
+      selectedItems.value = data;
     }
 
-    if (!props.multiple) {
+    if (!props.multiple && props.modelValue) {
       const id =
         (props.modelValue as ITag)?.id ||
         (props.modelValue as unknown as number);
-      const getTagByIdApiUrl = new URL(`${baseURL}${TagsApi.getTagById(id)}`);
-      const item = await axiosInstance.get(String(getTagByIdApiUrl));
 
-      if (item) {
-        selectedItems.value = item.data as ITag;
-      }
+      const url = new URL(`${baseURL}${TagsApi.getTagById(id)}`);
+
+      selectedItems.value = await $api<ITag>({
+        url: String(url),
+      });
 
       emit("update:modelValue", selectedItems.value);
     }

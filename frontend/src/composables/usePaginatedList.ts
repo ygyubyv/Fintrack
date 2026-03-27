@@ -1,19 +1,20 @@
-import axiosInstance, { baseURL } from "@/plugins/axios.plugin";
+import { baseURL } from "@/plugins/axios.plugin";
 import type { TPaginatedResponse } from "@/types";
 import { watchDebounced } from "@vueuse/core";
 import { useRouteQuery } from "@vueuse/router";
-import { computed, onMounted, reactive, ref, watch, watchEffect } from "vue";
+import { computed, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
+import { useApi } from "./useApi";
 
 export const usePaginatedList = <T>(apiUrl: string) => {
   const router = useRouter();
+  const { $api, isLoading } = useApi();
 
   const page = useRouteQuery("page", 1, { transform: Number });
   const perPage = useRouteQuery("perPage", 15, { transform: Number });
 
   const DEBOUNCE = 300; // ms
 
-  const isLoading = ref(false);
   const items = ref<T[]>([]);
   const lastPage = ref(0);
   const total = ref(0);
@@ -82,16 +83,13 @@ export const usePaginatedList = <T>(apiUrl: string) => {
 
   const fetchItems = async () => {
     try {
-      isLoading.value = true;
+      const { data, meta } = await $api<TPaginatedResponse<T>>({
+        url: generateSearchParams(baseURL + apiUrl),
+      });
 
-      const response = await axiosInstance.get<TPaginatedResponse<T>>(
-        generateSearchParams(baseURL + apiUrl),
-      );
-
-      items.value = response.data.data;
-
-      total.value = response.data.meta.total;
-      lastPage.value = response.data.meta.lastPage;
+      items.value = data;
+      total.value = meta.total;
+      lastPage.value = meta.lastPage;
     } catch (error) {
       console.error(error);
     } finally {

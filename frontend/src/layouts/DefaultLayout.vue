@@ -16,8 +16,8 @@ const { isLoading } = storeToRefs(useAuthStore());
 
     <main class="flex flex-1 items-center justify-center">
       <div class="w-full max-w-7xl px-8 py-6">
-        <RouterView v-if="!isLoading" />
-        <BaseSpinner v-else mode="Black-spinner" />
+        <RouterView v-show="!isLoading" />
+        <BaseSpinner v-show="isLoading" mode="Black-spinner" />
       </div>
     </main>
 

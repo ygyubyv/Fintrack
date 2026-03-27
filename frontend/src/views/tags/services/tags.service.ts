@@ -1,22 +1,22 @@
-import axiosInstance from "@/plugins/axios.plugin";
 import { TagsApi } from "./api/tags.api";
 import type { ICreateTag, IUpdateTag } from "../types";
-import { ref } from "vue";
+import { useApi } from "@/composables/useApi";
 
 export const TagsService = () => {
   const createTag = (successFn?: () => void) => {
-    const isLoading = ref(false);
+    const { isLoading, $api } = useApi();
 
     const createTagHandler = async (payload: ICreateTag) => {
       try {
-        isLoading.value = true;
-        await axiosInstance.post(TagsApi.createTag, payload);
+        await $api({
+          url: TagsApi.createTag,
+          method: "POST",
+          payload,
+        });
 
         successFn?.();
       } catch (error) {
         console.error(error);
-      } finally {
-        isLoading.value = false;
       }
     };
 
@@ -24,18 +24,19 @@ export const TagsService = () => {
   };
 
   const updateTag = (successFn?: () => void) => {
-    const isLoading = ref(false);
+    const { isLoading, $api } = useApi();
 
     const updateTagHandler = async (id: number, payload: IUpdateTag) => {
       try {
-        isLoading.value = true;
-        await axiosInstance.patch(TagsApi.updateTag(id), payload);
+        await $api({
+          url: TagsApi.updateTag(id),
+          method: "PATCH",
+          payload,
+        });
 
         successFn?.();
       } catch (error) {
         console.error(error);
-      } finally {
-        isLoading.value = false;
       }
     };
 
@@ -43,18 +44,18 @@ export const TagsService = () => {
   };
 
   const deleteTag = (successFn?: () => void) => {
-    const isLoading = ref(false);
+    const { isLoading, $api } = useApi();
 
     const deleteTagHandler = async (id: number) => {
       try {
-        isLoading.value = true;
-        await axiosInstance.delete(TagsApi.deleteTag(id));
+        await $api({
+          url: TagsApi.deleteTag(id),
+          method: "DELETE",
+        });
 
         successFn?.();
       } catch (error) {
         console.error(error);
-      } finally {
-        isLoading.value = false;
       }
     };
 

@@ -1,22 +1,22 @@
-import axiosInstance from "@/plugins/axios.plugin";
 import { ExpensesApi } from "./api/expenses.api";
 import type { ICreateExpense, IUpdateExpense } from "../types";
-import { ref } from "vue";
+import { useApi } from "@/composables/useApi";
 
 export const ExpensesService = () => {
   const createExpense = (successFn?: () => void) => {
-    const isLoading = ref(false);
+    const { isLoading, $api } = useApi();
 
     const createExpenseHandler = async (payload: ICreateExpense) => {
       try {
-        isLoading.value = true;
-        await axiosInstance.post(ExpensesApi.createExpense, payload);
+        await $api({
+          url: ExpensesApi.createExpense,
+          method: "POST",
+          payload,
+        });
 
         successFn?.();
       } catch (error) {
         console.error(error);
-      } finally {
-        isLoading.value = false;
       }
     };
 
@@ -24,18 +24,22 @@ export const ExpensesService = () => {
   };
 
   const updateExpense = (successFn?: () => void) => {
-    const isLoading = ref(false);
+    const { isLoading, $api } = useApi();
 
-    const updateExpenseHandler = async (id: number, payload: IUpdateExpense) => {
+    const updateExpenseHandler = async (
+      id: number,
+      payload: IUpdateExpense,
+    ) => {
       try {
-        isLoading.value = true;
-        await axiosInstance.patch(ExpensesApi.updateExpense(id), payload);
+        await $api({
+          method: "PATCH",
+          url: ExpensesApi.updateExpense(id),
+          payload,
+        });
 
         successFn?.();
       } catch (error) {
         console.error(error);
-      } finally {
-        isLoading.value = false;
       }
     };
 
@@ -43,18 +47,18 @@ export const ExpensesService = () => {
   };
 
   const deleteExpense = (successFn?: () => void) => {
-    const isLoading = ref(false);
+    const { isLoading, $api } = useApi();
 
     const deleteExpenseHandler = async (id: number) => {
       try {
-        isLoading.value = true;
-        await axiosInstance.delete(ExpensesApi.deleteExpense(id));
+        await $api({
+          method: "DELETE",
+          url: ExpensesApi.deleteExpense(id),
+        });
 
         successFn?.();
       } catch (error) {
         console.error(error);
-      } finally {
-        isLoading.value = false;
       }
     };
 

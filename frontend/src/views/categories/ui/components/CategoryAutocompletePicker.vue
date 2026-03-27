@@ -121,12 +121,13 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, useTemplateRef } from "vue";
 import type { ICategory } from "../../types";
-import axiosInstance, { baseURL } from "@/plugins/axios.plugin";
+import { baseURL } from "@/plugins/axios.plugin";
 import { CategoriesApi } from "../../services/api/categories.api";
 import type { TPaginatedResponse } from "@/types";
 import { onClickOutside, watchDebounced } from "@vueuse/core";
 import { useIntersectionObserver } from "@vueuse/core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { useApi } from "@/composables/useApi";
 
 interface Props {
   id: string;
@@ -224,17 +225,19 @@ const getAllCategoriesHandler = async () => {
   try {
     isLoading.value = true;
 
-    const response = await axiosInstance.get<TPaginatedResponse<ICategory>>(
-      String(url),
-    );
+    const { $api } = useApi();
+
+    const { data, meta } = await $api<TPaginatedResponse<ICategory>>({
+      url: String(url),
+    });
 
     if (page.value === 1) {
-      items.value = response.data.data;
+      items.value = data;
     } else {
-      items.value = [...items.value, ...response.data.data];
+      items.value = [...items.value, ...data];
     }
 
-    total.value = response.data.meta.total;
+    total.value = meta.total;
   } catch (error) {
     console.error(error);
   } finally {
@@ -254,6 +257,8 @@ const initialLoadSelectedItems = async () => {
   try {
     isLoading.value = true;
 
+    const { $api } = useApi();
+
     if (props.multiple && (props.modelValue as ICategory[])?.length) {
       const url = new URL(`${baseURL}${CategoriesApi.getAllCategories}`);
 
@@ -271,11 +276,11 @@ const initialLoadSelectedItems = async () => {
         }
       });
 
-      const response = await axiosInstance.get<TPaginatedResponse<ICategory>>(
-        String(url),
-      );
+      const { data } = await $api<TPaginatedResponse<ICategory>>({
+        url: String(url),
+      });
 
-      selectedItems.value = response.data.data;
+      selectedItems.value = data;
     }
 
     if (!props.multiple && props.modelValue) {
@@ -285,9 +290,10 @@ const initialLoadSelectedItems = async () => {
 
       const url = new URL(`${baseURL}${CategoriesApi.getCategoryById(id)}`);
 
-      const response = await axiosInstance.get(String(url));
+      selectedItems.value = await $api<ICategory>({
+        url: String(url),
+      });
 
-      selectedItems.value = response.data as ICategory;
       emit("update:modelValue", selectedItems.value);
     }
   } catch (error) {
