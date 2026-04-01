@@ -1,19 +1,29 @@
 import { baseURL } from "@/plugins/axios.plugin";
 import type { TPaginatedResponse } from "@/types";
 import { watchDebounced } from "@vueuse/core";
-import { useRouteQuery } from "@vueuse/router";
-import { computed, reactive, ref } from "vue";
-import { useRouter } from "vue-router";
+import { computed, reactive, ref, watchEffect } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { useApi } from "./useApi";
 
-export const usePaginatedList = <T>(apiUrl: string) => {
+interface IPaginatedListOptions {
+  changeUrl: boolean;
+}
+
+export const usePaginatedList = <T>(
+  apiUrl: string,
+  options: Partial<IPaginatedListOptions> = {},
+) => {
+  const { changeUrl = true } = options;
+
   const router = useRouter();
+  const route = useRoute();
+
   const { $api, isLoading } = useApi();
 
-  const page = useRouteQuery("page", 1, { transform: Number });
-  const perPage = useRouteQuery("perPage", 15, { transform: Number });
+  const page = ref(route.query.page ? Number(route.query.page) : 1);
+  const perPage = ref(route.query.perPage ? Number(route.query.perPage) : 15);
 
-  const DEBOUNCE = 300; // ms
+  const DEBOUNCE = ref(25); // ms
 
   const items = ref<T[]>([]);
   const lastPage = ref(0);
@@ -44,12 +54,8 @@ export const usePaginatedList = <T>(apiUrl: string) => {
       delete searchQueryParams[key];
     }
 
-    router.replace({
-      query: {
-        page: 1,
-        perPage: 15,
-      },
-    });
+    page.value = 1;
+    perPage.value = 15;
   };
 
   // Sync state with initial query
@@ -101,24 +107,23 @@ export const usePaginatedList = <T>(apiUrl: string) => {
 
   // Sync state changes with router query
   watchDebounced(
-    searchQueryParams,
+    filters,
     () => {
-      router.replace({
-        query: {
-          page: String(page.value),
-          perPage: String(perPage.value),
-          ...Object.fromEntries(
-            Object.entries(searchQueryParams)
-              .filter(
-                ([_, value]) =>
-                  value !== undefined &&
-                  value !== null &&
-                  !(typeof value === "string" && value.trim() === ""),
-              )
-              .map(([key, value]) => [key, String(value)]),
-          ),
-        },
-      });
+      changeUrl &&
+        router.replace({
+          query: {
+            ...Object.fromEntries(
+              Object.entries(filters.value)
+                .filter(
+                  ([_, value]) =>
+                    value !== undefined &&
+                    value !== null &&
+                    !(typeof value === "string" && value.trim() === ""),
+                )
+                .map(([key, value]) => [key, String(value)]),
+            ),
+          },
+        });
     },
     {
       debounce: DEBOUNCE,
@@ -131,17 +136,20 @@ export const usePaginatedList = <T>(apiUrl: string) => {
     (newValue, oldValue) => {
       if (JSON.stringify(newValue) !== JSON.stringify(oldValue)) {
         fetchItems();
+
+        // Initially, we don't want to debounce the fetchItems call, so we set DEBOUNCE to 0. After the first change, we set it to 300ms for subsequent changes.
+        DEBOUNCE.value = 300;
       }
     },
     {
       immediate: true,
-      debounce: DEBOUNCE,
+      debounce: DEBOUNCE.value,
       deep: true,
     },
   );
 
   initializeSearchQuery();
-  fetchItems();
+  // fetchItems();
 
   return {
     page,

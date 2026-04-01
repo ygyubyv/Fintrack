@@ -3,7 +3,6 @@ import Main from "@/pages/index.vue";
 import Analytics from "@/pages/analytics.vue";
 import Auth from "@/pages/auth.vue";
 import Tags from "@/pages/tags.vue";
-import Dashboard from "@/pages/dashboard.vue";
 import Transactions from "@/pages/transactions.vue";
 import { useAuthStore } from "@/stores/auth/auth.store";
 import { storeToRefs } from "pinia";
@@ -48,14 +47,6 @@ const router = createRouter({
       path: "/categories",
       name: "categories",
       component: Categories,
-      meta: {
-        requiresAuth: true,
-      },
-    },
-    {
-      path: "/dashboard",
-      name: "dashboard",
-      component: Dashboard,
       meta: {
         requiresAuth: true,
       },

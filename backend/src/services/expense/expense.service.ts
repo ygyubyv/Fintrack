@@ -23,9 +23,6 @@ export const ExpenseService = () => {
   };
 
   const findAll = async (userId: number, filters: TGetAllExpensesFilters) => {
-    const skip = (filters.page - 1) * filters.perPage;
-    const take = filters.perPage;
-
     const total = await prisma.expense.count({
       where: {
         userId,
@@ -94,8 +91,11 @@ export const ExpenseService = () => {
         tags: true,
         category: true,
       },
-      skip,
-      take,
+      skip:
+        filters?.page && filters?.perPage
+          ? (filters.page - 1) * filters.perPage
+          : undefined,
+      take: filters?.perPage ? filters.perPage : undefined,
       orderBy: {
         ...(filters?.orderByValue &&
           filters?.orderByValueDirection && {
@@ -118,7 +118,7 @@ export const ExpenseService = () => {
 
     const perPage = filters.perPage;
     const currentPage = filters.page;
-    const lastPage = Math.ceil(total / perPage);
+    const lastPage = filters.perPage ? Math.ceil(total / filters.perPage) : 1;
 
     return {
       data,

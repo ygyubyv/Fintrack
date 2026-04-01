@@ -13,9 +13,8 @@ const { logout } = authStore;
 const { isAuthenticated, isLoading } = storeToRefs(authStore);
 
 const links = [
-  { label: "Dashboard", to: "/dashboard", requiresAuth: true },
-  { label: "Transactions", to: "/transactions", requiresAuth: true },
   { label: "Analytics", to: "/analytics", requiresAuth: true },
+  { label: "Transactions", to: "/transactions", requiresAuth: true },
   { label: "Tags", to: "/tags", requiresAuth: true },
   { label: "Categories", to: "/categories", requiresAuth: true },
 ];

@@ -30,6 +30,7 @@ import {
   faRotateLeft,
   faChevronDown,
   faInbox,
+  faBolt,
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(
@@ -62,6 +63,7 @@ library.add(
   faRotateLeft,
   faChevronDown,
   faInbox,
+  faBolt,
 );
 
 export { FontAwesomeIcon };

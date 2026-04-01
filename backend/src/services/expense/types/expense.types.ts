@@ -26,7 +26,7 @@ export type TExpenseOrderByFields =
   | "ExpenseType"
   | "PaymentType";
 
-export type TGetAllExpensesFilters = IPaginationPayload &
+export type TGetAllExpensesFilters = Partial<IPaginationPayload> &
   TOrderBy<TExpenseOrderByFields> & {
     description?: string;
     valueFrom?: number;

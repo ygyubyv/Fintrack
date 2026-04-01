@@ -18,14 +18,14 @@ export const expensePaths = {
         {
           name: "page",
           in: "query",
-          required: true,
+          required: false,
           schema: { type: "integer", minimum: 1 },
           example: 1,
         },
         {
           name: "perPage",
           in: "query",
-          required: true,
+          required: false,
           schema: { type: "integer", minimum: 1, maximum: 100 },
           example: 10,
         },

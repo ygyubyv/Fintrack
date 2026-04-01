@@ -32,8 +32,8 @@ const dateNotLaterThanNow = z.string().refine(
 );
 
 export const GetAllSchema: z.ZodType<TGetAllExpensesFilters> = z.object({
-  page: z.coerce.number().int().min(1),
-  perPage: z.coerce.number().int().min(1).max(100),
+  page: z.coerce.number().int().min(1).optional(),
+  perPage: z.coerce.number().int().min(1).max(100).optional(),
   description: z.string().min(1).max(255).optional(),
   valueFrom: z.coerce.number().optional(),
   valueTo: z.coerce.number().optional(),
