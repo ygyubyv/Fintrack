@@ -31,6 +31,10 @@ import {
   faChevronDown,
   faInbox,
   faBolt,
+  faChartBar,
+  faPlusCircle,
+  faLayerGroup,
+  faCheckCircle,
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(
@@ -64,6 +68,10 @@ library.add(
   faChevronDown,
   faInbox,
   faBolt,
+  faChartBar,
+  faPlusCircle,
+  faLayerGroup,
+  faCheckCircle,
 );
 
 export { FontAwesomeIcon };

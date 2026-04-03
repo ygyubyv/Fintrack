@@ -108,7 +108,7 @@ const handleDeleteCategory = () => {
         <BaseInput
           id="search"
           v-model="searchQueryParams.title"
-          placeholder="Search tags..."
+          placeholder="Search Categories..."
           size="Medium"
           class="sm:w-64"
         />
