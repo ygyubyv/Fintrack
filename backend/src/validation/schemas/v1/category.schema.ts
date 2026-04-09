@@ -4,6 +4,7 @@ import type {
   IGetCategoryByIdFilters,
   ICreateCategoryPayload,
   IUpdateCategoryPayload,
+  TExportAllCategoriesFilters,
 } from "../../../services/category/types/category.types";
 import { TSortDirection } from "../../../types/v1";
 
@@ -20,6 +21,16 @@ export const GetAllSchema: z.ZodType<TGetAllCategoriesFilters> = z.object({
   orderByCreatedAt: z.coerce.boolean().optional(),
   orderByCreatedAtDirection: SortDirectionSchema.optional(),
 });
+
+export const ExportAllSchema: z.ZodType<TExportAllCategoriesFilters> = z.object(
+  {
+    title: z.coerce.string().min(1).max(50).optional(),
+    categoryIds: z.array(z.coerce.number()).optional(),
+
+    orderByCreatedAt: z.coerce.boolean().optional(),
+    orderByCreatedAtDirection: SortDirectionSchema.optional(),
+  },
+);
 
 export const GetByIdSchema: z.ZodType<IGetCategoryByIdFilters> = z.object({
   id: z.coerce.number().int().min(1).default(1),

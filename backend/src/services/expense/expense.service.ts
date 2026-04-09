@@ -1,12 +1,14 @@
 import { AppError } from "../../errors/AppError";
 import { MapPrismaError } from "../../errors/mapper/prisma-error.mapper";
-import { prisma } from "../../lib/prisma";
+import { Prisma, prisma } from "../../lib/prisma";
 import {
   ICreateExpensePayload,
   IGetExpenseByIdFilters,
+  IImportExpensePayload,
   IUpdateExpensePayload,
   TGetAllExpensesFilters,
 } from "./types/expense.types";
+import Papa from "papaparse";
 
 export const ExpenseService = () => {
   const findById = async (userId: number, filters: IGetExpenseByIdFilters) => {
@@ -22,7 +24,7 @@ export const ExpenseService = () => {
     });
   };
 
-  const findAll = async (userId: number, filters: TGetAllExpensesFilters) => {
+  const findAll = async (userId: number, filters?: TGetAllExpensesFilters) => {
     const total = await prisma.expense.count({
       where: {
         userId,
@@ -116,9 +118,9 @@ export const ExpenseService = () => {
       },
     });
 
-    const perPage = filters.perPage;
-    const currentPage = filters.page;
-    const lastPage = filters.perPage ? Math.ceil(total / filters.perPage) : 1;
+    const perPage = filters?.perPage;
+    const currentPage = filters?.page;
+    const lastPage = filters?.perPage ? Math.ceil(total / filters.perPage) : 1;
 
     return {
       data,
@@ -232,11 +234,163 @@ export const ExpenseService = () => {
     }
   };
 
+  const exportAll = async (
+    userId: number,
+    filters?: TGetAllExpensesFilters,
+  ) => {
+    const expenses = await prisma.expense.findMany({
+      where: {
+        userId,
+        ...(filters?.description && {
+          description: { contains: filters.description, mode: "insensitive" },
+        }),
+        ...(filters?.valueFrom || filters?.valueTo
+          ? {
+              value: {
+                ...(filters.valueFrom && { gte: filters.valueFrom }),
+                ...(filters.valueTo && { lte: filters.valueTo }),
+              },
+            }
+          : {}),
+        ...(filters?.expenseType && { expenseType: filters.expenseType }),
+        ...(filters?.paymentType && { paymentType: filters.paymentType }),
+        ...(filters?.categoryId && { categoryId: filters.categoryId }),
+        ...(filters?.tagIds && {
+          tags: { some: { id: { in: filters.tagIds } } },
+        }),
+        ...(filters?.createdFromDate || filters?.createdToDate
+          ? {
+              createdAt: {
+                ...(filters.createdFromDate && {
+                  gte: filters.createdFromDate,
+                }),
+                ...(filters.createdToDate && { lte: filters.createdToDate }),
+              },
+            }
+          : {}),
+      },
+
+      orderBy: {
+        ...(filters?.orderByValue &&
+          filters?.orderByValueDirection && {
+            value: filters.orderByValueDirection,
+          }),
+        ...(filters?.orderByExpenseType &&
+          filters?.orderByExpenseTypeDirection && {
+            expenseType: filters.orderByExpenseTypeDirection,
+          }),
+        ...(filters?.orderByPaymentType &&
+          filters?.orderByPaymentTypeDirection && {
+            paymentType: filters.orderByPaymentTypeDirection,
+          }),
+        ...(filters?.orderByCreatedAt &&
+          filters?.orderByCreatedAtDirection && {
+            createdAt: filters.orderByCreatedAtDirection,
+          }),
+      },
+
+      include: {
+        tags: true,
+      },
+    });
+
+    const data = expenses.map((expense) => {
+      return {
+        id: expense.id,
+        value: expense.value,
+        description: expense.description,
+        expenseType: expense.expenseType,
+        paymentType: expense.paymentType,
+        categoryId: expense.categoryId,
+        tagIds: expense.tags
+          .map((tag) => {
+            return tag.id;
+          })
+          .join(","),
+        createdAt: expense.createdAt,
+        updatedAt: expense.updatedAt,
+      };
+    });
+
+    return Papa.unparse(data, {
+      delimiter: ";",
+      columns: [
+        "id",
+        "value",
+        "description",
+        "expenseType",
+        "paymentType",
+        "categoryId",
+        "tagIds",
+        "createdAt",
+        "updatedAt",
+      ],
+      header: true,
+    });
+  };
+
+  const importAll = async (userId: number, file: Express.Multer.File) => {
+    const csvString = file.buffer.toString("utf-8");
+
+    const { data: payload } = Papa.parse<IImportExpensePayload>(csvString, {
+      header: true,
+      skipEmptyLines: true,
+      delimiter: ";",
+    });
+
+    await prisma.$transaction(async (transaction) => {
+      await transaction.expense.deleteMany({
+        where: {
+          userId,
+        },
+      });
+
+      if (!payload.length) {
+        return;
+      }
+
+      await transaction.expense.createMany({
+        data: payload.map((expense) => {
+          return {
+            userId,
+            id: Number(expense.id),
+            value: Number(expense.value),
+            description: expense.description,
+            expenseType: expense.expenseType,
+            paymentType: expense.paymentType,
+            categoryId: Number(expense.categoryId),
+            createdAt: expense.createdAt,
+            updatedAt: expense.updatedAt,
+          };
+        }),
+      });
+
+      await transaction.$executeRaw`
+        INSERT INTO "_ExpenseToTag" ("A", "B")
+        VALUES ${Prisma.join(
+          payload.flatMap((expense) => {
+            const tagIds = expense.tagIds?.split(",");
+
+            if (!tagIds?.length) {
+              return [];
+            }
+
+            return tagIds.map((tagId) => {
+              return Prisma.sql`(${expense.id}, ${tagId})`;
+            });
+          }),
+        )}
+      `;
+    });
+  };
+
   return {
     findById,
     findAll,
     create,
     update,
     remove,
+    exportAll,
+    importAll,
   };
 };

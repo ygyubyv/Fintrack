@@ -8,6 +8,13 @@ export interface IUpdateCategoryPayload {
   title?: string;
 }
 
+export interface IImportCategoryPayload {
+  id: string;
+  title: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export type TCategoryOrderByFields = "CreatedAt";
 
 export type TGetAllCategoriesFilters = IPaginationPayload &
@@ -15,6 +22,11 @@ export type TGetAllCategoriesFilters = IPaginationPayload &
     title?: string;
     categoryIds?: number[];
   };
+
+export type TExportAllCategoriesFilters = TOrderBy<TCategoryOrderByFields> & {
+  title?: string;
+  categoryIds?: number[];
+};
 
 export interface IGetCategoryByIdFilters {
   id: number;

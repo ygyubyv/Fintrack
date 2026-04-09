@@ -10,6 +10,14 @@ export interface IUpdateTagPayload {
   color?: string;
 }
 
+export interface IImportTagPayload {
+  id: string;
+  title: string;
+  color: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export type TTagOrderByFields = "CreatedAt";
 
 export type TGetAllTagsFilters = IPaginationPayload &
@@ -17,6 +25,11 @@ export type TGetAllTagsFilters = IPaginationPayload &
     title?: string;
     tagIds?: number[];
   };
+
+export type TExportAllTagsFilters = TOrderBy<TTagOrderByFields> & {
+  title?: string;
+  tagIds?: number[];
+};
 
 export interface IGetTagByIdFilters {
   id: number;

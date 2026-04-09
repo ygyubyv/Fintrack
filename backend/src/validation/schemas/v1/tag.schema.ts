@@ -4,6 +4,7 @@ import type {
   IUpdateTagPayload,
   TGetAllTagsFilters,
   IGetTagByIdFilters,
+  TExportAllTagsFilters,
 } from "../../../services/tag/types/tag.types";
 import { TSortDirection } from "../../../types/v1";
 
@@ -16,6 +17,14 @@ export const hexColorRegex = /^#([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$/;
 export const GetAllSchema: z.ZodType<TGetAllTagsFilters> = z.object({
   page: z.coerce.number().int().min(1),
   perPage: z.coerce.number().int().min(1).max(100),
+  title: z.coerce.string().min(1).max(50).optional(),
+  tagIds: z.array(z.coerce.number()).optional(),
+
+  orderByCreatedAt: z.coerce.boolean().optional(),
+  orderByCreatedAtDirection: SortDirectionSchema.optional(),
+});
+
+export const ExportAllSchema: z.ZodType<TExportAllTagsFilters> = z.object({
   title: z.coerce.string().min(1).max(50).optional(),
   tagIds: z.array(z.coerce.number()).optional(),
 

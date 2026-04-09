@@ -6,10 +6,13 @@ import {
   GetByIdSchema,
   CreateSchema,
   UpdateSchema,
+  ExportAllSchema,
 } from "../../validation/schemas/v1/category.schema";
+import { uploadCsv } from "../../utils/multer";
 
 const router = express.Router();
-const { getById, getAll, create, update, remove } = CategoryController();
+const { getById, getAll, create, update, remove, exportAll, importAll } =
+  CategoryController();
 
 router.get("/:id", ValidateMiddleware({ params: GetByIdSchema }), getById);
 router.get("/", ValidateMiddleware({ query: GetAllSchema }), getAll);
@@ -20,5 +23,11 @@ router.patch(
   update,
 );
 router.delete("/:id", ValidateMiddleware({ params: GetByIdSchema }), remove);
+router.post(
+  "/export",
+  ValidateMiddleware({ query: ExportAllSchema }),
+  exportAll,
+);
+router.post("/import", uploadCsv.single("file"), importAll);
 
 export default router;

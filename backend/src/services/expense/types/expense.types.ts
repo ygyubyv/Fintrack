@@ -20,6 +20,18 @@ export interface IUpdateExpensePayload {
   createdAt?: string;
 }
 
+export interface IImportExpensePayload {
+  id: string;
+  value: string;
+  description?: string;
+  expenseType: TExpenseType;
+  paymentType: TPaymentType;
+  categoryId: string | null;
+  tagIds?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export type TExpenseOrderByFields =
   | "CreatedAt"
   | "Value"
@@ -38,6 +50,18 @@ export type TGetAllExpensesFilters = Partial<IPaginationPayload> &
     createdFromDate?: string;
     createdToDate?: string;
   };
+
+export type TExportAllExpensesFilters = TOrderBy<TExpenseOrderByFields> & {
+  description?: string;
+  valueFrom?: number;
+  valueTo?: number;
+  expenseType?: TExpenseType;
+  paymentType?: TPaymentType;
+  categoryId?: number;
+  tagIds?: number[];
+  createdFromDate?: string;
+  createdToDate?: string;
+};
 
 export interface IGetExpenseByIdFilters {
   id: number;

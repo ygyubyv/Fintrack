@@ -6,6 +6,7 @@ import type {
   IUpdateExpensePayload,
   TExpenseType,
   TPaymentType,
+  TExportAllExpensesFilters,
 } from "../../../services/expense/types/expense.types";
 import { TSortDirection } from "../../../types/v1";
 
@@ -79,4 +80,28 @@ export const UpdateSchema: z.ZodType<IUpdateExpensePayload> = z.object({
   categoryId: z.number().int().min(1).optional().nullable(),
   tagIds: z.array(z.number().int().min(1)).optional(),
   createdAt: dateNotLaterThanNow.optional(),
+});
+
+export const ExportAllSchema: z.ZodType<TExportAllExpensesFilters> = z.object({
+  description: z.string().min(1).max(255).optional(),
+  valueFrom: z.coerce.number().optional(),
+  valueTo: z.coerce.number().optional(),
+  expenseType: ExpenseTypeSchema.optional(),
+  paymentType: PaymentTypeSchema.optional(),
+  categoryId: z.coerce.number().optional(),
+  tagIds: z.array(z.coerce.number()).optional(),
+  createdFromDate: z.iso.datetime().optional(),
+  createdToDate: z.iso.datetime().optional(),
+
+  orderByCreatedAt: z.coerce.boolean().optional(),
+  orderByCreatedAtDirection: SortDirectionSchema.optional(),
+
+  orderByValue: z.coerce.boolean().optional(),
+  orderByValueDirection: SortDirectionSchema.optional(),
+
+  orderByExpenseType: z.coerce.boolean().optional(),
+  orderByExpenseTypeDirection: SortDirectionSchema.optional(),
+
+  orderByPaymentType: z.coerce.boolean().optional(),
+  orderByPaymentTypeDirection: SortDirectionSchema.optional(),
 });

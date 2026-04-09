@@ -75,7 +75,7 @@ export const expensePaths = {
         },
 
         {
-          name: "tagIds",
+          name: "tagIds[]",
           in: "query",
           required: false,
           style: "form",
@@ -200,6 +200,202 @@ export const expensePaths = {
           description: "Expense created",
           content: { "application/json": { schema: ExpenseSchema } },
         },
+
+        401: {
+          description: "Unauthorized",
+          content: { "application/json": { schema: ErrorResponseSchema } },
+        },
+
+        422: {
+          description: "Validation error",
+          content: { "application/json": { schema: ErrorResponseSchema } },
+        },
+
+        500: {
+          description: "Internal server error",
+          content: { "application/json": { schema: ErrorResponseSchema } },
+        },
+      },
+    },
+  },
+
+  "/api/v1/expenses/export": {
+    post: {
+      summary: "Export expenses to CSV",
+      tags: ["Expenses"],
+      security: [{ bearerAuth: [] }],
+
+      parameters: [
+        {
+          name: "description",
+          in: "query",
+          required: false,
+          schema: { type: "string", minLength: 1, maxLength: 255 },
+          example: "coffee",
+        },
+        {
+          name: "valueFrom",
+          in: "query",
+          required: false,
+          schema: { type: "number" },
+          example: 10,
+        },
+        {
+          name: "valueTo",
+          in: "query",
+          required: false,
+          schema: { type: "number" },
+          example: 500,
+        },
+        {
+          name: "expenseType",
+          in: "query",
+          required: false,
+          schema: { type: "string", enum: ["INCOME", "EXPENSE"] },
+          example: "EXPENSE",
+        },
+        {
+          name: "paymentType",
+          in: "query",
+          required: false,
+          schema: { type: "string", enum: ["CARD", "CASH"] },
+          example: "CARD",
+        },
+        {
+          name: "categoryId",
+          in: "query",
+          required: false,
+          schema: { type: "integer", minimum: 1 },
+          example: 3,
+        },
+        {
+          name: "tagIds[]",
+          in: "query",
+          required: false,
+          style: "form",
+          explode: true,
+          schema: { type: "array", items: { type: "integer", minimum: 1 } },
+          example: [1, 2],
+        },
+        {
+          name: "createdFromDate",
+          in: "query",
+          required: false,
+          schema: { type: "string", format: "date-time" },
+          example: "2026-02-01T00:00:00.000Z",
+        },
+        {
+          name: "createdToDate",
+          in: "query",
+          required: false,
+          schema: { type: "string", format: "date-time" },
+          example: "2026-02-27T23:59:59.999Z",
+        },
+        {
+          name: "orderByCreatedAt",
+          in: "query",
+          required: false,
+          schema: { type: "boolean" },
+          example: true,
+        },
+        {
+          name: "orderByCreatedAtDirection",
+          in: "query",
+          required: false,
+          schema: { type: "string", enum: ["asc", "desc"] },
+          example: "desc",
+        },
+        {
+          name: "orderByValue",
+          in: "query",
+          required: false,
+          schema: { type: "boolean" },
+          example: true,
+        },
+        {
+          name: "orderByValueDirection",
+          in: "query",
+          required: false,
+          schema: { type: "string", enum: ["asc", "desc"] },
+          example: "desc",
+        },
+        {
+          name: "orderByExpenseType",
+          in: "query",
+          required: false,
+          schema: { type: "boolean" },
+          example: false,
+        },
+        {
+          name: "orderByExpenseTypeDirection",
+          in: "query",
+          required: false,
+          schema: { type: "string", enum: ["asc", "desc"] },
+          example: "asc",
+        },
+        {
+          name: "orderByPaymentType",
+          in: "query",
+          required: false,
+          schema: { type: "boolean" },
+          example: false,
+        },
+        {
+          name: "orderByPaymentTypeDirection",
+          in: "query",
+          required: false,
+          schema: { type: "string", enum: ["asc", "desc"] },
+          example: "asc",
+        },
+      ],
+
+      responses: {
+        200: {
+          description: "CSV file with expenses",
+          content: { "text/csv": { schema: { type: "string" } } },
+        },
+
+        401: {
+          description: "Unauthorized",
+          content: { "application/json": { schema: ErrorResponseSchema } },
+        },
+
+        422: {
+          description: "Validation error",
+          content: { "application/json": { schema: ErrorResponseSchema } },
+        },
+
+        500: {
+          description: "Internal server error",
+          content: { "application/json": { schema: ErrorResponseSchema } },
+        },
+      },
+    },
+  },
+
+  "/api/v1/expenses/import": {
+    post: {
+      summary: "Import expenses from CSV",
+      tags: ["Expenses"],
+      security: [{ bearerAuth: [] }],
+
+      requestBody: {
+        required: true,
+        content: {
+          "multipart/form-data": {
+            schema: {
+              type: "object",
+              required: ["file"],
+              properties: {
+                file: { type: "string", format: "binary" },
+              },
+            },
+          },
+        },
+      },
+
+      responses: {
+        200: { description: "Expenses imported successfully" },
 
         401: {
           description: "Unauthorized",

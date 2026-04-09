@@ -36,6 +36,15 @@ export const tagPaths = {
           example: "foo",
         },
         {
+          name: "tagIds[]",
+          in: "query",
+          required: false,
+          style: "form",
+          explode: true,
+          schema: { type: "array", items: { type: "integer", minimum: 1 } },
+          example: [1, 2],
+        },
+        {
           name: "orderByCreatedAt",
           in: "query",
           required: false,
@@ -105,6 +114,111 @@ export const tagPaths = {
 
         409: {
           description: "Tag already exists",
+          content: { "application/json": { schema: ErrorResponseSchema } },
+        },
+
+        422: {
+          description: "Validation error",
+          content: { "application/json": { schema: ErrorResponseSchema } },
+        },
+
+        500: {
+          description: "Internal server error",
+          content: { "application/json": { schema: ErrorResponseSchema } },
+        },
+      },
+    },
+  },
+
+  "/api/v1/tags/export": {
+    post: {
+      summary: "Export tags to CSV",
+      tags: ["Tags"],
+      security: [{ bearerAuth: [] }],
+
+      parameters: [
+        {
+          name: "title",
+          in: "query",
+          required: false,
+          schema: { type: "string", minLength: 1, maxLength: 50 },
+          example: "foo",
+        },
+        {
+          name: "tagIds[]",
+          in: "query",
+          required: false,
+          style: "form",
+          explode: true,
+          schema: { type: "array", items: { type: "integer", minimum: 1 } },
+          example: [1, 2],
+        },
+        {
+          name: "orderByCreatedAt",
+          in: "query",
+          required: false,
+          schema: { type: "boolean" },
+          example: true,
+        },
+        {
+          name: "orderByCreatedAtDirection",
+          in: "query",
+          required: false,
+          schema: { type: "string", enum: ["asc", "desc"] },
+          example: "desc",
+        },
+      ],
+
+      responses: {
+        200: {
+          description: "CSV file with tags",
+          content: { "text/csv": { schema: { type: "string" } } },
+        },
+
+        401: {
+          description: "Unauthorized",
+          content: { "application/json": { schema: ErrorResponseSchema } },
+        },
+
+        422: {
+          description: "Validation error",
+          content: { "application/json": { schema: ErrorResponseSchema } },
+        },
+
+        500: {
+          description: "Internal server error",
+          content: { "application/json": { schema: ErrorResponseSchema } },
+        },
+      },
+    },
+  },
+
+  "/api/v1/tags/import": {
+    post: {
+      summary: "Import tags from CSV",
+      tags: ["Tags"],
+      security: [{ bearerAuth: [] }],
+
+      requestBody: {
+        required: true,
+        content: {
+          "multipart/form-data": {
+            schema: {
+              type: "object",
+              required: ["file"],
+              properties: {
+                file: { type: "string", format: "binary" },
+              },
+            },
+          },
+        },
+      },
+
+      responses: {
+        200: { description: "Tags imported successfully" },
+
+        401: {
+          description: "Unauthorized",
           content: { "application/json": { schema: ErrorResponseSchema } },
         },
 

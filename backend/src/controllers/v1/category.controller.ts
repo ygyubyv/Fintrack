@@ -133,11 +133,68 @@ export const CategoryController = () => {
     }
   };
 
+  const exportAll = async (
+    request: Request,
+    response: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const { user } = request;
+
+      const {
+        title,
+        page,
+        perPage,
+        orderByCreatedAt,
+        orderByCreatedAtDirection,
+      } = request.query;
+
+      const categoryIds = toArray(request.query["categoryIds[]"])?.map(
+        (categoryId) => Number(categoryId),
+      );
+
+      const csv = await CategoryService().exportAll(user!.id, {
+        page: Number(page),
+        perPage: Number(perPage),
+        title: title as string,
+        categoryIds,
+        orderByCreatedAt: !!orderByCreatedAt,
+        orderByCreatedAtDirection: orderByCreatedAtDirection as TSortDirection,
+      });
+
+      response.header("Content-Type", "text/csv");
+      response.attachment("Categories");
+
+      return response.status(200).send(csv);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  const importAll = async (
+    request: Request,
+    response: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const { user } = request;
+      const { file } = request;
+
+      await CategoryService().importAll(user!.id, file!);
+
+      return response.sendStatus(200);
+    } catch (error) {
+      next(error);
+    }
+  };
+
   return {
     create,
     update,
     remove,
     getById,
     getAll,
+    exportAll,
+    importAll,
   };
 };

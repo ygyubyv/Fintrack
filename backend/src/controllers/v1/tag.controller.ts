@@ -135,11 +135,68 @@ export const TagController = () => {
     }
   };
 
+  const exportAll = async (
+    request: Request,
+    response: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const { user } = request;
+
+      const {
+        title,
+        page,
+        perPage,
+        orderByCreatedAt,
+        orderByCreatedAtDirection,
+      } = request.query;
+
+      const tagIds = toArray(request.query["tagIds[]"])?.map((tagId) =>
+        Number(tagId),
+      );
+
+      const csv = await TagService().exportAll(user!.id, {
+        page: Number(page),
+        perPage: Number(perPage),
+        title: title as string,
+        tagIds,
+        orderByCreatedAt: !!orderByCreatedAt,
+        orderByCreatedAtDirection: orderByCreatedAtDirection as TSortDirection,
+      });
+
+      response.header("Content-Type", "text/csv");
+      response.attachment("Tags");
+
+      return response.status(200).send(csv);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  const importAll = async (
+    request: Request,
+    response: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const { user } = request;
+      const { file } = request;
+
+      await TagService().importAll(user!.id, file!);
+
+      return response.sendStatus(200);
+    } catch (error) {
+      next(error);
+    }
+  };
+
   return {
     create,
     update,
     remove,
     getById,
     getAll,
+    exportAll,
+    importAll,
   };
 };

@@ -192,11 +192,91 @@ export const ExpenseController = () => {
     }
   };
 
+  const exportAll = async (
+    request: Request,
+    response: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const { user } = request;
+      const {
+        description,
+        valueFrom,
+        valueTo,
+        expenseType,
+        paymentType,
+        categoryId,
+        createdFromDate,
+        createdToDate,
+        orderByCreatedAt,
+        orderByCreatedAtDirection,
+        orderByValue,
+        orderByValueDirection,
+        orderByExpenseType,
+        orderByExpenseTypeDirection,
+        orderByPaymentType,
+        orderByPaymentTypeDirection,
+      } = request.query;
+
+      const tagIds = toArray(request.query["tagIds[]"])?.map((tagId) =>
+        Number(tagId),
+      );
+
+      const csv = await ExpenseService().exportAll(user!.id, {
+        description: description as string,
+        valueFrom: Number(valueFrom),
+        valueTo: Number(valueTo),
+        expenseType: expenseType as TExpenseType,
+        paymentType: paymentType as TPaymentType,
+        categoryId: Number(categoryId),
+        tagIds,
+        createdFromDate: createdFromDate as string,
+        createdToDate: createdToDate as string,
+        orderByCreatedAt: !!orderByCreatedAt,
+        orderByCreatedAtDirection: orderByCreatedAtDirection as TSortDirection,
+        orderByValue: !!orderByValue,
+        orderByValueDirection: orderByValueDirection as TSortDirection,
+        orderByExpenseType: !!orderByExpenseType,
+        orderByExpenseTypeDirection:
+          orderByExpenseTypeDirection as TSortDirection,
+        orderByPaymentType: !!orderByPaymentType,
+        orderByPaymentTypeDirection:
+          orderByPaymentTypeDirection as TSortDirection,
+      });
+
+      response.header("Content-Type", "text/csv");
+      response.attachment("Expenses");
+
+      return response.status(200).send(csv);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  const importAll = async (
+    request: Request,
+    response: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const { user } = request;
+      const { file } = request;
+
+      await ExpenseService().importAll(user!.id, file!);
+
+      return response.sendStatus(200);
+    } catch (error) {
+      next(error);
+    }
+  };
+
   return {
     create,
     update,
     remove,
     getById,
     getAll,
+    exportAll,
+    importAll,
   };
 };

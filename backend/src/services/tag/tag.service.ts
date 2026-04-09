@@ -6,7 +6,9 @@ import {
   IUpdateTagPayload,
   TGetAllTagsFilters,
   IGetTagByIdFilters,
+  IImportTagPayload,
 } from "./types/tag.types";
+import Papa from "papaparse";
 
 export const TagService = () => {
   const findById = async (userId: number, filters: IGetTagByIdFilters) => {
@@ -131,11 +133,84 @@ export const TagService = () => {
     }
   };
 
+  const exportAll = async (userId: number, filters?: TGetAllTagsFilters) => {
+    const tags = await prisma.tag.findMany({
+      where: {
+        userId,
+        ...(filters?.title && {
+          title: { contains: filters.title, mode: "insensitive" },
+        }),
+        ...(filters?.tagIds?.length && {
+          id: { in: filters.tagIds },
+        }),
+      },
+      orderBy: {
+        ...(filters?.orderByCreatedAt &&
+          filters?.orderByCreatedAtDirection && {
+            createdAt: filters.orderByCreatedAtDirection,
+          }),
+      },
+    });
+
+    const data = tags.map((tag) => {
+      return {
+        id: tag.id,
+        title: tag.title,
+        color: tag.color,
+        createdAt: tag.createdAt,
+        updatedAt: tag.updatedAt,
+      };
+    });
+
+    return Papa.unparse(data, {
+      delimiter: ";",
+      columns: ["id", "title", "color", "createdAt", "updatedAt"],
+      header: true,
+    });
+  };
+
+  const importAll = async (userId: number, file: Express.Multer.File) => {
+    const csvString = file.buffer.toString("utf-8");
+
+    const { data: payload } = Papa.parse<IImportTagPayload>(csvString, {
+      header: true,
+      skipEmptyLines: true,
+      delimiter: ";",
+    });
+
+    await prisma.$transaction(async (transaction) => {
+      await transaction.tag.deleteMany({
+        where: {
+          userId,
+        },
+      });
+
+      if (!payload.length) {
+        return;
+      }
+
+      await transaction.tag.createMany({
+        data: payload.map((tag) => {
+          return {
+            userId,
+            id: Number(tag.id),
+            color: tag.color,
+            title: tag.title,
+            createdAt: tag.createdAt,
+            updatedAt: tag.updatedAt,
+          };
+        }),
+      });
+    });
+  };
+
   return {
     findById,
     findAll,
     create,
     update,
     remove,
+    exportAll,
+    importAll,
   };
 };

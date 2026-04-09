@@ -51,6 +51,7 @@
           :error="errors.categoryId"
           id="expense-category"
           label="Category"
+          clearable
         />
 
         <!-- Tags -->
@@ -61,6 +62,7 @@
           :error="errors.tagIds"
           id="expense-tags"
           label="Tags"
+          clearable
         />
 
         <!-- Description -->
