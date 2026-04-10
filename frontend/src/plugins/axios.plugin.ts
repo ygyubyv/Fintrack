@@ -40,14 +40,28 @@ axiosInstance.interceptors.request.use(async (config) => {
     });
   }
 
+  if (config.headers["Content-Type"] === "multipart/form-data") {
+    const formData = new FormData();
+
+    for (const key in config.data) {
+      if (config.data.hasOwnProperty(key)) {
+        formData.append(key, config.data[key]);
+      }
+    }
+    config.data = formData;
+  }
+
   return config;
 });
 
 axiosInstance.interceptors.response.use(
   (response) => {
-    if (response.data && typeof response.data === "object") {
-      response.data = camelcaseKeys(response.data, { deep: true });
-    }
+    if (
+      response.data &&
+      response.headers["content-type"] === "application/json"
+    )
+      response.data = camelcaseKeys(response.data);
+
     return response;
   },
   (error) => Promise.reject(error),

@@ -1,6 +1,7 @@
 import { TagsApi } from "./api/tags.api";
-import type { ICreateTag, IUpdateTag } from "../types";
+import type { ICreateTag, IImportTags, IUpdateTag } from "../types";
 import { useApi } from "@/composables/useApi";
+import { downloadFile } from "@/utils";
 
 export const TagsService = () => {
   const createTag = (successFn?: () => void) => {
@@ -62,9 +63,56 @@ export const TagsService = () => {
     return { isLoading, deleteTagHandler };
   };
 
+  const exportTags = (successFn?: () => void) => {
+    const { isLoading, $api } = useApi();
+
+    const exportTagsHandler = async () => {
+      try {
+        const file = await $api<File>({
+          url: TagsApi.exportTags,
+          method: "POST",
+          responseType: "blob",
+        });
+
+        downloadFile("Tags.csv", file);
+
+        successFn?.();
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    return { isLoading, exportTagsHandler };
+  };
+
+  const importTags = (successFn?: () => void) => {
+    const { isLoading, $api } = useApi();
+
+    const importTagsHandler = async (payload: IImportTags) => {
+      try {
+        await $api({
+          url: TagsApi.importTags,
+          method: "POST",
+          payload,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+
+        successFn?.();
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    return { isLoading, importTagsHandler };
+  };
+
   return {
     createTag,
     updateTag,
     deleteTag,
+    exportTags,
+    importTags,
   };
 };

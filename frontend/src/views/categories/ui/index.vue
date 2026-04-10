@@ -3,7 +3,12 @@ import BasePagination from "@/components/base/BasePagination.vue";
 import BaseInput from "@/components/base/BaseInput.vue";
 import BaseButton from "@/components/base/BaseButton.vue";
 import { usePaginatedList } from "@/composables/usePaginatedList";
-import type { ICategory, ICreateCategory, IUpdateCategory } from "../types";
+import type {
+  ICategory,
+  ICreateCategory,
+  IImportCategories,
+  IUpdateCategory,
+} from "../types";
 import { CategoriesApi } from "../services/api/categories.api";
 import { CategoriesService } from "../services/categories.service";
 import { computed, ref } from "vue";
@@ -12,6 +17,7 @@ import UpdateCategory from "./components/drawer/UpdateCategory.vue";
 import BaseConfirmDialog from "@/components/base/BaseConfirmDialog.vue";
 import CreateCategory from "./components/drawer/CreateCategory.vue";
 import CategoriesTable from "./components/CategoriesTable.vue";
+import ImportCategories from "./components/dialog/ImportCategories.vue";
 
 const {
   page,
@@ -25,7 +31,13 @@ const {
   refresh,
 } = usePaginatedList<ICategory>(CategoriesApi.getAllCategories);
 
-const { createCategory, updateCategory, deleteCategory } = CategoriesService();
+const {
+  createCategory,
+  updateCategory,
+  deleteCategory,
+  exportCategories,
+  importCategories,
+} = CategoriesService();
 
 const { isLoading: createCategoryIsLoading, createCategoryHandler } =
   createCategory(refresh);
@@ -33,17 +45,24 @@ const { isLoading: updateCategoryIsLoading, updateCategoryHandler } =
   updateCategory(refresh);
 const { isLoading: deleteCategoryIsLoading, deleteCategoryHandler } =
   deleteCategory(refresh);
+const { isLoading: exportCategoriesIsLoading, exportCategoriesHandler } =
+  exportCategories();
+const { isLoading: importCategoriesIsLoading, importCategoriesHandler } =
+  importCategories(refresh);
 
 const createCategoryDrawerIsVisible = ref(false);
 const updateCategoryDrawerIsVisible = ref(false);
 const deleteCategoryDialogIsVisible = ref(false);
+const importCategoriesDialogIsVisible = ref(false);
 
 const isLoading = computed(() => {
   return (
     categoriesIsLoading.value ||
     createCategoryIsLoading.value ||
     updateCategoryIsLoading.value ||
-    deleteCategoryIsLoading.value
+    deleteCategoryIsLoading.value ||
+    exportCategoriesIsLoading.value ||
+    importCategoriesIsLoading.value
   );
 });
 
@@ -96,6 +115,12 @@ const handleDeleteCategory = () => {
       @confirm="handleDeleteCategory"
     />
 
+    <!-- Import Categories -->
+    <ImportCategories
+      v-model:dialog-is-visible="importCategoriesDialogIsVisible"
+      @submit="importCategoriesHandler"
+    />
+
     <div
       class="flex flex-col md:flex-row md:justify-between md:items-center gap-4"
     >
@@ -118,7 +143,24 @@ const handleDeleteCategory = () => {
           text="Reset Filters"
           size="Medium"
           mode="Secondary"
+          icon="rotate-left"
           @click="resetFilters"
+        />
+
+        <!-- Import -->
+        <BaseButton
+          text="Import"
+          icon="file-import"
+          mode="Secondary"
+          :onClick="() => (importCategoriesDialogIsVisible = true)"
+        />
+
+        <!-- Export -->
+        <BaseButton
+          text="Export"
+          icon="file-export"
+          mode="Secondary"
+          :onClick="exportCategoriesHandler"
         />
 
         <!-- Create Category -->

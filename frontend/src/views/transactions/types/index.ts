@@ -33,5 +33,9 @@ export interface IUpdateExpense {
   createdAt?: string;
 }
 
+export interface IImportExpenses {
+  file: File;
+}
+
 export type TExpenseType = "INCOME" | "EXPENSE";
 export type TPaymentType = "CARD" | "CASH";

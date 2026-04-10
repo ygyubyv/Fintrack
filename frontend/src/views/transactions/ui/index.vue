@@ -13,6 +13,7 @@ import BaseConfirmDialog from "@/components/base/BaseConfirmDialog.vue";
 import BaseButton from "@/components/base/BaseButton.vue";
 import UpdateExpense from "./components/drawer/UpdateExpense.vue";
 import ShowExpenseDetailsDialog from "./components/dialog/ShowExpenseDetailsDialog.vue";
+import ImportExpenses from "./components/dialog/ImportExpenses.vue";
 
 const {
   page,
@@ -26,21 +27,29 @@ const {
   refresh,
 } = usePaginatedList<IExpense>(ExpensesApi.getAllExpenses);
 
-const { createExpense, updateExpense, deleteExpense } = ExpensesService();
-
+const {
+  createExpense,
+  updateExpense,
+  deleteExpense,
+  exportExpenses,
+  importExpenses,
+} = ExpensesService();
 const { isLoading: createExpenseIsLoading, createExpenseHandler } =
   createExpense(refresh);
-
 const { isLoading: updateExpenseIsLoading, updateExpenseHandler } =
   updateExpense(refresh);
-
 const { isLoading: deleteExpenseIsLoading, deleteExpenseHandler } =
   deleteExpense(refresh);
+const { isLoading: exportExpensesIsLoading, exportExpensesHandler } =
+  exportExpenses();
+const { isLoading: importExpensesIsLoading, importExpensesHandler } =
+  importExpenses(refresh);
 
 const expenseDetailsDialogIsVisible = ref(false);
 const createExpenseDrawerIsVisible = ref(false);
 const updateExpenseDrawerIsVisible = ref(false);
 const deleteExpenseDrawerIsVisible = ref(false);
+const importExpensesDialogIsVisible = ref(false);
 
 const selectedExpense = ref<IExpense | null>(null);
 
@@ -49,7 +58,9 @@ const isLoading = computed(() => {
     expensesIsLoading.value ||
     createExpenseIsLoading.value ||
     updateExpenseIsLoading.value ||
-    deleteExpenseIsLoading.value
+    deleteExpenseIsLoading.value ||
+    exportExpensesIsLoading.value ||
+    importExpensesIsLoading.value
   );
 });
 
@@ -112,6 +123,12 @@ const handleDeleteExpense = () => {
       @confirm="handleDeleteExpense"
     />
 
+    <!-- Import Expenses -->
+    <ImportExpenses
+      v-model:dialog-is-visible="importExpensesDialogIsVisible"
+      @submit="importExpensesHandler"
+    />
+
     <div>
       <h2 class="text-2xl font-semibold text-neutral-900">Transactions</h2>
     </div>
@@ -121,6 +138,8 @@ const handleDeleteExpense = () => {
       :search-query-params="searchQueryParams"
       @add-new-expense="createExpenseDrawerIsVisible = true"
       @reset-filters="resetFilters"
+      @export="exportExpensesHandler"
+      @import="importExpensesDialogIsVisible = true"
     />
 
     <!-- Content -->

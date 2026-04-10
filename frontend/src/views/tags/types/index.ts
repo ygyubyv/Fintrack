@@ -15,3 +15,7 @@ export interface IUpdateTag {
   title?: string;
   color?: string;
 }
+
+export interface IImportTags {
+  file: File;
+}

@@ -4,4 +4,6 @@ export const CategoriesApi = {
   getCategoryById: (id: number) => `/categories/${id}`,
   updateCategory: (id: number) => `/categories/${id}`,
   deleteCategory: (id: number) => `/categories/${id}`,
+  exportCategories: "/categories/export",
+  importCategories: "/categories/import",
 };

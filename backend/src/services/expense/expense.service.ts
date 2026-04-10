@@ -358,28 +358,35 @@ export const ExpenseService = () => {
             description: expense.description,
             expenseType: expense.expenseType,
             paymentType: expense.paymentType,
-            categoryId: Number(expense.categoryId),
+            categoryId: expense.categoryId ? Number(expense.categoryId) : null,
             createdAt: expense.createdAt,
             updatedAt: expense.updatedAt,
           };
         }),
       });
 
+      const tagsToExpenses = payload.flatMap((expense) => {
+        const tagIds = expense.tagIds
+          ?.split(",")
+          .map((id) => id.trim())
+          .filter((id) => id !== "");
+
+        if (!tagIds || !tagIds?.length) {
+          return [];
+        }
+
+        return tagIds.map((tagId) => {
+          return Prisma.sql`(${expense.id}, ${tagId})`;
+        });
+      });
+
+      if (!tagsToExpenses.length) {
+        return;
+      }
+
       await transaction.$executeRaw`
         INSERT INTO "_ExpenseToTag" ("A", "B")
-        VALUES ${Prisma.join(
-          payload.flatMap((expense) => {
-            const tagIds = expense.tagIds?.split(",");
-
-            if (!tagIds?.length) {
-              return [];
-            }
-
-            return tagIds.map((tagId) => {
-              return Prisma.sql`(${expense.id}, ${tagId})`;
-            });
-          }),
-        )}
+        VALUES ${Prisma.join(tagsToExpenses)}
       `;
     });
   };

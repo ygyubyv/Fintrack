@@ -219,6 +219,143 @@ export const expensePaths = {
     },
   },
 
+  "/api/v1/expenses/{id}": {
+    get: {
+      summary: "Get expense by id",
+      tags: ["Expenses"],
+      security: [{ bearerAuth: [] }],
+
+      parameters: [
+        {
+          name: "id",
+          in: "path",
+          required: true,
+          schema: { type: "integer", minimum: 1 },
+          example: 1,
+        },
+      ],
+
+      responses: {
+        200: {
+          description: "Expense details",
+          content: {
+            "application/json": {
+              schema: ExpenseDetailsSchema,
+            },
+          },
+        },
+
+        401: {
+          description: "Unauthorized",
+          content: { "application/json": { schema: ErrorResponseSchema } },
+        },
+
+        404: {
+          description: "Expense not found",
+          content: { "application/json": { schema: ErrorResponseSchema } },
+        },
+
+        422: {
+          description: "Validation error",
+          content: { "application/json": { schema: ErrorResponseSchema } },
+        },
+
+        500: {
+          description: "Internal server error",
+          content: { "application/json": { schema: ErrorResponseSchema } },
+        },
+      },
+    },
+
+    patch: {
+      summary: "Update expense",
+      tags: ["Expenses"],
+      security: [{ bearerAuth: [] }],
+
+      parameters: [
+        {
+          name: "id",
+          in: "path",
+          required: true,
+          schema: { type: "integer", minimum: 1 },
+          example: 1,
+        },
+      ],
+
+      requestBody: {
+        required: true,
+        content: { "application/json": { schema: UpdateExpenseRequestSchema } },
+      },
+
+      responses: {
+        200: {
+          description: "Expense updated",
+          content: { "application/json": { schema: ExpenseSchema } },
+        },
+
+        401: {
+          description: "Unauthorized",
+          content: { "application/json": { schema: ErrorResponseSchema } },
+        },
+
+        404: {
+          description: "Expense not found",
+          content: { "application/json": { schema: ErrorResponseSchema } },
+        },
+
+        422: {
+          description: "Validation error",
+          content: { "application/json": { schema: ErrorResponseSchema } },
+        },
+
+        500: {
+          description: "Internal server error",
+          content: { "application/json": { schema: ErrorResponseSchema } },
+        },
+      },
+    },
+
+    delete: {
+      summary: "Delete expense",
+      tags: ["Expenses"],
+      security: [{ bearerAuth: [] }],
+
+      parameters: [
+        {
+          name: "id",
+          in: "path",
+          required: true,
+          schema: { type: "integer", minimum: 1 },
+          example: 1,
+        },
+      ],
+
+      responses: {
+        204: { description: "Expense deleted" },
+
+        401: {
+          description: "Unauthorized",
+          content: { "application/json": { schema: ErrorResponseSchema } },
+        },
+
+        404: {
+          description: "Expense not found",
+          content: { "application/json": { schema: ErrorResponseSchema } },
+        },
+
+        422: {
+          description: "Validation error",
+          content: { "application/json": { schema: ErrorResponseSchema } },
+        },
+
+        500: {
+          description: "Internal server error",
+          content: { "application/json": { schema: ErrorResponseSchema } },
+        },
+      },
+    },
+  },
+
   "/api/v1/expenses/export": {
     post: {
       summary: "Export expenses to CSV",
@@ -399,143 +536,6 @@ export const expensePaths = {
 
         401: {
           description: "Unauthorized",
-          content: { "application/json": { schema: ErrorResponseSchema } },
-        },
-
-        422: {
-          description: "Validation error",
-          content: { "application/json": { schema: ErrorResponseSchema } },
-        },
-
-        500: {
-          description: "Internal server error",
-          content: { "application/json": { schema: ErrorResponseSchema } },
-        },
-      },
-    },
-  },
-
-  "/api/v1/expenses/{id}": {
-    get: {
-      summary: "Get expense by id",
-      tags: ["Expenses"],
-      security: [{ bearerAuth: [] }],
-
-      parameters: [
-        {
-          name: "id",
-          in: "path",
-          required: true,
-          schema: { type: "integer", minimum: 1 },
-          example: 1,
-        },
-      ],
-
-      responses: {
-        200: {
-          description: "Expense details",
-          content: {
-            "application/json": {
-              schema: ExpenseDetailsSchema,
-            },
-          },
-        },
-
-        401: {
-          description: "Unauthorized",
-          content: { "application/json": { schema: ErrorResponseSchema } },
-        },
-
-        404: {
-          description: "Expense not found",
-          content: { "application/json": { schema: ErrorResponseSchema } },
-        },
-
-        422: {
-          description: "Validation error",
-          content: { "application/json": { schema: ErrorResponseSchema } },
-        },
-
-        500: {
-          description: "Internal server error",
-          content: { "application/json": { schema: ErrorResponseSchema } },
-        },
-      },
-    },
-
-    patch: {
-      summary: "Update expense",
-      tags: ["Expenses"],
-      security: [{ bearerAuth: [] }],
-
-      parameters: [
-        {
-          name: "id",
-          in: "path",
-          required: true,
-          schema: { type: "integer", minimum: 1 },
-          example: 1,
-        },
-      ],
-
-      requestBody: {
-        required: true,
-        content: { "application/json": { schema: UpdateExpenseRequestSchema } },
-      },
-
-      responses: {
-        200: {
-          description: "Expense updated",
-          content: { "application/json": { schema: ExpenseSchema } },
-        },
-
-        401: {
-          description: "Unauthorized",
-          content: { "application/json": { schema: ErrorResponseSchema } },
-        },
-
-        404: {
-          description: "Expense not found",
-          content: { "application/json": { schema: ErrorResponseSchema } },
-        },
-
-        422: {
-          description: "Validation error",
-          content: { "application/json": { schema: ErrorResponseSchema } },
-        },
-
-        500: {
-          description: "Internal server error",
-          content: { "application/json": { schema: ErrorResponseSchema } },
-        },
-      },
-    },
-
-    delete: {
-      summary: "Delete expense",
-      tags: ["Expenses"],
-      security: [{ bearerAuth: [] }],
-
-      parameters: [
-        {
-          name: "id",
-          in: "path",
-          required: true,
-          schema: { type: "integer", minimum: 1 },
-          example: 1,
-        },
-      ],
-
-      responses: {
-        204: { description: "Expense deleted" },
-
-        401: {
-          description: "Unauthorized",
-          content: { "application/json": { schema: ErrorResponseSchema } },
-        },
-
-        404: {
-          description: "Expense not found",
           content: { "application/json": { schema: ErrorResponseSchema } },
         },
 

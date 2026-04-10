@@ -2,7 +2,7 @@
 import BaseInput from "@/components/base/BaseInput.vue";
 import BaseButton from "@/components/base/BaseButton.vue";
 import BaseSelect from "@/components/base/BaseSelect.vue";
-import { onMounted, ref, watch } from "vue";
+import { ref, watch } from "vue";
 import { toDatetimeLocal } from "@/utils";
 import TagAutocompletePicker from "@/views/tags/ui/components/TagAutocompletePicker.vue";
 import type { ITag } from "@/views/tags/types";
@@ -16,6 +16,8 @@ interface Props {
 interface Emits {
   (e: "resetFilters"): void;
   (e: "addNewExpense"): void;
+  (e: "export"): void;
+  (e: "import"): void;
 }
 
 const props = defineProps<Props>();
@@ -112,17 +114,31 @@ watch(
         :text="filtersExpanded ? 'Hide filters' : 'Filters'"
         icon="sliders"
         mode="Secondary"
-        size="Small"
         :onClick="toggleFilters"
       />
 
       <!-- Reset Filters -->
       <BaseButton
-        text="Reset"
+        text="Reset Filters"
         icon="rotate-left"
-        mode="Muted"
-        size="Small"
+        mode="Secondary"
         :onClick="handleResetFilters"
+      />
+
+      <!-- Import -->
+      <BaseButton
+        text="Import"
+        icon="file-import"
+        mode="Secondary"
+        :onClick="() => emit('import')"
+      />
+
+      <!-- Export -->
+      <BaseButton
+        text="Export"
+        icon="file-export"
+        mode="Secondary"
+        :onClick="() => emit('export')"
       />
 
       <!-- Add New Expense -->
@@ -130,7 +146,6 @@ watch(
         text="New"
         icon="plus"
         mode="Primary"
-        size="Small"
         :onClick="() => emit('addNewExpense')"
       />
     </div>

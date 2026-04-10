@@ -4,4 +4,6 @@ export const TagsApi = {
   getTagById: (id: number) => `/tags/${id}`,
   updateTag: (id: number) => `/tags/${id}`,
   deleteTag: (id: number) => `/tags/${id}`,
+  exportTags: "/tags/export",
+  importTags: "/tags/import",
 };

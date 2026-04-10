@@ -12,6 +12,7 @@ import BaseOverlay from "@/components/base/BaseOverlay.vue";
 import TagsTable from "./components/TagsTable.vue";
 import UpdateTag from "./components/drawer/UpdateTag.vue";
 import BaseConfirmDialog from "@/components/base/BaseConfirmDialog.vue";
+import ImportTags from "./components/dialog/ImportTags.vue";
 
 const {
   page,
@@ -25,15 +26,20 @@ const {
   refresh,
 } = usePaginatedList<ITag>(TagsApi.getAllTags);
 
-const { createTag, updateTag, deleteTag } = TagsService();
+const { createTag, updateTag, deleteTag, exportTags, importTags } =
+  TagsService();
 
 const { isLoading: createTagIsLoading, createTagHandler } = createTag(refresh);
 const { isLoading: updateTagIsLoading, updateTagHandler } = updateTag(refresh);
 const { isLoading: deleteTagIsLoading, deleteTagHandler } = deleteTag(refresh);
+const { isLoading: exportTagsIsLoading, exportTagsHandler } = exportTags();
+const { isLoading: importTagsIsLoading, importTagsHandler } =
+  importTags(refresh);
 
 const createTagDrawerIsVisible = ref(false);
 const updateTagDrawerIsVisible = ref(false);
 const deleteTagDialogIsVisible = ref(false);
+const importTagsDialogIsVisible = ref(false);
 
 const selectedTag = ref<ITag | null>(null);
 
@@ -42,7 +48,9 @@ const isLoading = computed(() => {
     tagsIsLoading.value ||
     createTagIsLoading.value ||
     updateTagIsLoading.value ||
-    deleteTagIsLoading.value
+    deleteTagIsLoading.value ||
+    exportTagsIsLoading.value ||
+    importTagsIsLoading.value
   );
 });
 
@@ -93,6 +101,12 @@ const handleDeleteTag = () => {
       @confirm="handleDeleteTag"
     />
 
+    <!-- Import Tags -->
+    <ImportTags
+      v-model:dialog-is-visible="importTagsDialogIsVisible"
+      @submit="importTagsHandler"
+    />
+
     <div
       class="flex flex-col md:flex-row md:justify-between md:items-center gap-4"
     >
@@ -113,9 +127,26 @@ const handleDeleteTag = () => {
         <!-- Reset Filters -->
         <BaseButton
           text="Reset Filters"
+          icon="rotate-left"
           size="Medium"
           mode="Secondary"
           @click="resetFilters"
+        />
+
+        <!-- Import -->
+        <BaseButton
+          text="Import"
+          icon="file-import"
+          mode="Secondary"
+          :onClick="() => (importTagsDialogIsVisible = true)"
+        />
+
+        <!-- Export -->
+        <BaseButton
+          text="Export"
+          icon="file-export"
+          mode="Secondary"
+          :onClick="exportTagsHandler"
         />
 
         <!-- Create Tag -->

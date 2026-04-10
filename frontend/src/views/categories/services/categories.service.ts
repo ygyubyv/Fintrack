@@ -1,6 +1,11 @@
 import { CategoriesApi } from "./api/categories.api";
-import type { ICreateCategory, IUpdateCategory } from "../types";
+import type {
+  ICreateCategory,
+  IImportCategories,
+  IUpdateCategory,
+} from "../types";
 import { useApi } from "@/composables/useApi";
+import { downloadFile } from "@/utils";
 
 export const CategoriesService = () => {
   const createCategory = (successFn?: () => void) => {
@@ -65,9 +70,56 @@ export const CategoriesService = () => {
     return { isLoading, deleteCategoryHandler };
   };
 
+  const exportCategories = (successFn?: () => void) => {
+    const { isLoading, $api } = useApi();
+
+    const exportCategoriesHandler = async () => {
+      try {
+        const file = await $api<File>({
+          url: CategoriesApi.exportCategories,
+          method: "POST",
+          responseType: "blob",
+        });
+
+        downloadFile("Categories.csv", file);
+
+        successFn?.();
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    return { isLoading, exportCategoriesHandler };
+  };
+
+  const importCategories = (successFn?: () => void) => {
+    const { isLoading, $api } = useApi();
+
+    const importCategoriesHandler = async (payload: IImportCategories) => {
+      try {
+        await $api({
+          url: CategoriesApi.importCategories,
+          method: "POST",
+          payload,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+
+        successFn?.();
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    return { isLoading, importCategoriesHandler };
+  };
+
   return {
     createCategory,
     updateCategory,
     deleteCategory,
+    exportCategories,
+    importCategories,
   };
 };

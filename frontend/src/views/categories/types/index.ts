@@ -12,3 +12,7 @@ export interface ICreateCategory {
 export interface IUpdateCategory {
   title?: string;
 }
+
+export interface IImportCategories {
+  file: File;
+}

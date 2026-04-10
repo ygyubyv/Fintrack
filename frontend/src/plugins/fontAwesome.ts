@@ -35,6 +35,9 @@ import {
   faPlusCircle,
   faLayerGroup,
   faCheckCircle,
+  faFileExport,
+  faFileImport,
+  faFileArrowUp,
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(
@@ -72,6 +75,9 @@ library.add(
   faPlusCircle,
   faLayerGroup,
   faCheckCircle,
+  faFileExport,
+  faFileImport,
+  faFileArrowUp,
 );
 
 export { FontAwesomeIcon };

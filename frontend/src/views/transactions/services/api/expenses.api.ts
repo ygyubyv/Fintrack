@@ -4,4 +4,6 @@ export const ExpensesApi = {
   getExpenseById: (id: number) => `/expenses/${id}`,
   updateExpense: (id: number) => `/expenses/${id}`,
   deleteExpense: (id: number) => `/expenses/${id}`,
+  exportExpenses: "/expenses/export",
+  importExpenses: "/expenses/import",
 };
