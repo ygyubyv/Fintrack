@@ -2,8 +2,6 @@ import { useApi } from "@/composables/useApi";
 import { baseURL } from "@/plugins/axios.plugin";
 import type { TPaginatedResponse } from "@/types";
 import type { IExpense } from "@/views/transactions/types";
-import { watchDebounced } from "@vueuse/core";
-import { computed, reactive, ref } from "vue";
 import { ExpensesApi } from "@/views/transactions/services/api/expenses.api";
 
 export const usePaginatedList = () => {

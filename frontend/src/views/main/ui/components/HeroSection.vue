@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import HeroImage from "@/assets/images/HeroImage.jpg";
-import BaseButton from "@/components/base/BaseButton.vue";
 import { useAuthStore } from "@/stores/auth/auth.store";
-import { storeToRefs } from "pinia";
-import { useRouter } from "vue-router";
 
 const router = useRouter();
 const authStore = useAuthStore();

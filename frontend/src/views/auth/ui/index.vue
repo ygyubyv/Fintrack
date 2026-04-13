@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { computed } from "vue";
 import type { AuthMode } from "../types";
 
 import LoginForm from "./components/LoginForm.vue";

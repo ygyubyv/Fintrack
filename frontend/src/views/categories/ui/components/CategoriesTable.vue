@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import type { ICategory } from "../../types";
 import { formatTimeWithHoursWithoutTimeZone } from "@/utils";
-import BaseOrderBy from "@/components/base/BaseOrderBy.vue";
-import BaseButton from "@/components/base/BaseButton.vue";
 
 interface Props {
   items: ICategory[];

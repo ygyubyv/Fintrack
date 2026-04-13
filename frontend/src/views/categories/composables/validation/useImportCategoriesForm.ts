@@ -1,7 +1,5 @@
-import { useForm, useFormErrors } from "vee-validate";
 import { importCategoriesSchema } from "./schemas/import.schema";
 import type { IImportCategories } from "../../types";
-import { computed } from "vue";
 
 interface Emits {
   (e: "update:dialogIsVisible", value: boolean): void;

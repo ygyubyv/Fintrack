@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import BaseButton from "@/components/base/BaseButton.vue";
-import BaseInput from "@/components/base/BaseInput.vue";
 import { GoogleSignInButton } from "vue3-google-signin";
 import { useSignupForm } from "../../composables/validation/useSignupForm";
 

@@ -1,4 +1,3 @@
-import { useForm, useFormErrors } from "vee-validate";
 import { updateCategorySchema } from "./schemas/update.schema";
 import type { IUpdateCategory } from "../../types";
 

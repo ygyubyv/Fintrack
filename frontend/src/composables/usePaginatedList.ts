@@ -126,7 +126,7 @@ export const usePaginatedList = <T>(
         });
     },
     {
-      debounce: DEBOUNCE,
+      debounce: DEBOUNCE.value,
       deep: true,
     },
   );

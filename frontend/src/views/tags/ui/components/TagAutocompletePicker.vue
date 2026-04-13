@@ -125,13 +125,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, useTemplateRef } from "@vue/runtime-dom";
 import type { ITag } from "../../types";
 import { baseURL } from "@/plugins/axios.plugin";
 import { TagsApi } from "../../services/api/tags.api";
 import type { TPaginatedResponse } from "@/types";
-import { onClickOutside, watchDebounced } from "@vueuse/core";
-import { useIntersectionObserver } from "@vueuse/core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { useApi } from "@/composables/useApi";
 

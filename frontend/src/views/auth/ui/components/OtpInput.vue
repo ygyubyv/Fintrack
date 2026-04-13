@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { ref, computed, watch, nextTick } from "vue";
-
 interface Props {
   modelValue: string;
   length: number;

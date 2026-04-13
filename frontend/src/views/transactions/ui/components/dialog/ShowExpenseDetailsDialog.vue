@@ -80,11 +80,8 @@
 </template>
 
 <script setup lang="ts">
-import BaseDialog from "@/components/base/BaseDialog.vue";
-import BaseButton from "@/components/base/BaseButton.vue";
 import type { IExpense } from "../../../types";
 import { CURRENCY } from "@/constants";
-import { computed } from "vue";
 
 interface Props {
   dialogIsVisible: boolean;

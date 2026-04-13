@@ -1,7 +1,5 @@
-import { useForm, useFormErrors } from "vee-validate";
 import { useAuthStore } from "@/stores/auth/auth.store";
 import type { IResetPasswordPayload } from "../../types";
-import { useRouter } from "vue-router";
 import { useRouteQuery } from "@vueuse/router";
 import { resetPasswordSchema } from "./schemas/reset-password.schema";
 

@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
-import BaseTabs from "@/components/base/BaseTabs.vue";
-
 interface Props {
   searchQueryParams: Record<string, unknown>;
 }

@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import BasePagination from "@/components/base/BasePagination.vue";
-import BaseInput from "@/components/base/BaseInput.vue";
-import BaseButton from "@/components/base/BaseButton.vue";
 import { usePaginatedList } from "@/composables/usePaginatedList";
 import type {
   ICategory,
@@ -11,10 +8,7 @@ import type {
 } from "../types";
 import { CategoriesApi } from "../services/api/categories.api";
 import { CategoriesService } from "../services/categories.service";
-import { computed, ref } from "vue";
-import BaseOverlay from "@/components/base/BaseOverlay.vue";
 import UpdateCategory from "./components/drawer/UpdateCategory.vue";
-import BaseConfirmDialog from "@/components/base/BaseConfirmDialog.vue";
 import CreateCategory from "./components/drawer/CreateCategory.vue";
 import CategoriesTable from "./components/CategoriesTable.vue";
 import ImportCategories from "./components/dialog/ImportCategories.vue";

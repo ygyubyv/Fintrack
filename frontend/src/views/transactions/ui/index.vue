@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import BasePagination from "@/components/base/BasePagination.vue";
-import BaseOverlay from "@/components/base/BaseOverlay.vue";
-import { computed, ref } from "vue";
 import { usePaginatedList } from "@/composables/usePaginatedList";
 import type { IExpense, IUpdateExpense } from "../types";
 import { ExpensesApi } from "../services/api/expenses.api";
@@ -9,8 +6,6 @@ import TransactionsList from "./components/list/TransactionsList.vue";
 import FiltersBlock from "./components/FiltersBlock.vue";
 import CreateExpense from "./components/drawer/CreateExpense.vue";
 import { ExpensesService } from "../services/expenses.service";
-import BaseConfirmDialog from "@/components/base/BaseConfirmDialog.vue";
-import BaseButton from "@/components/base/BaseButton.vue";
 import UpdateExpense from "./components/drawer/UpdateExpense.vue";
 import ShowExpenseDetailsDialog from "./components/dialog/ShowExpenseDetailsDialog.vue";
 import ImportExpenses from "./components/dialog/ImportExpenses.vue";

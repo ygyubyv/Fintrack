@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { IExpense } from "@/views/transactions/types";
 import PaymentTypeChart from "./charts/PaymentTypeChart.vue";
-import { computed } from "vue";
 import ExpenseTypeChart from "./charts/ExpenseTypeChart.vue";
 import ExpensesChart from "./charts/ExpensesChart.vue";
 

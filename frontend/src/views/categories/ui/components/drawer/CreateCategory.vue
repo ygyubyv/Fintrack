@@ -48,9 +48,6 @@
 </template>
 
 <script setup lang="ts">
-import BaseButton from "@/components/base/BaseButton.vue";
-import BaseDrawer from "@/components/base/BaseDrawer.vue";
-import BaseInput from "@/components/base/BaseInput.vue";
 import { useCreateCategoryForm } from "../../../composables/validation/useCreateCategoryForm";
 import type { ICreateCategory } from "../../../types";
 

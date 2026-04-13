@@ -119,13 +119,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, useTemplateRef } from "vue";
 import type { ICategory } from "../../types";
 import { baseURL } from "@/plugins/axios.plugin";
 import { CategoriesApi } from "../../services/api/categories.api";
 import type { TPaginatedResponse } from "@/types";
-import { onClickOutside, watchDebounced } from "@vueuse/core";
-import { useIntersectionObserver } from "@vueuse/core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { useApi } from "@/composables/useApi";
 

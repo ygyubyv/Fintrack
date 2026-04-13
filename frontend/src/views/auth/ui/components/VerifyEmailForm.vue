@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import BaseButton from "@/components/base/BaseButton.vue";
 import { useVerifyEmailForm } from "../../composables/validation/useVerifyEmailForm";
 import OtpInput from "./OtpInput.vue";
 

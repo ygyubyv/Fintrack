@@ -119,17 +119,12 @@
 </template>
 
 <script setup lang="ts">
-import BaseButton from "@/components/base/BaseButton.vue";
-import BaseDrawer from "@/components/base/BaseDrawer.vue";
-import BaseInput from "@/components/base/BaseInput.vue";
-import BaseSelect from "@/components/base/BaseSelect.vue";
 import { useUpdateExpenseForm } from "../../../composables/validation/useUpdateExpenseForm";
 import type { IExpense, IUpdateExpense } from "../../../types";
 import TagAutocompletePicker from "@/views/tags/ui/components/TagAutocompletePicker.vue";
 import type { ITag } from "@/views/tags/types";
 import CategoryAutocompletePicker from "@/views/categories/ui/components/CategoryAutocompletePicker.vue";
 import type { ICategory } from "@/views/categories/types";
-import { ref, watch } from "vue";
 import { toDatetimeLocal } from "@/utils";
 
 interface Props {

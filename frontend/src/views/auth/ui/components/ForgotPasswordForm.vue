@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import BaseButton from "@/components/base/BaseButton.vue";
-import BaseInput from "@/components/base/BaseInput.vue";
 import { useForgotPasswordForm } from "../../composables/validation/useForgotPasswordForm";
 
 const { email, emailAttrs, errors, meta, onSubmit, resetForm } =

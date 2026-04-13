@@ -1,8 +1,6 @@
-import { useForm, useFormErrors } from "vee-validate";
 import { loginSchema } from "./schemas/login.schema";
 import { useAuthStore } from "@/stores/auth/auth.store";
 import type { ILoginPayload } from "../../types";
-import { useRouter } from "vue-router";
 import type { CredentialResponse } from "vue3-google-signin";
 
 export const useLoginForm = () => {

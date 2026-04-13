@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import BaseDialog from "@/components/base/BaseDialog.vue";
-import BaseButton from "@/components/base/BaseButton.vue";
 import type { IImportExpenses } from "@/views/transactions/types";
-import { useTemplateRef } from "vue";
 import { useImportExpensesForm } from "@/views/transactions/composables/validation/useImportExpensesForm";
 
 interface Props {

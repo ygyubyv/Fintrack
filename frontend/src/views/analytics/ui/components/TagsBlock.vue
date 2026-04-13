@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { CURRENCY } from "@/constants";
 import type { IExpense } from "@/views/transactions/types";
-import { computed } from "vue";
 import TagsChart from "./charts/TagsChart.vue";
 
 interface Props {

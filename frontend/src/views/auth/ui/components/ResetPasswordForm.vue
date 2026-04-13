@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import BaseButton from "@/components/base/BaseButton.vue";
-import BaseInput from "@/components/base/BaseInput.vue";
 import { useResetPasswordForm } from "../../composables/validation/useResetPasswordForm";
 
 const { password, passwordAttrs, errors, meta, onSubmit, resetForm } =

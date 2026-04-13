@@ -78,14 +78,9 @@
 </template>
 
 <script setup lang="ts">
-import BaseButton from "@/components/base/BaseButton.vue";
-import BaseDrawer from "@/components/base/BaseDrawer.vue";
-import BaseInput from "@/components/base/BaseInput.vue";
 import { useCreateTagForm } from "../../../composables/validation/useCreateTagForm";
 import type { ICreateTag } from "../../../types";
 import { Vue3ColorPicker } from "@cyhnkckali/vue3-color-picker";
-import { ref, useTemplateRef } from "vue";
-import { onClickOutside } from "@vueuse/core";
 
 interface Props {
   drawerIsVisible: boolean;

@@ -1,17 +1,11 @@
 <script setup lang="ts">
-import BasePagination from "@/components/base/BasePagination.vue";
-import BaseInput from "@/components/base/BaseInput.vue";
-import BaseButton from "@/components/base/BaseButton.vue";
 import { usePaginatedList } from "@/composables/usePaginatedList";
 import CreateTag from "./components/drawer/CreateTag.vue";
 import type { ITag, IUpdateTag } from "../types";
 import { TagsApi } from "../services/api/tags.api";
 import { TagsService } from "../services/tags.service";
-import { computed, ref } from "vue";
-import BaseOverlay from "@/components/base/BaseOverlay.vue";
 import TagsTable from "./components/TagsTable.vue";
 import UpdateTag from "./components/drawer/UpdateTag.vue";
-import BaseConfirmDialog from "@/components/base/BaseConfirmDialog.vue";
 import ImportTags from "./components/dialog/ImportTags.vue";
 
 const {

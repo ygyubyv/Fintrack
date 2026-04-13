@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import BaseDialog from "@/components/base/BaseDialog.vue";
-import BaseButton from "@/components/base/BaseButton.vue";
 import type { IImportCategories } from "@/views/categories/types";
-import { useTemplateRef } from "vue";
 import { useImportCategoriesForm } from "@/views/categories/composables/validation/useImportCategoriesForm";
 
 interface Props {

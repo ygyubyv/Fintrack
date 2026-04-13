@@ -1,8 +1,4 @@
 <script setup lang="ts">
-import BaseInput from "@/components/base/BaseInput.vue";
-import BaseButton from "@/components/base/BaseButton.vue";
-import BaseSelect from "@/components/base/BaseSelect.vue";
-import { ref, watch } from "vue";
 import { toDatetimeLocal } from "@/utils";
 import TagAutocompletePicker from "@/views/tags/ui/components/TagAutocompletePicker.vue";
 import type { ITag } from "@/views/tags/types";

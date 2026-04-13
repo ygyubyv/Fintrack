@@ -1,7 +1,5 @@
-import { useForm } from "vee-validate";
 import { verifyEmailSchema } from "./schemas/verify-email.schema";
 import { useAuthStore } from "@/stores/auth/auth.store";
-import { useRouter } from "vue-router";
 
 export const useVerifyEmailForm = () => {
   const { verifyEmail } = useAuthStore();

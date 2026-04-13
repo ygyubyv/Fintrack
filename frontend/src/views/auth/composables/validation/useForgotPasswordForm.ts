@@ -1,8 +1,6 @@
-import { useForm, useFormErrors } from "vee-validate";
 import { forgotPasswordSchema } from "./schemas/forgot-password.schema";
 import { useAuthStore } from "@/stores/auth/auth.store";
 import type { IForgotPasswordPayload } from "../../types";
-import { useRouter } from "vue-router";
 
 export const useForgotPasswordForm = () => {
   const { forgotPassword } = useAuthStore();

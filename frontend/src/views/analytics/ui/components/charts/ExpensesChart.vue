@@ -14,8 +14,6 @@ import {
   LinearScale,
   PointElement,
 } from "chart.js";
-import { computed } from "vue";
-
 import { Line } from "vue-chartjs";
 
 interface Props {

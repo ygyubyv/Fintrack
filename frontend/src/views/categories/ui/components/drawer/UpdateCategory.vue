@@ -48,12 +48,8 @@
 </template>
 
 <script setup lang="ts">
-import BaseButton from "@/components/base/BaseButton.vue";
-import BaseDrawer from "@/components/base/BaseDrawer.vue";
-import BaseInput from "@/components/base/BaseInput.vue";
 import { useUpdateCategoryForm } from "../../../composables/validation/useUpdateCategoryForm";
 import type { ICategory, IUpdateCategory } from "../../../types";
-import { watch } from "vue";
 
 interface Props {
   drawerIsVisible: boolean;
