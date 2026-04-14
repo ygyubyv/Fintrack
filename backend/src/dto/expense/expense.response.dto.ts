@@ -1,7 +1,7 @@
-import { Prisma } from "../../lib/prisma";
+import type { Prisma } from "../../lib/prisma";
 import { toCategoryResponse } from "../category/category.response.dto";
 import { toTagResponse } from "../tag/tag.response.dto";
-import { TExpenseResponseDto } from "./types/expense.types";
+import type { TExpenseResponseDto } from "./types/expense.types";
 
 type Expense = Prisma.ExpenseGetPayload<{
   include: { category: true; tags: true };

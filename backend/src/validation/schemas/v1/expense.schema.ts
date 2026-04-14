@@ -8,7 +8,7 @@ import type {
   TPaymentType,
   TExportAllExpensesFilters,
 } from "../../../services/expense/types/expense.types";
-import { TSortDirection } from "../../../types/v1";
+import type { TSortDirection } from "../../../types/v1";
 
 export const SortDirectionSchema = z.custom<TSortDirection>(
   (val) => val === "asc" || val === "desc",

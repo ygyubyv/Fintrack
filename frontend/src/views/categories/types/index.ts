@@ -1,3 +1,5 @@
+import type { TOrderBy } from "@/types";
+
 export interface ICategory {
   id: number;
   title: string;
@@ -16,3 +18,9 @@ export interface IUpdateCategory {
 export interface IImportCategories {
   file: File;
 }
+
+export type TCategoriesOrderByFields = "CreatedAt";
+
+export type TGetAllCategoriesFilters = TOrderBy<TCategoriesOrderByFields> & {
+  title: string;
+};

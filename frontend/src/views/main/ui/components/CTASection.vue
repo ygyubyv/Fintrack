@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useAuthStore } from "@/stores/auth/auth.store";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -28,7 +27,7 @@ const handleSignUp = () => {
       </p>
 
       <!-- Actions -->
-      <div class="pt-4" v-if="!isAuthenticated">
+      <div v-if="!isAuthenticated" class="pt-4">
         <!-- Sign Up -->
         <BaseButton
           text="Create Account"

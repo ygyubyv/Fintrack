@@ -7,8 +7,6 @@ import { ExpensesApi } from "@/views/transactions/services/api/expenses.api";
 export const usePaginatedList = () => {
   const { $api, isLoading } = useApi();
 
-  const DEBOUNCE = ref(0); // ms
-
   const items = ref<IExpense[]>([]);
 
   const searchQueryParams = reactive<Record<string, unknown>>({});
@@ -53,19 +51,15 @@ export const usePaginatedList = () => {
 
   const refresh = () => fetchItems();
 
-  watchDebounced(
+  watch(
     filters,
     (newValue, oldValue) => {
       if (JSON.stringify(newValue) !== JSON.stringify(oldValue)) {
         fetchItems();
-
-        // Initially, we don't want to debounce the fetchItems call, so we set DEBOUNCE to 0. After the first change, we set it to 300ms for subsequent changes.
-        DEBOUNCE.value = 300;
       }
     },
     {
       immediate: false,
-      debounce: DEBOUNCE.value,
       deep: true,
     },
   );

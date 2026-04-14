@@ -15,10 +15,10 @@ const { password, passwordAttrs, errors, meta, onSubmit, resetForm } =
 
     <!-- Password -->
     <BaseInput
-      v-model="password"
       v-bind="passwordAttrs"
-      :error="errors.password"
       id="password"
+      v-model="password"
+      :error="errors.password"
       type="password"
       label="New password"
       placeholder="Enter new password"

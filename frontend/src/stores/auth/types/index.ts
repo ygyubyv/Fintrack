@@ -60,6 +60,5 @@ export interface IIdTokenClaims extends ITokenClaims {
   lastName: string;
 }
 
-export interface IAccessTokenClaims extends ITokenClaims {}
-
-export interface IRefreshTokenClaims extends ITokenClaims {}
+export type TAccessTokenClaims = ITokenClaims;
+export type IRefreshTokenClaims = ITokenClaims;

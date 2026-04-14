@@ -1,15 +1,16 @@
 import { baseURL } from "@/plugins/axios.plugin";
 import type { TPaginatedResponse } from "@/types";
-import { watchDebounced } from "@vueuse/core";
-import { computed, reactive, ref, watchEffect } from "vue";
-import { useRoute, useRouter } from "vue-router";
 import { useApi } from "./useApi";
 
 interface IPaginatedListOptions {
   changeUrl: boolean;
 }
 
-export const usePaginatedList = <T>(
+export const usePaginatedList = <
+  T,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  F extends Record<string, any> = Record<string, never>,
+>(
   apiUrl: string,
   options: Partial<IPaginatedListOptions> = {},
 ) => {
@@ -23,7 +24,7 @@ export const usePaginatedList = <T>(
   const page = ref(route.query.page ? Number(route.query.page) : 1);
   const perPage = ref(route.query.perPage ? Number(route.query.perPage) : 15);
 
-  const DEBOUNCE = ref(25); // ms
+  const DEBOUNCE = 100; // ms
 
   const items = ref<T[]>([]);
   const lastPage = ref(0);
@@ -39,7 +40,7 @@ export const usePaginatedList = <T>(
     return `Showing ${firstIndex} to ${lastIndex} of ${total.value} entries`;
   });
 
-  const searchQueryParams = reactive<Record<string, unknown>>({});
+  const searchQueryParams = reactive({} as F);
 
   const filters = computed((): Record<string, unknown> => {
     return {
@@ -64,7 +65,9 @@ export const usePaginatedList = <T>(
 
     params.forEach((value, key) => {
       if (value !== undefined && value !== null && value !== "") {
-        if (key === "page" || key === "perPage") return;
+        if (key === "page" || key === "perPage") {
+          return;
+        }
 
         if (!isNaN(Number(value))) {
           searchQueryParams[key] = Number(value);
@@ -85,6 +88,10 @@ export const usePaginatedList = <T>(
     }
 
     return String(url);
+  };
+
+  const updateSearchQueryParam = <K extends keyof F>(key: K, value: F[K]) => {
+    (searchQueryParams as F)[key] = value;
   };
 
   const fetchItems = async () => {
@@ -109,7 +116,7 @@ export const usePaginatedList = <T>(
   watchDebounced(
     filters,
     () => {
-      changeUrl &&
+      if (changeUrl) {
         router.replace({
           query: {
             ...Object.fromEntries(
@@ -124,9 +131,10 @@ export const usePaginatedList = <T>(
             ),
           },
         });
+      }
     },
     {
-      debounce: DEBOUNCE.value,
+      debounce: DEBOUNCE,
       deep: true,
     },
   );
@@ -136,20 +144,16 @@ export const usePaginatedList = <T>(
     (newValue, oldValue) => {
       if (JSON.stringify(newValue) !== JSON.stringify(oldValue)) {
         fetchItems();
-
-        // Initially, we don't want to debounce the fetchItems call, so we set DEBOUNCE to 0. After the first change, we set it to 300ms for subsequent changes.
-        DEBOUNCE.value = 300;
       }
     },
     {
       immediate: true,
-      debounce: DEBOUNCE.value,
+      debounce: DEBOUNCE,
       deep: true,
     },
   );
 
   initializeSearchQuery();
-  // fetchItems();
 
   return {
     page,
@@ -164,5 +168,6 @@ export const usePaginatedList = <T>(
     resetFilters,
     fetchItems,
     refresh,
+    updateSearchQueryParam,
   };
 };

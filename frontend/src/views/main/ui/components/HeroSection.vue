@@ -56,10 +56,10 @@ const handleLogin = () => {
 
           <!-- Login -->
           <BaseButton
+            v-if="!isAuthenticated"
             text="Login"
             size="Big"
             mode="Secondary"
-            v-if="!isAuthenticated"
             @click="handleLogin"
           />
         </div>

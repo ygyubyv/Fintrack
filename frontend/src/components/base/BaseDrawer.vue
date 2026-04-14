@@ -1,7 +1,7 @@
 <template>
   <div
-    class="fixed top-0 right-0 z-50 h-full bg-white w-64 md:w-96 shadow-xl transform transition-transform duration-300 translate-x-0 flex flex-col"
     ref="drawer"
+    class="fixed top-0 right-0 z-50 h-full bg-white w-64 md:w-96 shadow-xl transform transition-transform duration-300 translate-x-0 flex flex-col"
   >
     <div
       class="flex items-center p-4 pt-8 border-b"
@@ -29,11 +29,6 @@
 </template>
 
 <script setup lang="ts">
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { computed, useSlots } from "vue";
-import { onClickOutside } from "@vueuse/core";
-import { useTemplateRef } from "vue";
-
 interface Props {
   closeOutside?: boolean;
 }
@@ -56,6 +51,8 @@ const headerHasContent = computed(() => {
 });
 
 onClickOutside(drawer, () => {
-  props.closeOutside && emit("onClose");
+  if (props.closeOutside) {
+    emit("onClose");
+  }
 });
 </script>

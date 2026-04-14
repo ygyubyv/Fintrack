@@ -8,71 +8,71 @@
       <div class="flex flex-col gap-3">
         <!-- Value -->
         <BaseInput
-          label="Value"
-          v-model="value"
-          placeholder="Expense Value"
           v-bind="valueAttrs"
-          :error="errors.value"
           id="expense-value"
+          v-model="value"
+          label="Value"
+          placeholder="Expense Value"
+          :error="errors.value"
           type="number"
           size="Medium"
         />
 
         <!-- Expense Type -->
         <BaseSelect
-          label="Expense Type"
-          v-model="expenseType"
           v-bind="expenseTypeAttrs"
+          id="expense-type"
+          v-model="expenseType"
+          label="Expense Type"
           :error="errors.expenseType"
           :options="[
             { label: 'Expense', value: 'EXPENSE' },
             { label: 'Income', value: 'INCOME' },
           ]"
-          id="expense-type"
         />
 
         <!-- Payment Type -->
         <BaseSelect
-          label="Payment Type"
-          v-model="paymentType"
           v-bind="paymentTypeAttrs"
+          id="payment-type"
+          v-model="paymentType"
+          label="Payment Type"
           :error="errors.paymentType"
           :options="[
             { label: 'Cash', value: 'CASH' },
             { label: 'Card', value: 'CARD' },
           ]"
-          id="payment-type"
         />
 
         <!-- Category -->
         <CategoryAutocompletePicker
-          v-model="selectedCategory"
           v-bind="categoryIdAttrs"
-          :error="errors.categoryId"
           id="expense-category"
+          v-model="selectedCategory"
+          :error="errors.categoryId"
           label="Category"
           clearable
         />
 
         <!-- Tags -->
         <TagAutocompletePicker
+          v-bind="tagIdsAttrs"
+          id="expense-tags"
           v-model="selectedTags"
           :multiple="true"
-          v-bind="tagIdsAttrs"
           :error="errors.tagIds"
-          id="expense-tags"
           label="Tags"
           clearable
         />
 
         <!-- Description -->
         <BaseInput
-          label="Description"
-          v-model="description"
-          placeholder="Description"
           v-bind="descriptionAttrs"
-          :error="errors.description"
           id="expense-description"
+          v-model="description"
+          label="Description"
+          placeholder="Description"
+          :error="errors.description"
           type="text"
           size="Medium"
         />
@@ -80,12 +80,9 @@
         <!-- Created At -->
         <BaseInput
           id="created-at"
+          v-model="createdAtModelValue"
           type="datetime-local"
           label="Expense Date"
-          :modelValue="toDatetimeLocal(createdAt as string) ?? null"
-          @update:modelValue="
-            (value) => (createdAt = new Date(value).toISOString())
-          "
           v-bind="createdAtAttrs"
           size="Medium"
           :error="errors.createdAt"
@@ -141,7 +138,6 @@ defineProps<Props>();
 const emit = defineEmits<Emits>();
 
 const {
-  meta,
   value,
   valueAttrs,
   expenseType,
@@ -163,6 +159,19 @@ const {
 
 const selectedTags = ref<ITag[]>([]);
 const selectedCategory = ref<ICategory | null>(null);
+
+const createdAtModelValue = computed({
+  get() {
+    return createdAt.value ? toDatetimeLocal(createdAt.value) : null;
+  },
+  set(newValue: string | undefined) {
+    if (newValue) {
+      createdAt.value = new Date(newValue).toISOString();
+    } else {
+      createdAt.value = undefined;
+    }
+  },
+});
 
 const closeModal = () => {
   selectedCategory.value = null;

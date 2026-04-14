@@ -1,6 +1,9 @@
 import ejs from "ejs";
 import path from "path";
-import { TEmailTemplate, TEmailTemplateVariables } from "../types/email.types";
+import type {
+  TEmailTemplate,
+  TEmailTemplateVariables,
+} from "../types/email.types";
 
 const templatePath = (fileName: TEmailTemplate) =>
   path.join(

@@ -1,5 +1,6 @@
-import { ZodSchema } from "zod";
-import { Request, Response, NextFunction } from "express";
+import { ZodError } from "zod";
+import type { ZodSchema } from "zod";
+import type { Request, Response, NextFunction } from "express";
 import { AppError } from "../errors/AppError";
 
 type TValidationSchemas = {
@@ -10,7 +11,7 @@ type TValidationSchemas = {
 
 export const ValidateMiddleware =
   (schemas: TValidationSchemas) =>
-  (request: Request, response: Response, next: NextFunction) => {
+  (request: Request, _: Response, next: NextFunction) => {
     try {
       if (schemas.params) {
         request.params = schemas.params.parse(
@@ -30,7 +31,7 @@ export const ValidateMiddleware =
     } catch (error) {
       next(
         new AppError("VALIDATION_ERROR", {
-          errors: (error as any).flatten?.(),
+          errors: error instanceof ZodError ? error.flatten((issue) => issue.message) : undefined,
         }),
       );
     }

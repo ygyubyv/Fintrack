@@ -1,10 +1,6 @@
 <script setup lang="ts">
-import { RouterLink, useRoute } from "vue-router";
-import BaseButton from "../base/BaseButton.vue";
 import Burger from "./Burger.vue";
 import { useAuthStore } from "@/stores/auth/auth.store";
-import { storeToRefs } from "pinia";
-import { computed } from "vue";
 
 const route = useRoute();
 
@@ -56,7 +52,7 @@ const visibleLinks = computed(() => {
           />
         </RouterLink>
 
-        <div class="ml-2" v-if="!isLoading">
+        <div v-if="!isLoading" class="ml-2">
           <!-- Login -->
           <template v-if="!isAuthenticated">
             <RouterLink to="/auth">
@@ -76,14 +72,14 @@ const visibleLinks = computed(() => {
               icon="right-from-bracket"
               mode="Secondary"
               size="Small"
-              :onClick="logout"
+              :on-click="logout"
             />
           </template>
         </div>
       </nav>
 
       <!-- Mobile -->
-      <div class="sm:hidden" v-if="!isLoading">
+      <div v-if="!isLoading" class="sm:hidden">
         <template v-if="!isAuthenticated">
           <!-- Login -->
           <RouterLink to="/auth">

@@ -1,0 +1,13 @@
+{
+  // ESLint: auto-detect working directory per package (monorepo best practice)
+  // Each subpackage with a package.json gets its own ESLint process + node_modules
+  "eslint.workingDirectories": [{ "mode": "auto" }],
+
+  // Autofix on save for all relevant file types
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+
+  // Tell ESLint extension which language IDs to validate
+  "eslint.validate": ["javascript", "typescript", "vue"]
+}

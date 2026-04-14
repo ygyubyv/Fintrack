@@ -1,4 +1,5 @@
-import { ERROR_MAP, ErrorCode } from "./types";
+import type { ErrorCode } from "./types";
+import { ERROR_MAP } from "./types";
 
 export class AppError extends Error {
   public code: ErrorCode;

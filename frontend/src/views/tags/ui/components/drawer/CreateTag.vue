@@ -8,18 +8,18 @@
       <div class="flex flex-col gap-3">
         <!-- Title -->
         <BaseInput
-          label="Title"
-          v-model="title"
-          placeholder="Tag Title"
           v-bind="titleAttrs"
-          :error="errors.title"
           id="tag-title"
+          v-model="title"
+          label="Title"
+          placeholder="Tag Title"
+          :error="errors.title"
           type="text"
           size="Medium"
         />
 
         <!-- Color -->
-        <div class="flex flex-col gap-2 relative" ref="colorWrapperRef">
+        <div ref="colorWrapperRef" class="flex flex-col gap-2 relative">
           <label class="mb-1 text-sm font-medium text-neutral-800">Color</label>
 
           <div
@@ -33,13 +33,13 @@
             class="absolute z-50 mt-1 left-0 shadow-lg border rounded"
           >
             <Vue3ColorPicker
-              v-model:modelValue="color"
+              v-model:model-value="color"
               type="HEX"
               mode="solid"
-              :showPickerMode="false"
-              :showAlpha="false"
-              :showInputMenu="false"
-              :showColorList="false"
+              :show-picker-mode="false"
+              :show-alpha="false"
+              :show-input-menu="false"
+              :show-color-list="false"
             />
           </div>
 

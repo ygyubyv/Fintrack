@@ -9,9 +9,8 @@
     </label>
 
     <button
-      type="button"
       :id="id"
-      @click="toggle"
+      type="button"
       :class="[
         'flex items-center justify-between rounded-lg border text-left transition-colors duration-200',
         sizeClasses,
@@ -19,6 +18,7 @@
           ? 'border-red-500 bg-red-50'
           : 'border-neutral-300 hover:border-neutral-400',
       ]"
+      @click="toggle"
     >
       <span class="truncate">
         {{ displayLabel }}
@@ -39,11 +39,11 @@
         <li
           v-for="option in options"
           :key="option.value ?? option.label"
-          @click="select(option)"
           :class="[
             'flex items-center gap-2 px-4 py-2 text-sm cursor-pointer',
             isActive(option) ? 'bg-gray-100 font-medium' : 'hover:bg-gray-50',
           ]"
+          @click="select(option)"
         >
           <input
             v-if="multiple"
@@ -64,14 +64,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-
 type Size = "Small" | "Medium" | "Big";
 
 interface Option {
   label: string;
-  value: string | number | undefined;
+  value: string | number | null;
 }
 
 interface Props {
@@ -90,7 +87,7 @@ const props = withDefaults(defineProps<Props>(), {
   multiple: false,
 });
 
-const model = defineModel<any>();
+const model = defineModel<Option["value"] | Option["value"][]>();
 
 const isOpen = ref(false);
 
@@ -102,6 +99,7 @@ const isActive = (option: Option) => {
   if (props.multiple) {
     return Array.isArray(model.value) && model.value.includes(option.value);
   }
+
   return model.value === option.value;
 };
 
@@ -131,13 +129,20 @@ const displayLabel = computed(() => {
     }
 
     const labels = props.options
-      .filter((o) => model.value.includes(o.value))
-      .map((o) => o.label);
+      .filter((option) => {
+        return (model.value as Option["value"][]).includes(option.value);
+      })
+      .map((option) => {
+        return option.label;
+      });
 
     return labels.join(", ");
   }
 
-  const selected = props.options.find((o) => o.value === model.value);
+  const selected = props.options.find((option) => {
+    return option.value === model.value;
+  });
+
   return selected?.label || props.placeholder;
 });
 

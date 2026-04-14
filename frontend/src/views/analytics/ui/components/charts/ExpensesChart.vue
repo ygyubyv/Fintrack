@@ -15,6 +15,7 @@ import {
   PointElement,
 } from "chart.js";
 import { Line } from "vue-chartjs";
+import type { TooltipItem } from "chart.js";
 
 interface Props {
   data: {
@@ -56,7 +57,7 @@ const chartOptions = {
     legend: { display: false },
     tooltip: {
       callbacks: {
-        label: (context: any) => {
+        label: (context: TooltipItem<"line">) => {
           const value = context.raw as number;
 
           return `Spent: ${value.toFixed(2)} ${CURRENCY}`;

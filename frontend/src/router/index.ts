@@ -5,7 +5,6 @@ import Auth from "@/pages/auth.vue";
 import Tags from "@/pages/tags.vue";
 import Transactions from "@/pages/transactions.vue";
 import { useAuthStore } from "@/stores/auth/auth.store";
-import { storeToRefs } from "pinia";
 import Categories from "@/pages/categories.vue";
 
 const router = createRouter({

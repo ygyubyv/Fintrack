@@ -1,4 +1,3 @@
-import { computed, ref } from "vue";
 import { useNotification } from "./useNotification";
 import axiosInstance from "@/plugins/axios.plugin";
 import axios from "axios";
@@ -46,11 +45,12 @@ export const useApi = () => {
         responseType,
       });
 
-      successMessage &&
+      if (successMessage) {
         notify({
           message: successMessage,
           type: "success",
         });
+      }
 
       return response.data;
     } catch (e) {

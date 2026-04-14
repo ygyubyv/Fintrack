@@ -1,4 +1,4 @@
-import { IPaginationPayload, TOrderBy } from "../../../types/v1";
+import type { IPaginationPayload, TOrderBy } from "../../../types/v1";
 
 export interface ICreateCategoryPayload {
   title: string;

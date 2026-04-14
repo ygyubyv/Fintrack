@@ -4,9 +4,14 @@ import TagAutocompletePicker from "@/views/tags/ui/components/TagAutocompletePic
 import type { ITag } from "@/views/tags/types";
 import type { ICategory } from "@/views/categories/types";
 import CategoryAutocompletePicker from "@/views/categories/ui/components/CategoryAutocompletePicker.vue";
+import type {
+  TExpenseType,
+  TGetAllExpensesFilters,
+  TPaymentType,
+} from "../../types";
 
 interface Props {
-  searchQueryParams: Record<string, unknown>;
+  searchQueryParams: TGetAllExpensesFilters;
 }
 
 interface Emits {
@@ -14,6 +19,11 @@ interface Emits {
   (e: "addNewExpense"): void;
   (e: "export"): void;
   (e: "import"): void;
+  (
+    e: "update:searchQueryParams",
+    key: keyof TGetAllExpensesFilters,
+    value: TGetAllExpensesFilters[keyof TGetAllExpensesFilters],
+  ): void;
 }
 
 const props = defineProps<Props>();
@@ -22,10 +32,11 @@ const emit = defineEmits<Emits>();
 const filtersExpanded = ref(false);
 
 const selectedTag = ref<ITag | null>(
-  (props.searchQueryParams["tagIds[]"] as ITag) ?? null,
+  (props.searchQueryParams["tagIds[]"] as unknown as ITag) ?? null,
 );
+
 const selectedCategory = ref<ICategory | null>(
-  (props.searchQueryParams.categoryId as ICategory) ?? null,
+  (props.searchQueryParams.categoryId as unknown as ICategory) ?? null,
 );
 
 const toggleFilters = () => {
@@ -41,11 +52,94 @@ const handleResetFilters = () => {
   emit("resetFilters");
 };
 
+const createdFromModelValue = computed({
+  get() {
+    return props.searchQueryParams["createdFromDate"]
+      ? toDatetimeLocal(props.searchQueryParams["createdFromDate"])
+      : null;
+  },
+  set(newValue: string | undefined) {
+    if (newValue) {
+      emit(
+        "update:searchQueryParams",
+        "createdFromDate",
+        new Date(newValue).toISOString(),
+      );
+    } else {
+      emit("update:searchQueryParams", "createdFromDate", undefined);
+    }
+  },
+});
+
+const createdToModelValue = computed({
+  get() {
+    return props.searchQueryParams["createdToDate"]
+      ? toDatetimeLocal(props.searchQueryParams["createdToDate"])
+      : null;
+  },
+  set(newValue: string | undefined) {
+    if (newValue) {
+      emit(
+        "update:searchQueryParams",
+        "createdToDate",
+        new Date(newValue).toISOString(),
+      );
+    } else {
+      emit("update:searchQueryParams", "createdToDate", undefined);
+    }
+  },
+});
+
+const descriptionModelValue = computed({
+  get() {
+    return props.searchQueryParams["description"];
+  },
+  set(newValue: string) {
+    emit("update:searchQueryParams", "description", newValue);
+  },
+});
+
+const valueFromModelValue = computed({
+  get() {
+    return props.searchQueryParams["valueFrom"];
+  },
+  set(newValue: number) {
+    emit("update:searchQueryParams", "valueFrom", newValue);
+  },
+});
+
+const valueToModelValue = computed({
+  get() {
+    return props.searchQueryParams["valueTo"];
+  },
+  set(newValue: number) {
+    emit("update:searchQueryParams", "valueTo", newValue);
+  },
+});
+
+const expenseTypeModelValue = computed({
+  get() {
+    return props.searchQueryParams.expenseType;
+  },
+  set(newValue: TExpenseType | null) {
+    emit("update:searchQueryParams", "expenseType", newValue ?? undefined);
+  },
+});
+
+const paymentTypeModelValue = computed({
+  get() {
+    return props.searchQueryParams.paymentType;
+  },
+  set(newValue: TPaymentType | null) {
+    emit("update:searchQueryParams", "paymentType", newValue ?? undefined);
+  },
+});
+
 watch(
   selectedTag,
   (newVal) => {
     if (newVal) {
-      props.searchQueryParams["tagIds[]"] = selectedTag.value?.id;
+      emit("update:searchQueryParams", "tagIds[]", newVal.id);
     }
   },
   {
@@ -57,7 +151,7 @@ watch(
   selectedCategory,
   (newVal) => {
     if (newVal) {
-      props.searchQueryParams.categoryId = selectedCategory.value?.id;
+      emit("update:searchQueryParams", "categoryId", newVal.id);
     }
   },
   {
@@ -72,34 +166,19 @@ watch(
       <!-- Created From -->
       <BaseInput
         id="createdFrom"
+        v-model="createdFromModelValue"
         type="datetime-local"
         label="Date from"
         class="w-44"
-        :modelValue="
-          toDatetimeLocal(searchQueryParams['createdFromDate'] as string) ??
-          null
-        "
-        @update:modelValue="
-          (value) =>
-            (searchQueryParams['createdFromDate'] = new Date(
-              value,
-            ).toISOString())
-        "
       />
 
       <!-- Created To -->
       <BaseInput
         id="createdTo"
+        v-model="createdToModelValue"
         type="datetime-local"
         label="Date to"
         class="w-44"
-        :modelValue="
-          toDatetimeLocal(searchQueryParams['createdToDate'] as string) ?? null
-        "
-        @update:modelValue="
-          (value) =>
-            (searchQueryParams['createdToDate'] = new Date(value).toISOString())
-        "
       />
 
       <!-- Spacer -->
@@ -110,7 +189,7 @@ watch(
         :text="filtersExpanded ? 'Hide filters' : 'Filters'"
         icon="sliders"
         mode="Secondary"
-        :onClick="toggleFilters"
+        :on-click="toggleFilters"
       />
 
       <!-- Reset Filters -->
@@ -118,7 +197,7 @@ watch(
         text="Reset Filters"
         icon="rotate-left"
         mode="Secondary"
-        :onClick="handleResetFilters"
+        :on-click="handleResetFilters"
       />
 
       <!-- Import -->
@@ -126,7 +205,7 @@ watch(
         text="Import"
         icon="file-import"
         mode="Secondary"
-        :onClick="() => emit('import')"
+        :on-click="() => emit('import')"
       />
 
       <!-- Export -->
@@ -134,7 +213,7 @@ watch(
         text="Export"
         icon="file-export"
         mode="Secondary"
-        :onClick="() => emit('export')"
+        :on-click="() => emit('export')"
       />
 
       <!-- Add New Expense -->
@@ -142,7 +221,7 @@ watch(
         text="New"
         icon="plus"
         mode="Primary"
-        :onClick="() => emit('addNewExpense')"
+        :on-click="() => emit('addNewExpense')"
       />
     </div>
 
@@ -155,18 +234,18 @@ watch(
         <!-- Description -->
         <BaseInput
           id="search"
+          v-model="descriptionModelValue"
           label="Description"
           placeholder="Coffee..."
-          v-model="searchQueryParams['description']"
         />
 
         <!-- Expense Type -->
         <BaseSelect
           id="expenseType"
+          v-model="expenseTypeModelValue"
           label="Type"
-          v-model="searchQueryParams.expenseType"
           :options="[
-            { label: 'All types', value: undefined },
+            { label: 'All types', value: null },
             { label: 'Expense', value: 'EXPENSE' },
             { label: 'Income', value: 'INCOME' },
           ]"
@@ -175,10 +254,10 @@ watch(
         <!-- Payment Type -->
         <BaseSelect
           id="paymentType"
+          v-model="paymentTypeModelValue"
           label="Payment Type"
-          v-model="searchQueryParams.paymentType"
           :options="[
-            { label: 'All types', value: undefined },
+            { label: 'All types', value: null },
             { label: 'Cash', value: 'CASH' },
             { label: 'Card', value: 'CARD' },
           ]"
@@ -187,32 +266,32 @@ watch(
         <!-- Value From -->
         <BaseInput
           id="valueFrom"
+          v-model.number="valueFromModelValue"
           type="number"
           label="Value from"
           placeholder="0"
-          v-model.number="searchQueryParams['valueFrom']"
         />
 
         <!-- Value To -->
         <BaseInput
           id="valueTo"
+          v-model.number="valueToModelValue"
           type="number"
           label="Value to"
           placeholder="1000"
-          v-model.number="searchQueryParams['valueTo']"
         />
 
         <!-- Tag -->
         <TagAutocompletePicker
-          v-model="selectedTag"
           id="tags"
+          v-model="selectedTag"
           label="Filter By Included Tag"
         />
 
         <!-- Category -->
         <CategoryAutocompletePicker
-          v-model="selectedCategory"
           id="category"
+          v-model="selectedCategory"
           label="Filter By Category"
         />
       </div>

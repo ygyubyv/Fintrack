@@ -1,6 +1,6 @@
 import { CategoryService } from "../../services/category/category.service";
 import type { Request, Response, NextFunction } from "express";
-import { TSortDirection } from "../../types/v1";
+import type { TSortDirection } from "../../types/v1";
 import { AppError } from "../../errors/AppError";
 import { toCategoryResponse } from "../../dto/category/category.response.dto";
 import { toArray } from "../../utils";

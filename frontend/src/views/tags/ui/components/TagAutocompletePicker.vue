@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col w-full max-w-md relative" ref="root">
+  <div ref="root" class="flex flex-col w-full max-w-md relative">
     <!-- Label -->
     <label
       v-if="label"
@@ -53,8 +53,8 @@
       <!-- Clear -->
       <button
         v-if="clearable && selectedItems"
-        @click.stop="clearSelection"
         class="flex items-center justify-center w-5 h-5 text-gray-400 hover:text-gray-600 transition"
+        @click.stop="clearSelection"
       >
         <font-awesome-icon :icon="['fas', 'times']" />
       </button>
@@ -69,13 +69,13 @@
         <li
           v-for="tag in items"
           :key="tag.id"
-          @click.stop="toggleSelect(tag)"
           :class="[
             'flex items-center gap-3 px-3 py-2 cursor-pointer transition rounded-md mx-1',
             isSelected(tag)
               ? 'bg-blue-50 text-blue-700'
               : 'hover:bg-gray-100 active:bg-gray-200',
           ]"
+          @click.stop="toggleSelect(tag)"
         >
           <!-- Checkbox for multiple -->
           <div
@@ -129,7 +129,6 @@ import type { ITag } from "../../types";
 import { baseURL } from "@/plugins/axios.plugin";
 import { TagsApi } from "../../services/api/tags.api";
 import type { TPaginatedResponse } from "@/types";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { useApi } from "@/composables/useApi";
 
 interface Props {
@@ -230,7 +229,9 @@ const getAllTagsHandler = async () => {
   getAllTagsApiUrl.searchParams.set("page", String(page.value));
   getAllTagsApiUrl.searchParams.set("perPage", String(perPage));
 
-  search.value && getAllTagsApiUrl.searchParams.set("title", search.value);
+  if (search.value) {
+    getAllTagsApiUrl.searchParams.set("title", search.value);
+  }
 
   try {
     isLoading.value = true;

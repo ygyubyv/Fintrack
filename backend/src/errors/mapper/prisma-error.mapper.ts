@@ -1,5 +1,6 @@
 import { Prisma } from "../../lib/prisma";
-import { DbErrorCode, PRISMA_TO_DB_ERROR_MAP, PrismaErrorCode } from "../types";
+import type { DbErrorCode, PrismaErrorCode } from "../types";
+import { PRISMA_TO_DB_ERROR_MAP } from "../types";
 
 export const MapPrismaError = (error: unknown): DbErrorCode | null => {
   if (error instanceof Prisma.PrismaClientKnownRequestError) {

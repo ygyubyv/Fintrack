@@ -11,7 +11,7 @@ interface Emits {
   (e: "update:dialogIsVisible", value: boolean): void;
 }
 
-const props = defineProps<Props>();
+defineProps<Props>();
 const emit = defineEmits<Emits>();
 
 const { file, errors, isFormValid, onSubmit, onClose, resetForm } =
@@ -41,8 +41,8 @@ const handleFileInputChange = (event: Event) => {
 <template>
   <BaseDialog
     v-if="dialogIsVisible"
-    @close="onClose"
     title="Select file to import"
+    @close="onClose"
   >
     <template #default>
       <div class="flex flex-col items-center gap-4 m-8">
@@ -76,9 +76,9 @@ const handleFileInputChange = (event: Event) => {
           <!-- Upload -->
           <label class="mt-2">
             <input
+              ref="fileInput"
               type="file"
               class="hidden"
-              ref="fileInput"
               @change="handleFileInputChange"
             />
             <BaseButton
@@ -105,8 +105,8 @@ const handleFileInputChange = (event: Event) => {
 
           <font-awesome-icon
             :icon="['fas', 'xmark']"
-            @click="resetForm"
             class="text-gray-400 cursor-pointer hover:text-black"
+            @click="resetForm"
           />
         </div>
       </div>
@@ -116,7 +116,7 @@ const handleFileInputChange = (event: Event) => {
     <template #footer>
       <!-- Close -->
       <BaseButton
-        :onClick="onClose"
+        :on-click="onClose"
         icon="xmark"
         text="Cancel"
         mode="Secondary"
@@ -128,7 +128,7 @@ const handleFileInputChange = (event: Event) => {
         text="Import"
         mode="Primary"
         :disabled="!isFormValid"
-        :onClick="onSubmit"
+        :on-click="onSubmit"
       />
     </template>
   </BaseDialog>

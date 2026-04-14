@@ -26,6 +26,6 @@ app.use(GoogleSignInPlugin, {
 
 app.use(ToastPlugin);
 
-app.component("font-awesome-icon", FontAwesomeIcon);
+app.component("FontAwesomeIcon", FontAwesomeIcon);
 
 app.mount("#app");

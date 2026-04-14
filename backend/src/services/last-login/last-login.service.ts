@@ -1,5 +1,5 @@
 import { prisma } from "../../lib/prisma";
-import { ICreateLastLogin } from "./types/last-login.types";
+import type { ICreateLastLogin } from "./types/last-login.types";
 
 export const LastLoginService = () => {
   const upsert = async (payload: ICreateLastLogin) => {

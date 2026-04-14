@@ -1,19 +1,47 @@
 <script setup lang="ts">
-import type { ITag } from "../../types";
+import type { TSortDirection } from "@/types";
+import type { ITag, TGetAllTagsFilters } from "../../types";
 import { formatTimeWithHoursWithoutTimeZone } from "@/utils";
 
 interface Props {
   items: ITag[];
-  searchQueryParams: Record<string, unknown>;
+  searchQueryParams: TGetAllTagsFilters;
 }
 
 interface Emits {
   (e: "update", tag: ITag): void;
   (e: "delete", tag: ITag): void;
+  (
+    e: "update:searchQueryParams",
+    key: keyof TGetAllTagsFilters,
+    value: TGetAllTagsFilters[keyof TGetAllTagsFilters],
+  ): void;
 }
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
+
+const createdAtModelValue = computed({
+  get() {
+    return props.searchQueryParams.orderByCreatedAt ?? null;
+  },
+  set(newValue: boolean | null) {
+    emit("update:searchQueryParams", "orderByCreatedAt", newValue ?? undefined);
+  },
+});
+
+const createdAtDirectionModelValue = computed({
+  get() {
+    return props.searchQueryParams.orderByCreatedAtDirection ?? null;
+  },
+  set(newValue: TSortDirection | null) {
+    emit(
+      "update:searchQueryParams",
+      "orderByCreatedAtDirection",
+      newValue ?? undefined,
+    );
+  },
+});
 </script>
 
 <template>
@@ -33,8 +61,8 @@ const emit = defineEmits<Emits>();
         <!-- Created At -->
         <th class="px-6 py-3 text-left text-sm font-medium text-gray-700">
           <BaseOrderBy
-            v-model:value="searchQueryParams['orderByCreatedAt']"
-            v-model:direction="searchQueryParams['orderByCreatedAtDirection']"
+            v-model:value="createdAtModelValue"
+            v-model:direction="createdAtDirectionModelValue"
             >Created At
           </BaseOrderBy>
         </th>
@@ -86,18 +114,18 @@ const emit = defineEmits<Emits>();
           <div class="flex items-center justify-end gap-2">
             <!-- Update -->
             <BaseButton
-              @click="emit('update', tag)"
               icon="pen"
               size="Small"
               mode="Secondary"
+              @click="emit('update', tag)"
             />
 
             <!-- Delete -->
             <BaseButton
-              @click="emit('delete', tag)"
               icon="trash"
               size="Small"
               mode="Danger"
+              @click="emit('delete', tag)"
             />
           </div>
         </td>

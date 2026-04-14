@@ -1,5 +1,5 @@
-import { Tag } from "../../generated/prisma/client";
-import { TTagResponseDto } from "./types/tag.types";
+import type { Tag } from "../../generated/prisma/client";
+import type { TTagResponseDto } from "./types/tag.types";
 
 export const toTagResponse = (tag: Tag): TTagResponseDto => ({
   id: tag.id,

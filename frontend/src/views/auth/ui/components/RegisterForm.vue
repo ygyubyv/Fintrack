@@ -23,30 +23,30 @@ const {
   <form class="space-y-4" @submit.prevent="onSubmit">
     <!-- First Name -->
     <BaseInput
-      v-model="firstName"
       v-bind="firstNameAttrs"
-      :error="errors.firstName"
       id="firstName"
+      v-model="firstName"
+      :error="errors.firstName"
       label="First name"
       placeholder="Enter your first name"
     />
 
     <!-- Last Name -->
     <BaseInput
-      v-model="lastName"
       v-bind="lastNameAttrs"
-      :error="errors.lastName"
       id="lastName"
+      v-model="lastName"
+      :error="errors.lastName"
       label="Last name"
       placeholder="Enter your last name"
     />
 
     <!-- Email -->
     <BaseInput
-      v-model="email"
       v-bind="emailAttrs"
-      :error="errors.email"
       id="email"
+      v-model="email"
+      :error="errors.email"
       type="email"
       label="Email"
       placeholder="Enter your email"
@@ -54,10 +54,10 @@ const {
 
     <!-- Password -->
     <BaseInput
-      v-model="password"
       v-bind="passwordAttrs"
-      :error="errors.password"
       id="password"
+      v-model="password"
+      :error="errors.password"
       type="password"
       label="Password"
       placeholder="Enter your password"

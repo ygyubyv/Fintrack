@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col w-full max-w-md relative" ref="root">
+  <div ref="root" class="flex flex-col w-full max-w-md relative">
     <!-- Label -->
     <label
       v-if="label"
@@ -53,8 +53,8 @@
       <!-- Clear -->
       <button
         v-if="clearable && selectedItems"
-        @click.stop="clearSelection"
         class="flex items-center justify-center w-5 h-5 text-gray-400 hover:text-gray-600 transition"
+        @click.stop="clearSelection"
       >
         <font-awesome-icon :icon="['fas', 'times']" />
       </button>
@@ -69,13 +69,13 @@
         <li
           v-for="item in items"
           :key="item.id"
-          @click.stop="toggleSelect(item)"
           :class="[
             'flex items-center gap-3 px-3 py-2 cursor-pointer transition rounded-md mx-1',
             isSelected(item)
               ? 'bg-blue-50 text-blue-700'
               : 'hover:bg-gray-100 active:bg-gray-200',
           ]"
+          @click.stop="toggleSelect(item)"
         >
           <!-- Checkbox -->
           <div
@@ -123,7 +123,6 @@ import type { ICategory } from "../../types";
 import { baseURL } from "@/plugins/axios.plugin";
 import { CategoriesApi } from "../../services/api/categories.api";
 import type { TPaginatedResponse } from "@/types";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { useApi } from "@/composables/useApi";
 
 interface Props {

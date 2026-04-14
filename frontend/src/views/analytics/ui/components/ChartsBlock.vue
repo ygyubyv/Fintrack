@@ -64,7 +64,7 @@ const paymentTypeChartData = computed(() => {
       currentValue.expenseType === "EXPENSE" &&
       currentValue.paymentType === "CARD"
     ) {
-      return (accumulator += Number(currentValue.value));
+      return accumulator + Number(currentValue.value);
     } else {
       return accumulator;
     }
@@ -75,7 +75,7 @@ const paymentTypeChartData = computed(() => {
       currentValue.expenseType === "EXPENSE" &&
       currentValue.paymentType === "CASH"
     ) {
-      return (accumulator += Number(currentValue.value));
+      return accumulator + Number(currentValue.value);
     } else {
       return accumulator;
     }
@@ -93,7 +93,7 @@ const paymentTypeChartData = computed(() => {
 const expenseTypeChartData = computed(() => {
   const expenses = props.items.reduce((accumulator, currentValue) => {
     if (currentValue.expenseType === "EXPENSE") {
-      return (accumulator += Number(currentValue.value));
+      return accumulator + Number(currentValue.value);
     } else {
       return accumulator;
     }
@@ -101,7 +101,7 @@ const expenseTypeChartData = computed(() => {
 
   const incomes = props.items.reduce((accumulator, currentValue) => {
     if (currentValue.expenseType === "INCOME") {
-      return (accumulator += Number(currentValue.value));
+      return accumulator + Number(currentValue.value);
     } else {
       return accumulator;
     }

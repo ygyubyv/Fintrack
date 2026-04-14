@@ -3,9 +3,14 @@ interface Props {
   searchQueryParams: Record<string, unknown>;
 }
 
+interface Emits {
+  (e: "update:searchQueryParams", key: string, value: unknown): void;
+}
+
 type TTimeTabsItem = "1week" | "1month" | "3months" | "1year";
 
-const props = defineProps<Props>();
+defineProps<Props>();
+const emit = defineEmits<Emits>();
 
 const activeTimeTab = ref<TTimeTabsItem>("1month");
 const timeTabItems: TTimeTabsItem[] = ["1week", "1month", "3months", "1year"];
@@ -15,38 +20,44 @@ watch(
   (newVal) => {
     const now = new Date().toISOString();
 
-    props.searchQueryParams["createdToDate"] = now;
+    emit("update:searchQueryParams", "createdToDate", now);
 
     switch (newVal) {
-      case "1week":
+      case "1week": {
         const weekAgo = new Date(
-          new Date().getTime() - 7 * 24 * 60 * 60 * 1000,
+          Date.now() - 7 * 24 * 60 * 60 * 1000,
         ).toISOString();
-        props.searchQueryParams["createdFromDate"] = weekAgo;
-        break;
 
-      case "1month":
+        emit("update:searchQueryParams", "createdFromDate", weekAgo);
+        break;
+      }
+
+      case "1month": {
         const monthAgo = new Date(
-          new Date().getTime() - 30 * 24 * 60 * 60 * 1000,
+          Date.now() - 30 * 24 * 60 * 60 * 1000,
         ).toISOString();
-        props.searchQueryParams["createdFromDate"] = monthAgo;
-        break;
 
-      case "3months":
+        emit("update:searchQueryParams", "createdFromDate", monthAgo);
+        break;
+      }
+
+      case "3months": {
         const threeMonthsAgo = new Date(
-          new Date().getTime() - 90 * 24 * 60 * 60 * 1000,
+          Date.now() - 90 * 24 * 60 * 60 * 1000,
         ).toISOString();
-        props.searchQueryParams["createdFromDate"] = threeMonthsAgo;
-        break;
 
-      case "1year":
+        emit("update:searchQueryParams", "createdFromDate", threeMonthsAgo);
+        break;
+      }
+
+      case "1year": {
         const yearAgo = new Date(
-          new Date().getTime() - 365 * 24 * 60 * 60 * 1000,
+          Date.now() - 365 * 24 * 60 * 60 * 1000,
         ).toISOString();
-        props.searchQueryParams["createdFromDate"] = yearAgo;
-        break;
 
-      default:
+        emit("update:searchQueryParams", "createdFromDate", yearAgo);
+        break;
+      }
     }
   },
   {

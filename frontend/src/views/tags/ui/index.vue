@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePaginatedList } from "@/composables/usePaginatedList";
 import CreateTag from "./components/drawer/CreateTag.vue";
-import type { ITag, IUpdateTag } from "../types";
+import type { ITag, IUpdateTag, TGetAllTagsFilters } from "../types";
 import { TagsApi } from "../services/api/tags.api";
 import { TagsService } from "../services/tags.service";
 import TagsTable from "./components/TagsTable.vue";
@@ -18,7 +18,8 @@ const {
   searchQueryParams,
   resetFilters,
   refresh,
-} = usePaginatedList<ITag>(TagsApi.getAllTags);
+  updateSearchQueryParam,
+} = usePaginatedList<ITag, TGetAllTagsFilters>(TagsApi.getAllTags);
 
 const { createTag, updateTag, deleteTag, exportTags, importTags } =
   TagsService();
@@ -69,7 +70,7 @@ const handleDeleteTag = () => {
 
 <template>
   <section class="flex flex-col gap-6 p-6 bg-white rounded-xl shadow-sm">
-    <BaseOverlay v-show="isLoading" />
+    <BaseOverlay :overlay-is-visible="isLoading" />
 
     <!-- Create Tag -->
     <CreateTag
@@ -79,8 +80,8 @@ const handleDeleteTag = () => {
 
     <!-- Update Tag -->
     <UpdateTag
-      v-model:drawer-is-visible="updateTagDrawerIsVisible"
       v-if="selectedTag"
+      v-model:drawer-is-visible="updateTagDrawerIsVisible"
       :initial-values="selectedTag"
       @submit="handleUpdateTag"
     />
@@ -132,7 +133,7 @@ const handleDeleteTag = () => {
           text="Import"
           icon="file-import"
           mode="Secondary"
-          :onClick="() => (importTagsDialogIsVisible = true)"
+          :on-click="() => (importTagsDialogIsVisible = true)"
         />
 
         <!-- Export -->
@@ -140,7 +141,7 @@ const handleDeleteTag = () => {
           text="Export"
           icon="file-export"
           mode="Secondary"
-          :onClick="exportTagsHandler"
+          :on-click="exportTagsHandler"
         />
 
         <!-- Create Tag -->
@@ -159,6 +160,7 @@ const handleDeleteTag = () => {
       <TagsTable
         :items="items"
         :search-query-params="searchQueryParams"
+        @update:search-query-params="updateSearchQueryParam"
         @delete="onDeleteTag"
         @update="onUpdateTag"
       />
@@ -185,7 +187,7 @@ const handleDeleteTag = () => {
         </label>
       </div>
 
-      <BasePagination :total-pages="lastPage" v-model="page" />
+      <BasePagination v-model="page" :total-pages="lastPage" />
     </div>
   </section>
 </template>

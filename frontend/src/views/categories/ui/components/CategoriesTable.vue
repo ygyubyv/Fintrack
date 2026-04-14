@@ -1,19 +1,47 @@
 <script setup lang="ts">
-import type { ICategory } from "../../types";
+import type { TSortDirection } from "@/types";
+import type { ICategory, TGetAllCategoriesFilters } from "../../types";
 import { formatTimeWithHoursWithoutTimeZone } from "@/utils";
 
 interface Props {
   items: ICategory[];
-  searchQueryParams: Record<string, unknown>;
+  searchQueryParams: TGetAllCategoriesFilters;
 }
 
 interface Emits {
   (e: "update", category: ICategory): void;
   (e: "delete", category: ICategory): void;
+  (
+    e: "update:searchQueryParams",
+    key: keyof TGetAllCategoriesFilters,
+    value: TGetAllCategoriesFilters[keyof TGetAllCategoriesFilters],
+  ): void;
 }
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
+
+const createdAtModelValue = computed({
+  get() {
+    return props.searchQueryParams.orderByCreatedAt ?? null;
+  },
+  set(newValue: boolean | null) {
+    emit("update:searchQueryParams", "orderByCreatedAt", newValue ?? undefined);
+  },
+});
+
+const createdAtDirectionModelValue = computed({
+  get() {
+    return props.searchQueryParams.orderByCreatedAtDirection ?? null;
+  },
+  set(newValue: TSortDirection | null) {
+    emit(
+      "update:searchQueryParams",
+      "orderByCreatedAtDirection",
+      newValue ?? undefined,
+    );
+  },
+});
 </script>
 
 <template>
@@ -28,8 +56,8 @@ const emit = defineEmits<Emits>();
         <!-- Created At -->
         <th class="px-6 py-3 text-left text-sm font-medium text-gray-700">
           <BaseOrderBy
-            v-model:value="searchQueryParams['orderByCreatedAt']"
-            v-model:direction="searchQueryParams['orderByCreatedAtDirection']"
+            v-model:value="createdAtModelValue"
+            v-model:direction="createdAtDirectionModelValue"
             >Created At
           </BaseOrderBy>
         </th>
@@ -72,18 +100,18 @@ const emit = defineEmits<Emits>();
           <div class="flex items-center justify-end gap-2">
             <!-- Update -->
             <BaseButton
-              @click="emit('update', category)"
               icon="pen"
               size="Small"
               mode="Secondary"
+              @click="emit('update', category)"
             />
 
             <!-- Delete -->
             <BaseButton
-              @click="emit('delete', category)"
               icon="trash"
               size="Small"
               mode="Danger"
+              @click="emit('delete', category)"
             />
           </div>
         </td>

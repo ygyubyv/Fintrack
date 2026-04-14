@@ -1,6 +1,6 @@
-import { ExpenseType, PaymentType } from "../../../generated/prisma/enums";
-import { TCategoryResponseDto } from "../../category/types/category.types";
-import { TTagResponseDto } from "../../tag/types/tag.types";
+import type { ExpenseType, PaymentType } from "../../../generated/prisma/enums";
+import type { TCategoryResponseDto } from "../../category/types/category.types";
+import type { TTagResponseDto } from "../../tag/types/tag.types";
 
 export type TExpenseResponseDto = {
   id: number;

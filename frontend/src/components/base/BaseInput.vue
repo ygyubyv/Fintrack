@@ -9,8 +9,8 @@
     </label>
 
     <input
-      v-model="inputValue"
       :id="id"
+      v-model="inputValue"
       :type="type"
       :placeholder="placeholder"
       v-bind="$attrs"
@@ -30,8 +30,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
-
 type InputType =
   | "text"
   | "password"
@@ -67,7 +65,9 @@ defineOptions({
   inheritAttrs: false,
 });
 
-const inputValue = defineModel();
+const inputValue = defineModel<string | number | null>({
+  default: null,
+});
 
 const sizeClasses = computed(() => {
   switch (props.size) {

@@ -12,9 +12,14 @@ const { items, searchQueryParams, isLoading } = usePaginatedList();
 
 <template>
   <div>
-    <div class="p-4 space-y-6" v-show="!isLoading">
+    <div v-show="!isLoading" class="p-4 space-y-6">
       <!-- Header -->
-      <HeaderBlock :search-query-params="searchQueryParams" />
+      <HeaderBlock
+        :search-query-params="searchQueryParams"
+        @update:search-query-params="
+          (key, value) => (searchQueryParams[key] = value)
+        "
+      />
 
       <!-- Stats -->
       <StatisticsBlock :items="items" />

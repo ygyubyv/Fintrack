@@ -2,7 +2,6 @@ import axios from "axios";
 import { API_URL, API_PREFIX } from "@/config";
 import { useAuthStore } from "@/stores/auth/auth.store";
 import camelcaseKeys from "camelcase-keys";
-import { storeToRefs } from "pinia";
 
 export const baseURL = `${API_URL}/${API_PREFIX}`;
 
@@ -44,7 +43,7 @@ axiosInstance.interceptors.request.use(async (config) => {
     const formData = new FormData();
 
     for (const key in config.data) {
-      if (config.data.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(config.data, key)) {
         formData.append(key, config.data[key]);
       }
     }

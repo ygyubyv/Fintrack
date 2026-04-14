@@ -8,12 +8,12 @@
       <div class="flex flex-col gap-3">
         <!-- Title -->
         <BaseInput
-          label="Title"
-          v-model="title"
-          placeholder="Category Title"
           v-bind="titleAttrs"
-          :error="errors.title"
           id="category-title"
+          v-model="title"
+          label="Title"
+          placeholder="Category Title"
+          :error="errors.title"
           type="text"
           size="Medium"
         />

@@ -83,7 +83,7 @@ const chartData = computed(() => {
 
     <!-- Tags -->
     <div class="bg-white rounded-2xl shadow-sm p-4">
-      <h3 class="text-lg font-semibold mb-4">Top Categories</h3>
+      <h3 class="text-lg font-semibold mb-4">Top Tags</h3>
 
       <div v-if="topTags.length" class="space-y-3">
         <div

@@ -1,10 +1,8 @@
-import { defineStore } from "pinia";
-import { ref, computed } from "vue";
 import { jwtDecode } from "jwt-decode";
 import { AuthService } from "./services/auth.service";
 import type {
   AuthState,
-  IAccessTokenClaims,
+  TAccessTokenClaims,
   IForgotPasswordPayload,
   ILoginPayload,
   IResetPasswordPayload,
@@ -12,7 +10,6 @@ import type {
   IVerifyEmailPayload,
 } from "./types";
 import type { CredentialResponse } from "vue3-google-signin";
-import { useRouter } from "vue-router";
 
 export const useAuthStore = defineStore("auth", () => {
   const router = useRouter();
@@ -33,7 +30,7 @@ export const useAuthStore = defineStore("auth", () => {
   });
 
   const isExpired = (accessToken: string) => {
-    const decodedAccessToken = jwtDecode<IAccessTokenClaims>(accessToken);
+    const decodedAccessToken = jwtDecode<TAccessTokenClaims>(accessToken);
     return decodedAccessToken.exp * 1000 < Date.now();
   };
 

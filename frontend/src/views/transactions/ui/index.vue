@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { usePaginatedList } from "@/composables/usePaginatedList";
-import type { IExpense, IUpdateExpense } from "../types";
+import type {
+  IExpense,
+  IUpdateExpense,
+  TGetAllExpensesFilters,
+} from "../types";
 import { ExpensesApi } from "../services/api/expenses.api";
 import TransactionsList from "./components/list/TransactionsList.vue";
 import FiltersBlock from "./components/FiltersBlock.vue";
@@ -20,7 +24,10 @@ const {
   searchQueryParams,
   resetFilters,
   refresh,
-} = usePaginatedList<IExpense>(ExpensesApi.getAllExpenses);
+  updateSearchQueryParam,
+} = usePaginatedList<IExpense, TGetAllExpensesFilters>(
+  ExpensesApi.getAllExpenses,
+);
 
 const {
   createExpense,
@@ -85,7 +92,7 @@ const handleDeleteExpense = () => {
 
 <template>
   <section class="flex flex-col gap-6 p-6 bg-white rounded-xl shadow-sm">
-    <BaseOverlay v-show="isLoading" />
+    <BaseOverlay :overlay-is-visible="isLoading" />
 
     <!-- Expense Details -->
     <ShowExpenseDetailsDialog
@@ -103,8 +110,8 @@ const handleDeleteExpense = () => {
     <!-- Update Expense -->
     <UpdateExpense
       v-if="selectedExpense"
-      :expense="selectedExpense"
       v-model:drawer-is-visible="updateExpenseDrawerIsVisible"
+      :expense="selectedExpense"
       @submit="handleUpdateExpense"
     />
 
@@ -131,6 +138,7 @@ const handleDeleteExpense = () => {
     <!-- Filters header -->
     <FiltersBlock
       :search-query-params="searchQueryParams"
+      @update:search-query-params="updateSearchQueryParam"
       @add-new-expense="createExpenseDrawerIsVisible = true"
       @reset-filters="resetFilters"
       @export="exportExpensesHandler"
@@ -160,7 +168,7 @@ const handleDeleteExpense = () => {
             text="New"
             icon="plus"
             mode="Primary"
-            :onClick="() => (createExpenseDrawerIsVisible = true)"
+            :on-click="() => (createExpenseDrawerIsVisible = true)"
           />
         </div>
       </div>
@@ -196,7 +204,7 @@ const handleDeleteExpense = () => {
         </label>
       </div>
 
-      <BasePagination :total-pages="lastPage" v-model="page" />
+      <BasePagination v-model="page" :total-pages="lastPage" />
     </div>
   </section>
 </template>

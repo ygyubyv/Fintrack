@@ -1,5 +1,5 @@
 import { prisma } from "../../lib/prisma";
-import { ICreateRefreshToken } from "./types/refresh-token.types";
+import type { ICreateRefreshToken } from "./types/refresh-token.types";
 
 export const RefreshTokenService = () => {
   const create = async (payload: ICreateRefreshToken) => {

@@ -1,5 +1,5 @@
-import { Category } from "../../generated/prisma/client";
-import { TCategoryResponseDto } from "./types/category.types";
+import type { Category } from "../../generated/prisma/client";
+import type { TCategoryResponseDto } from "./types/category.types";
 
 export const toCategoryResponse = (
   category: Category,

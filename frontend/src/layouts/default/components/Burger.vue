@@ -1,9 +1,9 @@
 <template>
-  <div class="relative sm:hidden" ref="burgerRef">
+  <div ref="burgerRef" class="relative sm:hidden">
     <!-- Burger button -->
     <button
-      @click="toggleMenu"
       class="flex flex-col justify-between w-6 h-4.5 focus:outline-none"
+      @click="toggleMenu"
     >
       <span
         :class="[
@@ -35,8 +35,8 @@
           v-for="link in links"
           :key="link.to"
           :to="link.to"
-          @click="toggleMenu"
           class="block px-4 py-3 text-black font-medium hover:bg-gray-100 transition"
+          @click="toggleMenu"
         >
           {{ link.label }}
         </RouterLink>
@@ -44,8 +44,8 @@
         <div class="border-t border-gray-200">
           <button
             v-if="isAuthenticated"
-            @click="emit('logout')"
             class="w-full text-left px-4 py-3 text-black hover:bg-gray-100 transition font-medium"
+            @click="emit('logout')"
           >
             Logout
           </button>
@@ -56,23 +56,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import { useTemplateRef } from "vue";
-import { onClickOutside } from "@vueuse/core";
-import { RouterLink } from "vue-router";
-
 interface Link {
   label: string;
   to: string;
 }
 
-defineProps<{
+interface Props {
   links: Link[];
   isAuthenticated: boolean;
-}>();
-const emit = defineEmits<{
+}
+
+interface Emits {
   (e: "logout"): void;
-}>();
+}
+
+defineProps<Props>();
+const emit = defineEmits<Emits>();
 
 const isOpen = ref(false);
 const burgerRef = useTemplateRef("burgerRef");

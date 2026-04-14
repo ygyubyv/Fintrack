@@ -1,6 +1,6 @@
-import { Prisma } from "../../lib/prisma";
+import type { Prisma } from "../../lib/prisma";
 import { toLastLoginResponse } from "../last-login/last-login.response.dto";
-import { TUserResponseDto } from "./types/user.types";
+import type { TUserResponseDto } from "./types/user.types";
 
 type User = Prisma.UserGetPayload<{
   include: {

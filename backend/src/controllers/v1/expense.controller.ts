@@ -1,10 +1,10 @@
 import { ExpenseService } from "../../services/expense/expense.service";
 import type { Request, Response, NextFunction } from "express";
-import {
+import type {
   TExpenseType,
   TPaymentType,
 } from "../../services/expense/types/expense.types";
-import { TSortDirection } from "../../types/v1";
+import type { TSortDirection } from "../../types/v1";
 import { AppError } from "../../errors/AppError";
 import { toExpenseResponse } from "../../dto/expense/expense.response.dto";
 import { toArray } from "../../utils";

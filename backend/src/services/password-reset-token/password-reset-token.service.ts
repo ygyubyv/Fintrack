@@ -1,5 +1,5 @@
 import { prisma } from "../../lib/prisma";
-import { ICreatePasswordResetToken } from "./types/password-reset-token.types";
+import type { ICreatePasswordResetToken } from "./types/password-reset-token.types";
 
 export const PasswordResetTokenService = () => {
   const findByResetToken = async (tokenHash: string) => {

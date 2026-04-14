@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import { prisma } from "../../lib/prisma";
-import { ICreateUser, IUpdateUser } from "./types/user.types";
+import type { ICreateUser, IUpdateUser } from "./types/user.types";
 import { AppError } from "../../errors/AppError";
 import { MapPrismaError } from "../../errors/mapper/prisma-error.mapper";
 

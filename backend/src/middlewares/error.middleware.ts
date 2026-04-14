@@ -1,11 +1,11 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import { AppError } from "../errors/AppError";
 
 export const ErrorMiddleware = (
   error: unknown,
-  request: Request,
+  _: Request,
   response: Response,
-  next: NextFunction,
+  _2: NextFunction,
 ) => {
   if (error instanceof AppError) {
     return response.status(error.status).json({

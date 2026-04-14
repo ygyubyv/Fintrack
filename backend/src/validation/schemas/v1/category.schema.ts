@@ -6,7 +6,7 @@ import type {
   IUpdateCategoryPayload,
   TExportAllCategoriesFilters,
 } from "../../../services/category/types/category.types";
-import { TSortDirection } from "../../../types/v1";
+import type { TSortDirection } from "../../../types/v1";
 
 export const SortDirectionSchema = z.custom<TSortDirection>(
   (val) => val === "asc" || val === "desc",

@@ -1,7 +1,7 @@
 import { AppError } from "../../errors/AppError";
 import { MapPrismaError } from "../../errors/mapper/prisma-error.mapper";
 import { prisma } from "../../lib/prisma";
-import {
+import type {
   TGetAllCategoriesFilters,
   IGetCategoryByIdFilters,
   ICreateCategoryPayload,

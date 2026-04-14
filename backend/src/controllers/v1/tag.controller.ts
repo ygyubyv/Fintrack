@@ -1,6 +1,6 @@
 import { TagService } from "../../services/tag/tag.service";
 import type { Request, Response, NextFunction } from "express";
-import { TSortDirection } from "../../types/v1";
+import type { TSortDirection } from "../../types/v1";
 import { toTagResponse } from "../../dto/tag/tag.response.dto";
 import { AppError } from "../../errors/AppError";
 import { toArray } from "../../utils";

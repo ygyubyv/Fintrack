@@ -26,12 +26,12 @@ const statisticsData = computed((): IStatistics => {
   });
 
   // Data
-  const totalExpense = expenses.reduce((acc, currentValue) => {
-    return (acc += Number(currentValue.value));
+  const totalExpense = expenses.reduce((accumulator, currentValue) => {
+    return accumulator + Number(currentValue.value);
   }, 0);
 
-  const totalIncome = incomes.reduce((acc, currentValue) => {
-    return (acc += Number(currentValue.value));
+  const totalIncome = incomes.reduce((accumulator, currentValue) => {
+    return accumulator + Number(currentValue.value);
   }, 0);
 
   const averageExpense = expenses.length ? totalExpense / expenses.length : 0;

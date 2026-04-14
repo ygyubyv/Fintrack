@@ -1,3 +1,5 @@
+import type { TOrderBy } from "@/types";
+
 export interface ITag {
   id: number;
   title: string;
@@ -19,3 +21,9 @@ export interface IUpdateTag {
 export interface IImportTags {
   file: File;
 }
+
+export type TTagsOrderByFields = "CreatedAt";
+
+export type TGetAllTagsFilters = TOrderBy<TTagsOrderByFields> & {
+  title: string;
+};

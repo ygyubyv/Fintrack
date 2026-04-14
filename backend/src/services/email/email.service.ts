@@ -1,7 +1,10 @@
 import { createTransport } from "nodemailer";
 import { EMAIL_CONFIG } from "../../config/email.config";
 import { renderTemplate } from "./renderer/template.renderer";
-import { TEmailTemplate, TEmailTemplateVariables } from "./types/email.types";
+import type {
+  TEmailTemplate,
+  TEmailTemplateVariables,
+} from "./types/email.types";
 import { AppError } from "../../errors/AppError";
 
 const transporter = createTransport({

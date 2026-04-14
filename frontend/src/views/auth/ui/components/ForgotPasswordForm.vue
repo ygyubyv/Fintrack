@@ -17,10 +17,10 @@ const { email, emailAttrs, errors, meta, onSubmit, resetForm } =
 
     <!-- Email -->
     <BaseInput
-      v-model="email"
       v-bind="emailAttrs"
-      :error="errors.email"
       id="email"
+      v-model="email"
+      :error="errors.email"
       type="email"
       label="Email"
       placeholder="Enter your email"

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { CURRENCY } from "@/constants";
 import type { IExpense } from "../../../types";
 
@@ -28,8 +27,8 @@ const formatValue = (expense: IExpense) => {
     <div
       v-for="expense in items"
       :key="expense.id"
-      @click="emit('details', expense)"
       class="group flex items-center justify-between px-4 py-3 rounded-xl border border-gray-200 bg-white hover:shadow-sm hover:border-gray-300 transition cursor-pointer"
+      @click="emit('details', expense)"
     >
       <div class="flex items-center gap-3 min-w-0">
         <div

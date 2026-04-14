@@ -1,5 +1,5 @@
 import { prisma } from "../../lib/prisma";
-import { ICreateEmailVerificationToken } from "./types/email-verification-token.types";
+import type { ICreateEmailVerificationToken } from "./types/email-verification-token.types";
 
 export const EmailVerificationTokenService = () => {
   const findByVerificationToken = async (tokenHash: string) => {

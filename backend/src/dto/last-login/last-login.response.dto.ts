@@ -1,5 +1,5 @@
-import { LastLogin } from "../../generated/prisma/client";
-import { TLastLoginResponseDto } from "./types/last-login.types";
+import type { LastLogin } from "../../generated/prisma/client";
+import type { TLastLoginResponseDto } from "./types/last-login.types";
 
 export const toLastLoginResponse = (
   login: LastLogin,

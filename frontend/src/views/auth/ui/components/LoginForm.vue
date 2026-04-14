@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { GoogleSignInButton } from "vue3-google-signin";
-
 import { useLoginForm } from "../../composables/validation/useLoginForm";
 
 const {
@@ -20,10 +19,10 @@ const {
   <form class="space-y-4" @submit.prevent="onSubmit">
     <!-- Email -->
     <BaseInput
-      v-model="email"
       v-bind="emailAttrs"
-      :error="errors.email"
       id="email"
+      v-model="email"
+      :error="errors.email"
       type="email"
       label="Email"
       placeholder="Enter your email"
@@ -32,10 +31,10 @@ const {
     <!-- Password -->
     <div class="space-y-1">
       <BaseInput
-        v-model="password"
         v-bind="passwordAttrs"
-        :error="errors.password"
         id="password"
+        v-model="password"
+        :error="errors.password"
         type="password"
         label="Password"
         placeholder="Enter your password"

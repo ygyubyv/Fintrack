@@ -22,9 +22,6 @@
 </template>
 
 <script setup lang="ts">
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { computed } from "vue";
-
 type Size = "Small" | "Medium" | "Big";
 type Mode = "Primary" | "Secondary" | "Muted" | "Danger";
 type ButtonType = "button" | "submit";

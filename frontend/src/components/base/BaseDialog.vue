@@ -4,8 +4,8 @@
       class="fixed inset-0 bg-black/50 flex justify-center items-center z-50 px-2 sm:px-4"
     >
       <div
-        class="bg-white border border-gray-300 p-6 rounded-2xl shadow-xl w-full max-w-[90%] sm:max-w-md max-h-[90vh] overflow-y-auto flex flex-col gap-4"
         ref="dialog"
+        class="bg-white border border-gray-300 p-6 rounded-2xl shadow-xl w-full max-w-[90%] sm:max-w-md max-h-[90vh] overflow-y-auto flex flex-col gap-4"
       >
         <div>
           <slot name="header">
@@ -24,7 +24,7 @@
         <div class="flex justify-end gap-2 pt-2">
           <slot name="footer">
             <BaseButton
-              :onClick="() => emit('close')"
+              :on-click="() => emit('close')"
               icon="xmark"
               :text="cancelText ?? 'Cancel'"
               mode="Secondary"
@@ -34,7 +34,7 @@
               icon="check"
               :text="submitText ?? 'Submit'"
               mode="Primary"
-              :onClick="() => emit('submit')"
+              :on-click="() => emit('submit')"
             />
           </slot>
         </div>
@@ -44,10 +44,6 @@
 </template>
 
 <script setup lang="ts">
-import BaseButton from "./BaseButton.vue";
-import { onClickOutside } from "@vueuse/core";
-import { useTemplateRef } from "vue";
-
 interface Props {
   title?: string;
   message?: string;

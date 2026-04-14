@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import { UserService } from "../user/user.service";
 import { RefreshTokenService } from "../refresh-token/refresh-token.service";
 import type { SignOptions } from "jsonwebtoken";
-import {
+import type {
   IAuthContext,
   IVerifyEmailPayload,
   IForgotPasswordPayload,
@@ -181,7 +181,7 @@ export const AuthService = () => {
       refreshTokenService.revoke(
         hashToken(payload.refreshToken, AUTH_CONFIG.refreshTokenSecret!),
       );
-    } catch (err) {
+    } catch {
       throw new AppError("AUTH_TOKEN_INVALID");
     }
   };
@@ -240,7 +240,7 @@ export const AuthService = () => {
         refreshToken,
         idToken,
       };
-    } catch (err) {
+    } catch {
       throw new AppError("AUTH_TOKEN_INVALID");
     }
   };

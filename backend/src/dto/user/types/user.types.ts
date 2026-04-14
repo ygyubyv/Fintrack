@@ -1,4 +1,4 @@
-import { TLastLoginResponseDto } from "../../last-login/types/last-login.types";
+import type { TLastLoginResponseDto } from "../../last-login/types/last-login.types";
 
 export type TUserResponseDto = {
   id: number;

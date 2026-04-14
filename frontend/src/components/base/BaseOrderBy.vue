@@ -5,31 +5,31 @@
     </span>
 
     <button
-      @click="toggleOrderBy"
       class="flex items-center justify-center w-6 h-6 rounded hover:bg-gray-100 transition-colors ml-2"
       :aria-label="'Sort by ' + (value ?? 'none')"
+      @click="toggleOrderBy"
     >
-      <font-awesome-icon icon="sort" class="text-gray-400" v-if="!direction" />
+      <font-awesome-icon v-if="!direction" icon="sort" class="text-gray-400" />
       <font-awesome-icon
+        v-else-if="direction === 'asc'"
         icon="arrow-up"
         class="text-gray-600"
-        v-else-if="direction === 'asc'"
       />
       <font-awesome-icon
+        v-else-if="direction === 'desc'"
         icon="arrow-down"
         class="text-gray-600"
-        v-else-if="direction === 'desc'"
       />
     </button>
   </div>
 </template>
 
 <script setup lang="ts">
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import type { TSortDirection } from "@/types";
 
 interface Props {
-  value: unknown;
-  direction: unknown;
+  value: boolean | null;
+  direction: TSortDirection | null;
 }
 
 interface Emits {

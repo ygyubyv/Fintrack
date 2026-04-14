@@ -2,9 +2,8 @@
 import { usePaginatedList } from "@/composables/usePaginatedList";
 import type {
   ICategory,
-  ICreateCategory,
-  IImportCategories,
   IUpdateCategory,
+  TGetAllCategoriesFilters,
 } from "../types";
 import { CategoriesApi } from "../services/api/categories.api";
 import { CategoriesService } from "../services/categories.service";
@@ -23,7 +22,10 @@ const {
   searchQueryParams,
   resetFilters,
   refresh,
-} = usePaginatedList<ICategory>(CategoriesApi.getAllCategories);
+  updateSearchQueryParam,
+} = usePaginatedList<ICategory, TGetAllCategoriesFilters>(
+  CategoriesApi.getAllCategories,
+);
 
 const {
   createCategory,
@@ -83,7 +85,7 @@ const handleDeleteCategory = () => {
 
 <template>
   <section class="flex flex-col gap-6 p-6 bg-white rounded-xl shadow-sm">
-    <BaseOverlay v-show="isLoading" />
+    <BaseOverlay :overlay-is-visible="isLoading" />
 
     <!-- Create Category -->
     <CreateCategory
@@ -93,8 +95,8 @@ const handleDeleteCategory = () => {
 
     <!-- Update Category -->
     <UpdateCategory
-      v-model:drawer-is-visible="updateCategoryDrawerIsVisible"
       v-if="selectedCategory"
+      v-model:drawer-is-visible="updateCategoryDrawerIsVisible"
       :initial-values="selectedCategory"
       @submit="handleUpdateCategory"
     />
@@ -146,7 +148,7 @@ const handleDeleteCategory = () => {
           text="Import"
           icon="file-import"
           mode="Secondary"
-          :onClick="() => (importCategoriesDialogIsVisible = true)"
+          :on-click="() => (importCategoriesDialogIsVisible = true)"
         />
 
         <!-- Export -->
@@ -154,7 +156,7 @@ const handleDeleteCategory = () => {
           text="Export"
           icon="file-export"
           mode="Secondary"
-          :onClick="exportCategoriesHandler"
+          :on-click="exportCategoriesHandler"
         />
 
         <!-- Create Category -->
@@ -173,6 +175,7 @@ const handleDeleteCategory = () => {
       <CategoriesTable
         :items="items"
         :search-query-params="searchQueryParams"
+        @update:search-query-params="updateSearchQueryParam"
         @delete="onDeleteCategory"
         @update="onUpdateCategory"
       />
@@ -199,7 +202,7 @@ const handleDeleteCategory = () => {
         </label>
       </div>
 
-      <BasePagination :total-pages="lastPage" v-model="page" />
+      <BasePagination v-model="page" :total-pages="lastPage" />
     </div>
   </section>
 </template>

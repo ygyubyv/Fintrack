@@ -1,3 +1,4 @@
+import type { TOrderBy } from "@/types";
 import type { ICategory } from "@/views/categories/types";
 import type { ITag } from "@/views/tags/types";
 
@@ -36,6 +37,24 @@ export interface IUpdateExpense {
 export interface IImportExpenses {
   file: File;
 }
+
+export type TExpenseOrderByFields =
+  | "CreatedAt"
+  | "Value"
+  | "ExpenseType"
+  | "PaymentType";
+
+export type TGetAllExpensesFilters = TOrderBy<TExpenseOrderByFields> & {
+  description: string;
+  valueFrom: number;
+  valueTo: number;
+  expenseType: TExpenseType;
+  paymentType: TPaymentType;
+  categoryId: number;
+  "tagIds[]": number[];
+  createdFromDate: string;
+  createdToDate: string;
+};
 
 export type TExpenseType = "INCOME" | "EXPENSE";
 export type TPaymentType = "CARD" | "CASH";
