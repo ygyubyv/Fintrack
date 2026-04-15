@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import morgan from "morgan";
 import cors from "cors";
 import path from "node:path";
+import helmet from "helmet";
 
 dotenv.config();
 
@@ -14,6 +15,8 @@ import apiRoutes from "./routes/index";
 import { ErrorMiddleware } from "./middlewares/error.middleware";
 
 const app = express();
+
+app.use(helmet());
 
 app.use(morgan("dev"));
 app.use(express.json());
