@@ -1,0 +1,57 @@
+services:
+  frontend:
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+      args:
+        VITE_API_URL: ${VITE_API_URL}
+        VITE_API_PREFIX: ${VITE_API_PREFIX}
+        VITE_AUTH_GOOGLE_CLIENT_ID: ${VITE_AUTH_GOOGLE_CLIENT_ID}
+    networks:
+      - app-network
+  backend:
+    depends_on:
+      postgres:
+        condition: service_healthy
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.prod
+      args:
+        DATABASE_URL: ${DATABASE_URL}
+    env_file:
+      - ./backend/.env.production
+    networks:
+      - db-network
+      - app-network
+  postgres:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_DB: "${DB}"
+      POSTGRES_USER: "${DB_USER}"
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB}"]
+      interval: 5s
+      timeout: 2s
+      retries: 20
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    command: postgres -c listen_addresses='*'
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      db-network:
+
+volumes:
+  postgres_data:
+
+networks:
+  db-network:
+  app-network:

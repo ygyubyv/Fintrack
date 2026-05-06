@@ -1,0 +1,9 @@
+node_modules
+dist
+.env
+.env.example
+.env.development
+.vscode
+.git
+.github
+.husky

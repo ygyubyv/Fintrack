@@ -2,14 +2,20 @@
   "devDependencies": {
     "@commitlint/cli": "^20.5.0",
     "@commitlint/config-conventional": "^20.5.0",
+    "eslint": "^10.3.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.4.0"
   },
-  "scripts": {
-    "prepare": "husky"
-  },
   "lint-staged": {
     "frontend/**/*.{ts,vue,js}": "eslint --fix",
-    "backend/**/*.ts,js": "eslint --fix"
+    "backend/**/*.{ts,js}": "eslint --fix"
+  },
+  "scripts": {
+    "prepare": "husky",
+    "dev": "docker compose -f docker-compose.dev.yml --env-file .env.development up --build --watch",
+    "dev:stop": "docker compose -f docker-compose.dev.yml down",
+    "dev:prisma": "docker exec -it prisma-first-app-backend-1 npx prisma studio --port 5555 --browser none",
+    "prod": "docker compose -f docker-compose.prod.yml --env-file .env.production up --build",
+    "prod:stop": "docker compose -f docker-compose.prod.yml down"
   }
 }

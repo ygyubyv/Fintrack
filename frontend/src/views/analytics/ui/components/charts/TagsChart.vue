@@ -35,7 +35,7 @@ const chartOptions = {
   responsive: true,
   plugins: {
     legend: {
-      position: "bottom",
+      position: "bottom" as const,
     },
     title: {
       display: true,

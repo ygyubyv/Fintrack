@@ -3,12 +3,9 @@
   "version": "1.0.0",
   "description": "first full-stack app",
   "main": "index.js",
-  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node dist/server.js",
-    "dev": "tsx watch --env-file=.env src/server.ts",
-    "build": "tsup src/server.ts --format esm --out-dir dist"
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc"
   },
   "author": "ygyubyv",
   "license": "ISC",
@@ -47,7 +44,6 @@
     "@types/swagger-jsdoc": "^6.0.4",
     "eslint": "^10.2.0",
     "globals": "^17.5.0",
-    "nodemon": "^3.1.11",
     "prisma": "^7.3.0",
     "ts-node": "^10.9.2",
     "tsup": "^8.5.1",
