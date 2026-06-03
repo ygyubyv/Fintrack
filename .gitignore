@@ -13,3 +13,4 @@ dist-ssr
 *.local
 
 .env*
+expense_tracker_key.pem*
