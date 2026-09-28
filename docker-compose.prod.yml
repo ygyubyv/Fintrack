@@ -4,6 +4,7 @@ services:
       - backend
     ports:
       - "80:80"
+      - "443:443"
     build:
       context: ./frontend
       dockerfile: Dockerfile.prod
@@ -11,8 +12,17 @@ services:
         VITE_API_URL: ${VITE_API_URL}
         VITE_API_PREFIX: ${VITE_API_PREFIX}
         VITE_AUTH_GOOGLE_CLIENT_ID: ${VITE_AUTH_GOOGLE_CLIENT_ID}
+        APP_DOMAIN: ${APP_DOMAIN}
     networks:
       - app-network
+    volumes:
+      - ./frontend/nginx/certbot/conf:/etc/letsencrypt
+      - ./frontend/nginx/certbot/www:/var/www/certbot
+    healthcheck:
+      test: ["CMD", "nc", "-z", "127.0.0.1", "80"]
+      interval: 5s
+      timeout: 2s
+      retries: 10
   backend:
     depends_on:
       postgres:
@@ -48,6 +58,20 @@ services:
         max-file: "3"
     networks:
       db-network:
+
+  certbot:
+    image: certbot/certbot
+    depends_on:
+      frontend:
+        condition: service_healthy
+    environment:
+      APP_DOMAIN: ${APP_DOMAIN}
+      CERTBOT_EMAIL: ${CERTBOT_EMAIL}
+    volumes:
+      - ./frontend/nginx/certbot/conf:/etc/letsencrypt
+      - ./frontend/nginx/certbot/www:/var/www/certbot
+      - ./frontend/nginx/certbot-entrypoint.sh:/entrypoint.sh:ro
+    entrypoint: ["/bin/sh", "/entrypoint.sh"]
 
 volumes:
   postgres_data:

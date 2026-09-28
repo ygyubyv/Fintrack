@@ -22,9 +22,6 @@ declare module 'vue' {
     BaseSelect: typeof import('./src/components/base/BaseSelect.vue')['default']
     BaseSpinner: typeof import('./src/components/base/BaseSpinner.vue')['default']
     BaseTabs: typeof import('./src/components/base/BaseTabs.vue')['default']
-    Burger: typeof import('./src/components/header/Burger.vue')['default']
-    Footer: typeof import('./src/components/footer/Footer.vue')['default']
-    Header: typeof import('./src/components/header/Header.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

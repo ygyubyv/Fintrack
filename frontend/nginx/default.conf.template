@@ -1,15 +1,22 @@
 server {
-  listen 80;
-  server_name dopi-expense-tracker.duckdns.org;
-  return 301 https://$host$request_uri;
+    listen 80;
+    server_name ${APP_DOMAIN};
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+
+    location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
 }
 
 server {
   listen 443 ssl;
-  server_name dopi-expense-tracker.duckdns.org;
+  server_name ${APP_DOMAIN};
 
-  ssl_certificate /etc/letsencrypt/live/dopi-expense-tracker.duckdns.org/fullchain.pem;
-  ssl_certificate_key /etc/letsencrypt/live/dopi-expense-tracker.duckdns.org/privkey.pem;
+  ssl_certificate /etc/letsencrypt/live/${APP_DOMAIN}/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/${APP_DOMAIN}/privkey.pem;
 
   root /usr/share/nginx/html;
   index index.html;
