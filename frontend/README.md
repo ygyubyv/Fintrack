@@ -1,42 +1,110 @@
-# expense-tracker
+# FinTrack — Frontend
 
-This template should help get you started developing with Vue 3 in Vite.
+Single-page application for FinTrack, built with Vue 3, TypeScript and Vite.
 
-## Recommended IDE Setup
+## Tech stack
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- **Vue 3** (`<script setup>`) + **TypeScript**
+- **Vite** with auto-imports (`unplugin-auto-import`) and auto-registered base components (`unplugin-vue-components`)
+- **Pinia** for state, **Vue Router** for routing
+- **Tailwind CSS 4** for styling
+- **VeeValidate** + **Yup** for forms
+- **Axios** for HTTP, **Chart.js** / **vue-chartjs** for charts
+- **vue3-google-signin** for Google Sign-In
+- **Font Awesome** icons, **vue-toast-notification** for toasts
 
-## Recommended Browser Setup
+## Pages
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+| Route           | Page          | Auth required |
+| --------------- | ------------- | ------------- |
+| `/`             | Landing page  | No            |
+| `/auth`         | Login, sign-up, email verification, forgot/reset password | Guests only |
+| `/transactions` | Transactions list with filters, create/edit, CSV import/export | Yes |
+| `/categories`   | Categories management | Yes   |
+| `/tags`         | Tags management       | Yes   |
+| `/analytics`    | Charts and statistics | Yes   |
 
-## Type Support for `.vue` Imports in TS
+The router guard bootstraps the auth store before each navigation and redirects unauthenticated users to `/auth`.
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+## Project structure
 
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
+```
+frontend/
+├── nginx/                 # Production Nginx config and entrypoints (SSL, certbot)
+└── src/
+    ├── assets/            # Global styles
+    ├── components/base/   # Reusable Base* UI components (auto-registered)
+    ├── composables/       # Shared composables (useApi, usePaginatedList, useNotification)
+    ├── layouts/           # App layout (header, footer, burger menu)
+    ├── pages/             # Route-level components (thin wrappers around views)
+    ├── plugins/           # Axios instance, Font Awesome
+    ├── router/            # Routes and navigation guards
+    ├── stores/            # Pinia stores (auth)
+    ├── utils/             # Date, file and shared helpers
+    ├── views/             # Feature modules
+    │   └── <feature>/
+    │       ├── composables/   # Form logic and Yup schemas
+    │       ├── services/      # API calls
+    │       ├── types/
+    │       └── ui/            # Feature components
+    ├── config.ts          # Env-based config
+    └── main.ts
 ```
 
-### Compile and Hot-Reload for Development
+Each feature (`auth`, `transactions`, `categories`, `tags`, `analytics`, `main`) lives in its own folder under `src/views/` and is exposed through an `index.ts`.
+
+## Environment variables
+
+Create `frontend/.env.development` (and `frontend/.env.production`):
+
+```env
+VITE_API_URL=http://localhost:3000   # Backend origin
+VITE_API_PREFIX=/api/v1              # API path prefix
+VITE_AUTH_GOOGLE_CLIENT_ID=          # Google OAuth client ID
+```
+
+For production Docker builds these values are passed as build args from the root `.env.production`, since Vite inlines them at build time.
+
+## Running
+
+### With Docker (recommended)
+
+From the repository root:
 
 ```sh
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+The app is available at `http://localhost:5173`. See the [root README](../README.md).
+
+### Locally
+
+Requires Node.js `^20.19.0` or `>=22.12.0` and a running backend.
 
 ```sh
-npm run build
+npm install
+npm run dev
 ```
+
+## Scripts
+
+| Script               | Description                                  |
+| -------------------- | -------------------------------------------- |
+| `npm run dev`        | Start the Vite dev server (exposed on the network) |
+| `npm run build`      | Type-check and build for production          |
+| `npm run build-only` | Build without type-checking                  |
+| `npm run type-check` | Run `vue-tsc`                                |
+| `npm run preview`    | Preview the production build locally         |
+
+## Production
+
+[Dockerfile.prod](Dockerfile.prod) builds the app and serves `dist/` with Nginx:
+
+- HTTP (port 80) redirects to HTTPS, except for ACME challenges
+- HTTPS (port 443) serves the SPA with history-mode fallback to `index.html`
+- `/api/` is proxied to the `backend` container
+- On first start a temporary self-signed certificate is generated until Certbot issues a real one; Nginx reloads every 10 minutes to pick up renewed certificates
+
+## Recommended IDE setup
+
+[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar).
